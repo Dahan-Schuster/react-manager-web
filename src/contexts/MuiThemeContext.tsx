@@ -16,6 +16,8 @@ interface ThemeContextValue {
   temaAtivo: Mui.Theme | null;
   modoTema: Mui.ThemeMode;
   toggleMode: VoidFunction;
+
+  getUrlLogo: (tipo: "login" | "header" | "simples") => string | null;
 }
 
 const MuiThemeContext = createContext<ThemeContextValue | null>(null);
@@ -38,6 +40,27 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
 
   const toggleMode = useCallback(() => {
     setModoTema((curr) => (curr === "light" ? "dark" : "light"));
+  }, []);
+
+  const getUrlLogo = useCallback((tipo: "login" | "header" | "simples") => {
+    if (temaAtivo) {
+      let url = "";
+      switch (tipo) {
+        case "login":
+          url = temaAtivo.url_logo_login || temaAtivo.url_logo_header || "";
+          break;
+        case "header":
+          url = temaAtivo.url_logo_header || "";
+          break;
+        case "simples":
+          url = temaAtivo.url_logo_simples || temaAtivo.url_logo_header || "";
+          break;
+      }
+      if (!url) return null;
+      return config.apiBaseUrl + url;
+    } else {
+      return null;
+    }
   }, []);
 
   useDebounceEffect(() => {
@@ -67,7 +90,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
               paper: temaAtivo?.background_paper,
             },
             text: {
-              primary: temaAtivo?.text_primary,
+              primary: temaAtivo?.text_primary || "#000000",
               secondary: temaAtivo?.text_secondary,
               disabled: temaAtivo?.text_disabled,
             },
@@ -122,6 +145,8 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
         temaAtivo,
         modoTema,
         toggleMode,
+
+        getUrlLogo,
       }}
     >
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
