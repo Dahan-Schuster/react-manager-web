@@ -61,30 +61,16 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   /** Desloga o usuário */
   const logout = useCallback(
     async (callback: VoidFunction) => {
-      try {
-        const response: Auth.LoginResponse = await fetch(
-          `${apiBaseUrl}/logout`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user?.token}`,
-            },
-          }
-        ).then((res) => res.json());
-
-        if (!response.success) {
-          throw new ApiError(response.error!);
-        }
-
+      await fetch(`${apiBaseUrl}/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token.token}`,
+        },
+      }).finally(() => {
         setUser(null);
         callback();
-      } catch (error) {
-        setLoading(false);
-        return error instanceof ApiError && error.message
-          ? error.message
-          : "Não foi possível efetuar o logout. Por favor, tente novamente.";
-      }
+      });
     },
     [setUser]
   );
