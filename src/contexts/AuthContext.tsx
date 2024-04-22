@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setLoading(true);
 
         const response: Common.CommonResponse = await fetch(
-          `${apiBaseUrl}/password/send-recovery-email`,
+          `${apiBaseUrl}/senha/enviar-email-recuperacao`,
           {
             method: "POST",
             headers: {
@@ -120,7 +120,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setLoading(true);
 
         const response: Common.CommonResponse = await fetch(
-          `${apiBaseUrl}/password/recover`,
+          `${apiBaseUrl}/senha/recuperar`,
           {
             method: "POST",
             headers: {
