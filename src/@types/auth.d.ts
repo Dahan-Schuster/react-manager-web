@@ -35,7 +35,6 @@ namespace Auth {
     user: UserType | null;
     loading: boolean;
     login: (config: LoginConfig) => Promise<string | undefined>;
-    logout: (callback: VoidFunction) => Promise<string | undefined>;
     logout: (callback: VoidFunction) => void;
     sendResetPasswordEmail: (email: string) => Promise<string | undefined>;
     resetPassword: (
