@@ -31,8 +31,14 @@ const StyledDrawer = styled(MuiSwipeableDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    backgroundColor: theme.palette.background.paper,
-    borderRight: "none",
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? theme.palette.background.paper
+        : theme.palette.background.default,
+    borderRight:
+      theme.palette.mode === "light"
+        ? "none"
+        : `1px solid ${theme.palette.background.paper}`,
 
     "& a": {
       textDecoration: "none",

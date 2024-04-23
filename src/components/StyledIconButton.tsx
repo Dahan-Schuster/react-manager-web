@@ -7,7 +7,10 @@ const StyledIconButton = styled(IconButton, {
   },
 })(({ theme, color }) => ({
   borderRadius: "8px",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor:
+    theme.palette.mode === "light"
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
   color: color || theme.palette.text.secondary,
   transition: "all 0.125s ease-in",
 

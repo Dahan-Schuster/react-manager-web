@@ -14,7 +14,14 @@ interface StyledAppBarProps extends MuiAppBarProps {
 }
 
 const StyledAppBar = styled(MuiAppBar)<StyledAppBarProps>(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor:
+    theme.palette.mode === "light"
+      ? theme.palette.background.paper
+      : theme.palette.background.default,
+  borderBottom:
+    theme.palette.mode === "light"
+      ? "none"
+      : `1px solid ${theme.palette.background.paper}`,
   backgroundImage: "none",
   boxShadow: "none",
   padding: "8px 0",
