@@ -5,12 +5,12 @@ import MuiSwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { CSSObject, Theme, styled } from "@mui/material/styles";
-import { drawerWidth, isIOS } from "../constants";
+import { drawerWidthClosed, drawerWidthOpen, isIOS } from "../constants";
 import StyledIconButton from "./StyledIconButton";
 import { useMuiTheme } from "../contexts/MuiThemeContext";
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
+  width: drawerWidthOpen,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -24,7 +24,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: drawerWidthClosed,
 });
 
 const StyledDrawer = styled(MuiSwipeableDrawer, {

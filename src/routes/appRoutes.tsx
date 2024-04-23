@@ -4,6 +4,7 @@ import Login from "../pages/Auth/Login";
 import EsqueciSenha from "../pages/Auth/EsqueciSenha";
 import Logout from "../pages/Auth/Logout";
 import NovaSenha from "../pages/Auth/NovaSenha";
+import InitialPage from "../pages/InitialPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "alterar-senha/:token",
         element: <NovaSenha />,
+      },
+      {
+        path: "/",
+        element: <InitialPage />,
       },
     ],
   },
