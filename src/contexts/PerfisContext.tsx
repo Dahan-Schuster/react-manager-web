@@ -1,13 +1,12 @@
 import {
-  createContext,
   FC,
   ReactNode,
-  useState,
-  useContext,
+  createContext,
   useCallback,
+  useContext,
+  useState,
 } from "react";
 import useAxios from "../services/useAxios";
-import { toast } from "react-toastify";
 
 interface PerfisContextValue {
   perfis: Perfis.PerfilType[];
@@ -29,12 +28,9 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
       url: "/perfis",
     });
 
-    if (!response.success) {
-      toast.error(response.error);
-      return;
+    if (response.success) {
+      setPerfis(response.perfis as Perfis.PerfilType[]);
     }
-
-    setPerfis(response.perfis as Perfis.PerfilType[]);
   }, []);
 
   return (

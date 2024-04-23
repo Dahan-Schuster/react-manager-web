@@ -45,6 +45,8 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         if (!response.success) {
           throw new ApiError(response.error!);
         }
+
+        setLoading(false);
         setUser({ ...response.user!, token: response.token! });
         // chama o callback de sucesso
         callback();

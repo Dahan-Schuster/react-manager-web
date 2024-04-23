@@ -5,6 +5,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import config from "../config";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: config.apiBaseUrl,
@@ -12,8 +13,8 @@ const api = axios.create({
 });
 
 interface RequestConfig {
-  authorized?: boolean;
   errorMessage?: string;
+  successMessage?: string;
 }
 
 interface Dict<T> {
@@ -32,7 +33,7 @@ const errorMessages: Dict<string> = {
   404: "Recurso não encontrado",
   500: "Ocorreu um erro interno no servidor",
   ECONNABORTED: "A requisição demorou demais a responder",
-  ERR_CANCELED: " ",
+  ERR_CANCELED: "",
 };
 
 /**
@@ -46,25 +47,11 @@ const useAxios = (): AxiosProps => {
 
   const requests = useRef<Dict<AbortController>>({});
 
-  const loginError = useCallback(() => {
-    logout(() => {
-      navigate("/login", {
-        replace: true,
-        state: { from: location },
-      });
-    });
-
-    return {
-      success: false,
-      error: "Sua sessão expirou",
-    } as Common.CommonResponse;
-  }, [location, logout, navigate]);
-
   const makeRequest = useCallback(
     async (
       config: AxiosRequestConfig & RequestConfig
     ): Promise<Common.CommonResponse> => {
-      const id = `${config.method}:${config.url || "/"}`;
+      const id = `${config.method || "GET"}:${config.url || "/"}`;
       console.log("requesting", id);
       try {
         // procura o id na lista de requests em andamento
@@ -79,8 +66,8 @@ const useAxios = (): AxiosProps => {
         const controller = new AbortController();
         requests.current[id] = controller;
 
-        // adiciona token se necessário
-        if (config.authorized && user?.token?.token) {
+        // adiciona token se houver
+        if (user?.token?.token) {
           config.headers = {
             ...config.headers,
             ["Authorization"]: "Bearer " + user?.token?.token,
@@ -94,6 +81,10 @@ const useAxios = (): AxiosProps => {
 
         const data = response.data;
         if (!data.success) data.error = data.error || config.errorMessage;
+
+        if (data.success && config.successMessage) {
+          toast.success(config.successMessage);
+        }
         return data;
       } catch (error) {
         let code: number | string = 0;
@@ -106,8 +97,15 @@ const useAxios = (): AxiosProps => {
           message = res?.data?.error || errorMessages[code] || message;
         }
 
+        message && toast.error(message);
+
         if (code === 401) {
-          return loginError();
+          logout(() => {
+            navigate("/login", {
+              replace: true,
+              state: { from: location },
+            });
+          });
         }
 
         return {
@@ -118,7 +116,7 @@ const useAxios = (): AxiosProps => {
         delete requests.current[id];
       }
     },
-    [loginError, user?.token?.token]
+    [user?.token?.token]
   );
 
   return {
