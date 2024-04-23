@@ -1,17 +1,14 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 import React, { FormEvent } from "react";
 import { Link, redirect, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import AuthContainer from "../../containers/Auth/AuthContainer";
 import { useAuth } from "../../contexts/AuthContext";
-import usePageTitle from "../../hooks/usePageTitle";
-import { toast } from "react-toastify";
 
 /**
  * Página de alteração de senha uasndo token recebido por email
  */
 const NovaSenha: React.FunctionComponent = () => {
-  usePageTitle("Alterar senha");
-
   const { token } = useParams();
 
   const { resetPassword, loading } = useAuth();

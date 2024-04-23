@@ -2,8 +2,9 @@ import { CssBaseline } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
+import { useMainLayout } from "../../contexts/MainLayoutContext";
 
 interface AuthContainerProps {
   title: string;
@@ -19,6 +20,15 @@ const AuthContainer: React.FunctionComponent<AuthContainerProps> = ({
 }) => {
   const { getUrlLogo } = useMuiTheme();
   const urlLogoLogin = getUrlLogo("login");
+
+  const { setLayoutConfig } = useMainLayout();
+  useEffect(() => {
+    setLayoutConfig({ title });
+
+    return () => {
+      setLayoutConfig({ title: "" });
+    };
+  }, []);
 
   return (
     <Container maxWidth="xs">

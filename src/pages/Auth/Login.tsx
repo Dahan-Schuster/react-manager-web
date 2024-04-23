@@ -1,13 +1,12 @@
-import { FormEvent, FunctionComponent, useCallback, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import AuthContainer from "../../containers/Auth/AuthContainer";
-import { useAuth } from "../../contexts/AuthContext";
-import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import usePageTitle from "../../hooks/usePageTitle";
+import TextField from "@mui/material/TextField";
+import { FormEvent, FunctionComponent, useCallback, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import AuthContainer from "../../containers/Auth/AuthContainer";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginProps {}
 
@@ -15,8 +14,6 @@ interface LoginProps {}
  * Página de login
  */
 const Login: FunctionComponent<LoginProps> = () => {
-  usePageTitle("Login");
-
   const navigate = useNavigate();
   const location = useLocation();
   const from: string = location.state?.from?.pathname || "/";

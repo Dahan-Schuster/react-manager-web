@@ -1,16 +1,14 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 import React, { FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import AuthContainer from "../../containers/Auth/AuthContainer";
 import { useAuth } from "../../contexts/AuthContext";
-import usePageTitle from "../../hooks/usePageTitle";
-import { toast } from "react-toastify";
 
 /**
  * Página de requisição de recuperação de senha via e-mail
  */
 const EsqueciSenha: React.FunctionComponent = () => {
-  usePageTitle("Recuperar senha");
   const { sendResetPasswordEmail, loading } = useAuth();
 
   const [email, setEmail] = React.useState<string>("");
