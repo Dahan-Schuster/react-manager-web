@@ -4,9 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import { Breakpoint, SxProps } from "@mui/material/styles";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
-import { useAuth } from "../../contexts/AuthContext";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
 import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
@@ -28,11 +26,9 @@ const MainLayout: FC<MainLayoutProps> = ({
   children,
   title = "",
   hideTitle = false,
-  showBackButton = true,
   mainContainerMaxWidth = "lg",
   mainContainerSx = {},
 }) => {
-  const { isAuthenticated } = useAuth();
   const { getUrlFavicon } = useMuiTheme();
 
   usePageTitle(title);
@@ -56,18 +52,6 @@ const MainLayout: FC<MainLayoutProps> = ({
     }
     link.href = getUrlFavicon();
   }, []);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
@@ -97,7 +81,7 @@ const MainLayout: FC<MainLayoutProps> = ({
           }}
         >
           <RouterBreadcrumbs />
-          <Box mb={hideTitle && !showBackButton ? 0 : 2}>
+          <Box mb={hideTitle ? 0 : 2}>
             <Grid container spacing={2} justifyContent={"space-between"}>
               {!hideTitle && (
                 <Grid
