@@ -15,6 +15,7 @@ export interface SelectInputProps {
   disabled?: boolean;
   optional?: boolean;
   emptyLabel?: string;
+  emptyValue?: string | number;
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -32,6 +33,7 @@ const SelectInput: React.FunctionComponent<SelectInputProps> = ({
   onClick,
   optional = false,
   emptyLabel = label,
+  emptyValue = 0,
 }) => {
   const { muiTheme } = useMuiTheme();
   const { palette } = muiTheme;
@@ -52,7 +54,9 @@ const SelectInput: React.FunctionComponent<SelectInputProps> = ({
           color: palette.text.secondary,
         }}
       >
-        {optional && <MenuItem value={0}>{emptyLabel || "Nenhum"}</MenuItem>}
+        {optional && (
+          <MenuItem value={emptyValue}>{emptyLabel || "Nenhum"}</MenuItem>
+        )}
         {values?.map(({ label, value }) => (
           <MenuItem
             sx={{ color: palette.text.secondary }}
