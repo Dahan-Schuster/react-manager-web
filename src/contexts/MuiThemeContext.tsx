@@ -18,6 +18,7 @@ interface ThemeContextValue {
   toggleMode: VoidFunction;
 
   getUrlLogo: (tipo: "login" | "header" | "simples") => string | null;
+  getUrlFavicon: () => string;
 }
 
 const MuiThemeContext = createContext<ThemeContextValue | null>(null);
@@ -61,6 +62,12 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     } else {
       return null;
     }
+  }, []);
+
+  const getUrlFavicon = useCallback(() => {
+    return temaAtivo?.url_favicon
+      ? config.apiBaseUrl + temaAtivo.url_favicon
+      : "/favicon_default.svg";
   }, []);
 
   useDebounceEffect(() => {
@@ -147,6 +154,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
         toggleMode,
 
         getUrlLogo,
+        getUrlFavicon,
       }}
     >
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
