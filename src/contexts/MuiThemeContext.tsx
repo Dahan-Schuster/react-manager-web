@@ -74,7 +74,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
   const fetchTema = useCallback((modo?: Mui.ThemeMode) => {
     fetch(
       config.apiBaseUrl +
-        `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode}`
+        `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode || "light"}`
     )
       .then((response) => response.json() as Promise<Common.CommonResponse>)
       .then((data) => {
@@ -92,19 +92,21 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     () =>
       createTheme(
         {
-          palette: {
-            mode: temaAtivo?.mui_mode,
-            ...temaAtivo?.coresMui,
-            background: {
-              default: temaAtivo?.background_default,
-              paper: temaAtivo?.background_paper,
-            },
-            text: {
-              primary: temaAtivo?.text_primary || "#000000",
-              secondary: temaAtivo?.text_secondary,
-              disabled: temaAtivo?.text_disabled,
-            },
-          },
+          palette: temaAtivo
+            ? {
+                mode: temaAtivo.mui_mode,
+                ...temaAtivo.coresMui,
+                background: {
+                  default: temaAtivo.background_default,
+                  paper: temaAtivo.background_paper,
+                },
+                text: {
+                  primary: temaAtivo.text_primary || "#000000",
+                  secondary: temaAtivo.text_secondary,
+                  disabled: temaAtivo.text_disabled,
+                },
+              }
+            : undefined,
           components: {
             MuiCssBaseline: {
               styleOverrides: (_theme) => ({

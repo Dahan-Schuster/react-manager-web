@@ -52,7 +52,6 @@ const useAxios = (): AxiosProps => {
       config: AxiosRequestConfig & RequestConfig
     ): Promise<Common.CommonResponse> => {
       const id = `${config.method || "GET"}:${config.url || "/"}`;
-      console.log("requesting", id);
       try {
         // procura o id na lista de requests em andamento
         const loadingRequest = requests.current[id];
