@@ -50,7 +50,10 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
               >
                 {Icon}
               </ListItemIcon>
-              <ListItemText primary={label} />
+              <ListItemText
+                primary={label}
+                sx={{ color: (theme) => theme.palette.text.primary }}
+              />
             </ListItemButton>
           </Link>
         </ListItem>

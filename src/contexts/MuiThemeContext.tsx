@@ -14,7 +14,6 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 interface ThemeContextValue {
   temaAtivo: Mui.Theme | null;
-  modoTema: Mui.ThemeMode;
   toggleMode: VoidFunction;
 
   getUrlLogo: (tipo: "login" | "header" | "simples") => string | null;
@@ -34,14 +33,6 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     config.storageKeys.temaAtivo,
     null
   );
-  const [modoTema, setModoTema] = useLocalStorage<Mui.ThemeMode>(
-    config.storageKeys.modoTema,
-    "light"
-  );
-
-  const toggleMode = useCallback(() => {
-    setModoTema((curr) => (curr === "light" ? "dark" : "light"));
-  }, []);
 
   const getUrlLogo = useCallback((tipo: "login" | "header" | "simples") => {
     if (temaAtivo) {
@@ -70,9 +61,20 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
       : "/favicon_default.svg";
   }, []);
 
+  const toggleMode = useCallback(() => {
+    const modo = temaAtivo?.mui_mode === "dark" ? "light" : "dark";
+    fetchTema(modo);
+  }, [temaAtivo]);
+
   useDebounceEffect(() => {
-    const modo = modoTema === "dark" ? "dark" : "light";
-    fetch(config.apiBaseUrl + `/sistema/temas-mui/ativo-${modo}`)
+    fetchTema();
+  }, []);
+
+  const fetchTema = useCallback((modo?: Mui.ThemeMode) => {
+    fetch(
+      config.apiBaseUrl +
+        `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode}`
+    )
       .then((response) => response.json() as Promise<Common.CommonResponse>)
       .then((data) => {
         if (data.success) {
@@ -83,7 +85,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
       .catch((e) => {
         console.log(e);
       });
-  }, [modoTema]);
+  }, []);
 
   const theme = useMemo(
     () =>
@@ -150,7 +152,6 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     <MuiThemeContext.Provider
       value={{
         temaAtivo,
-        modoTema,
         toggleMode,
 
         getUrlLogo,
