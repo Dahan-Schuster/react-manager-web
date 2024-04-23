@@ -10,9 +10,10 @@ import useDebounceEffect from "../hooks/useDebonceEffect";
 import config from "../config";
 import { ptBR as corePtBR } from "@mui/material/locale";
 import { useLocalStorage } from "usehooks-ts";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 
 interface ThemeContextValue {
+  muiTheme: Theme;
   temaAtivo: Mui.Theme | null;
   toggleMode: VoidFunction;
 
@@ -151,6 +152,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
   return (
     <MuiThemeContext.Provider
       value={{
+        muiTheme: theme,
         temaAtivo,
         toggleMode,
 
