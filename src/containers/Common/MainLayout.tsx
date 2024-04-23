@@ -1,24 +1,22 @@
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import { Breakpoint, SxProps } from "@mui/material/styles";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { appBarMinHeight, drawerWidthClosed } from "../../constants";
 import { useAuth } from "../../contexts/AuthContext";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppHeader from "./AppHeader";
 import usePageTitle from "../../hooks/usePageTitle";
+import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import { ArrowLeft } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-import Container from "@mui/material/Container";
-import { appBarMinHeight } from "../../constants";
-import { Breakpoint, SxProps } from "@mui/material/styles";
+import RouterBreadcrumbs from "./RouterBreadcrumbs";
 
 interface MainLayoutProps {
   children: ReactNode;
   title?: string;
   hideTitle?: boolean;
-  showBackButton?: boolean;
   mainContainerMaxWidth?: Breakpoint;
   mainContainerSx?: SxProps;
 }
@@ -61,8 +59,14 @@ const MainLayout: FC<MainLayoutProps> = ({
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated]);
+
   if (!isAuthenticated) {
-    return children;
+    return null;
   }
 
   return (
@@ -78,6 +82,7 @@ const MainLayout: FC<MainLayoutProps> = ({
           minHeight: `calc(100vh - ${appBarMinHeight})`,
           overflow: "auto",
           marginTop: appBarMinHeight,
+          paddingLeft: drawerWidthClosed,
         }}
       >
         <Container
@@ -91,6 +96,7 @@ const MainLayout: FC<MainLayoutProps> = ({
             ...mainContainerSx,
           }}
         >
+          <RouterBreadcrumbs />
           <Box mb={hideTitle && !showBackButton ? 0 : 2}>
             <Grid container spacing={2} justifyContent={"space-between"}>
               {!hideTitle && (
@@ -104,27 +110,6 @@ const MainLayout: FC<MainLayoutProps> = ({
                   alignItems="center"
                 >
                   <h2>{title}</h2>
-                </Grid>
-              )}
-              {showBackButton && (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  order={{ xs: 1, sm: 2 }}
-                  display="flex"
-                  justifyContent={{ xs: "flex-start", sm: "flex-end" }}
-                >
-                  <Button
-                    sx={{ fontSize: 18, padding: 0 }}
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                    color="inherit"
-                    startIcon={<ArrowLeft />}
-                  >
-                    Voltar
-                  </Button>
                 </Grid>
               )}
             </Grid>
