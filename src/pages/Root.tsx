@@ -6,6 +6,7 @@ import { MuiThemeProvider } from "../contexts/MuiThemeContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PerfisProvider } from "../contexts/PerfisContext";
+import { UsersProvider } from "../contexts/UsersContext";
 
 /**
  * Página raiz que engloba o restante das páginas
@@ -29,7 +30,9 @@ const RootPage: FC = () => {
         />
 
         <PerfisProvider>
-          <Outlet />
+          <UsersProvider>
+            <Outlet />
+          </UsersProvider>
         </PerfisProvider>
       </AuthProvider>
     </MuiThemeProvider>
