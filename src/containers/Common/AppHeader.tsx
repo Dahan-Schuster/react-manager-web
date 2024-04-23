@@ -2,11 +2,8 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 
-import MenuIcon from "@mui/icons-material/Menu";
-
-import StyledIconButton from "../../components/StyledIconButton";
-import config from "../../config";
 import Box from "@mui/material/Box";
+import { appBarMinHeight } from "../../constants";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
 
 interface StyledAppBarProps extends MuiAppBarProps {
@@ -17,30 +14,17 @@ const StyledAppBar = styled(MuiAppBar)<StyledAppBarProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: "none",
   padding: "8px 0",
-  minHeight: config.appBarMinHeight,
+  minHeight: appBarMinHeight,
 }));
 
-interface AppBarProps {
-  toggleDrawer: () => void;
-}
+interface AppBarProps {}
 
-const AppHeader: React.FunctionComponent<AppBarProps> = ({ toggleDrawer }) => {
+const AppHeader: React.FunctionComponent<AppBarProps> = () => {
   const { getUrlLogo } = useMuiTheme();
   const urlLogo = getUrlLogo("header");
   return (
     <StyledAppBar position="absolute">
       <Toolbar>
-        <StyledIconButton
-          edge="start"
-          aria-label="open drawer"
-          onClick={() => toggleDrawer()}
-          sx={{
-            marginLeft: 1,
-          }}
-        >
-          <MenuIcon />
-        </StyledIconButton>
-
         <Box
           display="flex"
           justifyContent="center"
@@ -57,8 +41,6 @@ const AppHeader: React.FunctionComponent<AppBarProps> = ({ toggleDrawer }) => {
             </Box>
           )}
         </Box>
-        {/* Espaço equivalente ao ícone da esquerda, para manter a logo centralizada */}
-        <Box height={40} width={40} />
       </Toolbar>
     </StyledAppBar>
   );

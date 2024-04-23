@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import AppHeader from "./AppHeader";
 import { useMainLayout } from "../../contexts/MainLayoutContext";
 import usePageTitle from "../../hooks/usePageTitle";
+import MenuDrawer from "./MenuDrawer";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -34,7 +35,8 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
       link = document.createElement("link");
-      link.rel = "icon";
+      link.rel = "shortcut icon";
+      link.type = "image/x-icon";
       document.getElementsByTagName("head")[0].appendChild(link);
     }
     link.href = getUrlFavicon();
@@ -46,7 +48,8 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
       <CssBaseline />
-      <AppHeader toggleDrawer={toggleDrawer} />
+      <AppHeader />
+      <MenuDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
       {children}
     </Box>
   );

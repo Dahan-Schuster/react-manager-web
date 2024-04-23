@@ -5,4 +5,11 @@ namespace Common {
     data?: unknown;
     [key: string]: unknown;
   };
+
+  type DrawerItemType = {
+    path: string;
+    label: string;
+    Icon: JSX.Element;
+    iconColor?: string;
+  };
 }
