@@ -9,7 +9,7 @@ const usePageTitle = (title: string) => {
   const originalTitle = React.useRef<string>(config.appTitle).current;
 
   React.useEffect(() => {
-    document.title = title + ` | ${config.appTitle}`;
+    document.title = title ? `${title} | ${config.appTitle}` : config.appTitle;
 
     return () => {
       document.title = originalTitle;

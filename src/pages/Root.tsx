@@ -5,7 +5,7 @@ import { MuiThemeProvider } from "../contexts/MuiThemeContext";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MainLayout from "../containers/Common/MainLayout";
+import { MainLayoutProvider } from "../contexts/MainLayoutContext";
 
 /**
  * Página raiz que engloba o restante das páginas
@@ -28,9 +28,9 @@ const RootPage: FC = () => {
           theme="colored"
         />
 
-        <MainLayout>
+        <MainLayoutProvider>
           <Outlet />
-        </MainLayout>
+        </MainLayoutProvider>
       </AuthProvider>
     </MuiThemeProvider>
   );

@@ -1,6 +1,11 @@
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppHeader from "./AppHeader";
+import { useMainLayout } from "../../contexts/MainLayoutContext";
+import usePageTitle from "../../hooks/usePageTitle";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -12,6 +17,17 @@ interface MainLayoutProps {
 const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const { getUrlFavicon } = useMuiTheme();
+
+  const { layoutConfig } = useMainLayout();
+  usePageTitle(layoutConfig.title);
+
+  /* Estado para o menu lateral */
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  /** Método para alterar o estado do menu lateral */
+  const toggleDrawer = useCallback(() => {
+    setDrawerOpen((prev) => !prev);
+  }, []);
 
   /** Atualiza o favicon usando o tema ativo */
   useEffect(() => {
@@ -27,7 +43,13 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   if (!isAuthenticated) {
     return children;
   }
-  return <div>{children}</div>;
+  return (
+    <Box sx={{ display: "flex", width: "100%" }}>
+      <CssBaseline />
+      <AppHeader toggleDrawer={toggleDrawer} />
+      {children}
+    </Box>
+  );
 };
 
 export default MainLayout;
