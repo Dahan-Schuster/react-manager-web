@@ -8,6 +8,7 @@ import { useMuiTheme } from "../../contexts/MuiThemeContext";
 import Grid from "@mui/material/Grid";
 import StyledIconButton from "../../components/StyledIconButton";
 import { DarkMode, LightMode } from "@mui/icons-material";
+import Tooltip from "@mui/material/Tooltip";
 
 interface StyledAppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -57,9 +58,15 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
           </Grid>
           <Grid item xs={1} sx={{ textAlign: "right" }}>
             {!!temaAtivo && (
-              <StyledIconButton onClick={toggleMode}>
-                {temaAtivo.mui_mode === "light" ? <LightMode /> : <DarkMode />}
-              </StyledIconButton>
+              <Tooltip
+                title={`Alterar para tema ${
+                  temaAtivo.mui_mode === "dark" ? "claro" : "escuro"
+                }`}
+              >
+                <StyledIconButton onClick={toggleMode}>
+                  {temaAtivo.mui_mode === "dark" ? <LightMode /> : <DarkMode />}
+                </StyledIconButton>
+              </Tooltip>
             )}
           </Grid>
         </Grid>
