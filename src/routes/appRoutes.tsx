@@ -1,10 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import RootPage from "../pages/Root";
-import Login from "../pages/Auth/Login";
+import RequireAuth from "../containers/Auth/RequireAuth";
 import EsqueciSenha from "../pages/Auth/EsqueciSenha";
+import Login from "../pages/Auth/Login";
 import Logout from "../pages/Auth/Logout";
 import NovaSenha from "../pages/Auth/NovaSenha";
 import InitialPage from "../pages/InitialPage";
+import RootPage from "../pages/Root";
+import Users from "../pages/Users";
 import ErrorPage from "../pages/ErrorPage";
 
 const router = createBrowserRouter([
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <InitialPage />,
+      },
+      {
+        path: "/usuarios",
+        element: (
+          <RequireAuth>
+            <Users />
+          </RequireAuth>
+        ),
       },
     ],
   },

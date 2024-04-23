@@ -23,8 +23,14 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
     null
   );
 
+  const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
+  const [usersError, setUsersError] = useState<string>("");
+
   const createUser = useCallback(
-    async (data: Users.CreateUserValues): Promise<void> => {
+    async (
+      data: Users.CreateUserValues
+    ): Promise<Common.CommonResponse & { user: Users.UserType }> => {
+      setLoadingUsers(true);
       const response = (await makeRequest({
         method: "POST",
         url: "/usuario",
@@ -36,15 +42,23 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         successMessage: "Usuário cadastrado com sucesso!",
       })) as Common.CommonResponse & { user: Users.UserType };
 
+      setLoadingUsers(false);
       if (response?.success) {
         setUsers((users) => [...users, response.user as Users.UserType]);
+      } else {
+        setUsersError(response.error!);
       }
+
+      return response;
     },
     [makeRequest]
   );
 
   const updateUser = useCallback(
-    async (data: Users.UserType): Promise<Users.UserType> => {
+    async (
+      data: Users.UserType
+    ): Promise<Common.CommonResponse & { user: Users.UserType }> => {
+      setLoadingUsers(true);
       const response = await makeRequest({
         method: "PUT",
         url: "/usuario/" + data.id,
@@ -53,18 +67,23 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         successMessage: "Usuário atualizado com sucesso!",
       });
 
+      setLoadingUsers(false);
       if (response?.success) {
         setUsers((users) =>
           users.map((u) => (u.id !== data.id ? u : { ...u, ...data }))
         );
+      } else {
+        setUsersError(response.error!);
       }
-      return data;
+
+      return response as Common.CommonResponse & { user: Users.UserType };
     },
     [makeRequest]
   );
 
   const deleteUser = useCallback(
     async (id: number) => {
+      setLoadingUsers(true);
       const response = await makeRequest({
         method: "DELETE",
         url: "/usuario/" + id,
@@ -72,20 +91,21 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         successMessage: "Usuário excluído com sucesso!",
       });
 
+      setLoadingUsers(false);
       if (response?.success) {
         setUsers((users) => users.filter((user) => user.id !== id));
+      } else {
+        setUsersError(response.error!);
       }
+
+      return response;
     },
     [makeRequest]
   );
 
-  const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
-  const [usersError, setUsersError] = useState<string>("");
-
   const getUsers = useCallback(
     async (filters?: Users.GetUsersFilters) => {
       setLoadingUsers(true);
-      setUsersError("");
       const {
         page = 0,
         pageSize = defaultTablePageSize,

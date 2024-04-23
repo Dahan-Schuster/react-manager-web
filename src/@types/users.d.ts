@@ -14,7 +14,7 @@ namespace Users {
     perfilId?: number;
     nome?: string;
     email?: string;
-    status?: number;
+    status?: number | "";
   };
 
   interface UsersResponse {
@@ -59,12 +59,16 @@ namespace Users {
      * Envia o ID para deleção na API, atualizando a lista de usuários em caso de sucesso
      * @throws {Error} Caso a requisição não seja bem sucedida
      */
-    deleteUser: (id: number) => Promise<void>;
+    deleteUser: (id: number) => Promise<Common.CommonResponse>;
     /**
      * Envia os dados para a API, atualizando a lista de usuários em caso de sucesso
      * @throws {Error} Caso a requisição não seja bem sucedida
      */
-    updateUser: (data: Users.UserType) => Promise<Partial<Users.UserType>>;
-    createUser: (data: Users.CreateUserValues) => Promise<void>;
+    updateUser: (
+      data: Users.UserType
+    ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
+    createUser: (
+      data: Users.CreateUserValues
+    ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
   }
 }
