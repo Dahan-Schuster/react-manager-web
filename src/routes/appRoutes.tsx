@@ -8,6 +8,7 @@ import InitialPage from "../pages/InitialPage";
 import RootPage from "../pages/Root";
 import Users from "../pages/Users";
 import ErrorPage from "../pages/ErrorPage";
+import Perfis from "../pages/Perfis";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <Users />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/perfis",
+        element: (
+          <RequireAuth>
+            <Perfis />
           </RequireAuth>
         ),
       },
