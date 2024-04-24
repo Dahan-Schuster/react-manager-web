@@ -10,6 +10,7 @@ import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import Paper from "@mui/material/Paper";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -25,7 +26,7 @@ interface MainLayoutProps {
 const MainLayout: FC<MainLayoutProps> = ({
   children,
   title = "",
-  hideTitle = false,
+  hideTitle = true,
   mainContainerMaxWidth = "lg",
   mainContainerSx = {},
 }) => {
@@ -80,26 +81,12 @@ const MainLayout: FC<MainLayoutProps> = ({
             ...mainContainerSx,
           }}
         >
-          <RouterBreadcrumbs />
-          <Box mb={hideTitle ? 0 : 2}>
-            <Grid container spacing={2} justifyContent={"space-between"}>
-              {!hideTitle && (
-                <Grid
-                  item
-                  xs={12}
-                  sm={8}
-                  order={{ xs: 2, sm: 1 }}
-                  display="flex"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <h2>{title}</h2>
-                </Grid>
-              )}
-            </Grid>
+          <Box mb={2}>
+            <RouterBreadcrumbs />
+            {!hideTitle && <h2>{title}</h2>}
           </Box>
 
-          {children}
+          <Paper sx={{ p: 2 }}>{children}</Paper>
         </Container>
       </Box>
     </Box>
