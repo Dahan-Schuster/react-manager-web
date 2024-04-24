@@ -22,12 +22,7 @@ namespace Auth {
     nome: string;
     email: string;
     token: TokenType;
-    permissoes: PermissaoType[];
-  };
-
-  type PermissaoType = {
-    label: string;
-    slug: string;
+    permissoes: Sistema.PermissaoType[];
   };
 
   interface AuthContextValues {
