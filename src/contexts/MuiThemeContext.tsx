@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
 } from "react";
 import useDebounceEffect from "../hooks/useDebonceEffect";
@@ -35,32 +36,35 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     null
   );
 
-  const getUrlLogo = useCallback((tipo: "login" | "header" | "simples") => {
-    if (temaAtivo) {
-      let url = "";
-      switch (tipo) {
-        case "login":
-          url = temaAtivo.url_logo_login || temaAtivo.url_logo_header || "";
-          break;
-        case "header":
-          url = temaAtivo.url_logo_header || "";
-          break;
-        case "simples":
-          url = temaAtivo.url_logo_simples || temaAtivo.url_logo_header || "";
-          break;
+  const getUrlLogo = useCallback(
+    (tipo: "login" | "header" | "simples") => {
+      if (temaAtivo) {
+        let url = "";
+        switch (tipo) {
+          case "login":
+            url = temaAtivo.url_logo_login || temaAtivo.url_logo_header || "";
+            break;
+          case "header":
+            url = temaAtivo.url_logo_header || "";
+            break;
+          case "simples":
+            url = temaAtivo.url_logo_simples || temaAtivo.url_logo_header || "";
+            break;
+        }
+        if (!url) return null;
+        return config.apiBaseUrl + url;
+      } else {
+        return null;
       }
-      if (!url) return null;
-      return config.apiBaseUrl + url;
-    } else {
-      return null;
-    }
-  }, []);
+    },
+    [temaAtivo]
+  );
 
   const getUrlFavicon = useCallback(() => {
     return temaAtivo?.url_favicon
       ? config.apiBaseUrl + temaAtivo.url_favicon
       : "/favicon_default.svg";
-  }, []);
+  }, [temaAtivo]);
 
   const toggleMode = useCallback(() => {
     const modo = temaAtivo?.mui_mode === "dark" ? "light" : "dark";
@@ -71,22 +75,23 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     fetchTema();
   }, []);
 
-  const fetchTema = useCallback((modo?: Mui.ThemeMode) => {
-    fetch(
-      config.apiBaseUrl +
-        `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode || "light"}`
-    )
-      .then((response) => response.json() as Promise<Common.CommonResponse>)
-      .then((data) => {
-        if (data.success) {
-          const tema = data.tema as Mui.Theme;
-          setTemaAtivo(tema);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+  const fetchTema = useCallback(
+    (modo?: Mui.ThemeMode) => {
+      fetch(
+        config.apiBaseUrl +
+          `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode || "light"}`
+      )
+        .then((response) => response.json() as Promise<Common.CommonResponse>)
+        .then((data) => {
+          if (data.success) {
+            const tema = data.tema as Mui.Theme;
+            setTemaAtivo(tema);
+          }
+        })
+        .catch((e) => {});
+    },
+    [temaAtivo]
+  );
 
   const theme = useMemo(
     () =>
@@ -158,6 +163,10 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
       ),
     [temaAtivo]
   );
+
+  useEffect(() => {
+    console.log("tema MUI", theme.palette);
+  }, [theme]);
 
   return (
     <MuiThemeContext.Provider
