@@ -38,6 +38,9 @@ import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 import MainLayout from "../../containers/Common/MainLayout";
 import SelectStatus from "../../containers/Users/SelectStatus";
 import UsersNoRowsOverlay from "../../containers/Users/NoRowsOverlay";
+import Switch from "@mui/material/Switch";
+import useUserPermissions from "../../hooks/useUserPermissions";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface UsersProps {}
 
@@ -48,15 +51,18 @@ interface UsersProps {}
  * @see https://mui.com/x/react-data-grid/
  */
 const Users: React.FunctionComponent<UsersProps> = () => {
-  usePageTitle("Usuários");
-
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
+
+  const { user } = useAuth();
+  const { has } = useUserPermissions();
+  const podeAlterarStatus = has("usuarios-alterar-status");
 
   const {
     getUsers,
     deleteUser,
     updateUser,
+    changeStatusUser,
     usersError,
     loadingUsers,
     users,
@@ -117,6 +123,10 @@ const Users: React.FunctionComponent<UsersProps> = () => {
   const handleDeleteClick = React.useCallback((id: number) => {
     setIdToDelete(id);
     setOpenConfirmDialog(true);
+  }, []);
+
+  const handleStatusChange = React.useCallback(async (id: number) => {
+    changeStatusUser(id);
   }, []);
 
   /**
@@ -198,13 +208,20 @@ const Users: React.FunctionComponent<UsersProps> = () => {
       {
         field: "nome",
         headerName: "Nome",
-        width: 200,
+        flex: 1,
+        editable: true,
+      },
+      {
+        field: "email",
+        headerName: "E-mail",
+        flex: 1,
+        minWidth: 250,
         editable: true,
       },
       {
         field: "perfil_id",
         headerName: "Perfil",
-        width: 150,
+        maxWidth: 100,
         editable: false,
         valueGetter: (value, row) => {
           if (!value) {
@@ -215,17 +232,29 @@ const Users: React.FunctionComponent<UsersProps> = () => {
         },
       },
       {
-        field: "email",
-        headerName: "E-mail",
-        flex: 1,
-        minWidth: 250,
-        editable: true,
+        field: "status",
+        headerName: "Status",
+        maxWidth: 100,
+        editable: false,
+        type: "actions",
+        getActions: ({ id, row }) => {
+          return [
+            <Switch
+              disabled={!podeAlterarStatus || row.id === user?.id}
+              checked={!!row.status}
+              onChange={
+                podeAlterarStatus ? () => handleStatusChange(row.id) : undefined
+              }
+              inputProps={{ "aria-label": "controlled" }}
+            />,
+          ];
+        },
       },
       {
         field: "actions",
         type: "actions",
         headerName: "Ações",
-        width: 100,
+        minWidth: 150,
         cellClassName: "actions",
         getActions: ({ id, row }) => {
           const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -285,11 +314,10 @@ const Users: React.FunctionComponent<UsersProps> = () => {
   );
 
   return (
-    <MainLayout title="Usuários" hideTitle>
-      <Grid container spacing={2} justifyContent={"space-between"} mt={2}>
+    <MainLayout title="Usuários" hideTitle={true}>
+      <Grid container spacing={2} justifyContent={"space-between"}>
         <Grid item xs={6}>
-          <h2>Usuários</h2>
-          {usersError && <p>{usersError}</p>}
+          {usersError}
         </Grid>
         <Grid item xs={6}>
           <CreateUserButton />

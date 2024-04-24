@@ -70,5 +70,6 @@ namespace Users {
     createUser: (
       data: Users.CreateUserValues
     ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
+    changeStatusUser: (id: number) => Promise<Common.CommonResponse>;
   }
 }

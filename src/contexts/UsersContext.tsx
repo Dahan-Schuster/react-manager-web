@@ -81,6 +81,31 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const changeStatusUser = useCallback(
+    async (id: number): Promise<Common.CommonResponse> => {
+      setLoadingUsers(true);
+      const response = await makeRequest({
+        method: "PUT",
+        url: "/usuario/" + id + "/trocar-status",
+        errorMessage: "Ocorreu um erro ao alterar o status do usuário",
+        successMessage: "Usuário atualizado com sucesso!",
+      });
+
+      setLoadingUsers(false);
+      if (response?.success) {
+        setUsers((users) =>
+          users.map((u) =>
+            u.id !== id ? u : { ...u, status: u.status === 1 ? 0 : 1 }
+          )
+        );
+      } else {
+        setUsersError(response.error!);
+      }
+      return response as Common.CommonResponse;
+    },
+    [makeRequest]
+  );
+
   const deleteUser = useCallback(
     async (id: number) => {
       setLoadingUsers(true);
@@ -143,6 +168,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         createUser,
         deleteUser,
         updateUser,
+        changeStatusUser,
         setUsers,
         usersPagination: pagination,
         loadingUsers,
