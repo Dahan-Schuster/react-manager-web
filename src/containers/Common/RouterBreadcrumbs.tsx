@@ -1,9 +1,10 @@
-import { Icon } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { nomesRotas } from "../../constants";
+import Icon from "@mui/material/Icon";
+import type { SxProps } from "@mui/material/styles";
 
 export default function RouterBreadcrumbs() {
   const location = useLocation();
@@ -16,7 +17,7 @@ export default function RouterBreadcrumbs() {
         const last = index === pathnames.length - 1;
         const to = `/${_value}`.replace("//", "/");
 
-        const nomeRota = nomesRotas[to] || { label: to };
+        const nomeRota = nomesRotas[to] || { label: to.substring(1) };
         const children = (
           <>
             {!!nomeRota.icon && (
@@ -28,12 +29,14 @@ export default function RouterBreadcrumbs() {
           </>
         );
 
+        const sx: SxProps = {
+          display: "flex",
+          alignItems: "center",
+          textTransform: "capitalize",
+        };
+
         return last ? (
-          <Typography
-            color="text.primary"
-            key={to}
-            sx={{ display: "flex", alignItems: "center" }}
-          >
+          <Typography color="text.primary" key={to} sx={sx}>
             {children}
           </Typography>
         ) : (
@@ -43,7 +46,7 @@ export default function RouterBreadcrumbs() {
             to={to}
             key={to}
             component={RouterLink as any}
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={sx}
           >
             {children}
           </Link>
