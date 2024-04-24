@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
           : "Não foi possível efetuar o login. Por favor, tente novamente.";
       }
     },
-    [loading]
+    [loading, setUser]
   );
 
   /** Desloga o usuário */

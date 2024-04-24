@@ -115,7 +115,7 @@ const useAxios = (): AxiosProps => {
         delete requests.current[id];
       }
     },
-    [user?.token?.token]
+    [user]
   );
 
   return {

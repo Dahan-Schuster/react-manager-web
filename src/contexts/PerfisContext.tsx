@@ -31,7 +31,7 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (response.success) {
       setPerfis(response.perfis as Perfis.PerfilType[]);
     }
-  }, []);
+  }, [makeRequest]);
 
   return (
     <PerfisContext.Provider
