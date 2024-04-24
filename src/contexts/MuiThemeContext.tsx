@@ -1,17 +1,17 @@
+import { ptBR as corePtBR } from "@mui/material/locale";
+import { ptBR as dataGridPtBR } from "@mui/x-data-grid/locales";
+import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import {
   FC,
   ReactNode,
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
 } from "react";
-import useDebounceEffect from "../hooks/useDebonceEffect";
-import config from "../config";
-import { ptBR as corePtBR } from "@mui/material/locale";
 import { useLocalStorage } from "usehooks-ts";
-import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
+import config from "../config";
+import useDebounceEffect from "../hooks/useDebonceEffect";
 
 interface ThemeContextValue {
   muiTheme: Theme;
@@ -159,14 +159,11 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
             },
           },
         },
-        corePtBR
+        corePtBR,
+        dataGridPtBR
       ),
     [temaAtivo]
   );
-
-  useEffect(() => {
-    console.log("tema MUI", theme.palette);
-  }, [theme]);
 
   return (
     <MuiThemeContext.Provider
