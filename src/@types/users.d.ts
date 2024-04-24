@@ -74,5 +74,9 @@ namespace Users {
       data: Users.SaveUserValues
     ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
     changeStatusUser: (id: number) => Promise<Common.CommonResponse>;
+    changePerfilUser: (
+      id: number,
+      perfilId: number
+    ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
   }
 }

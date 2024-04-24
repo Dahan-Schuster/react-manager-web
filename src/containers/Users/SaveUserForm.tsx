@@ -25,7 +25,8 @@ interface CreateUserFormProps {
 }
 
 const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
-  const { createUser, updateUser, loadingUsers, showUser } = useUsers();
+  const { createUser, updateUser, changePerfilUser, loadingUsers, showUser } =
+    useUsers();
   const { has } = useUserPermissions();
 
   const [loadingId, setLoadingId] = useState<boolean>(false);
@@ -79,9 +80,13 @@ const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
     [closeModal, createUser]
   );
 
-  const handleSubmitPerfil = useCallback(() => {
-    // TODO
-  }, []);
+  const handleSubmitPerfil = useCallback(
+    (perfilId: number) => {
+      if (!id) return;
+      changePerfilUser(id, perfilId);
+    },
+    [id]
+  );
 
   return (
     <Box>
@@ -117,6 +122,7 @@ const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
                       size="medium"
                       margin={inputsMargin}
                       optional
+                      emptyLabel="Sem perfil"
                       {...getFieldProps("perfil_id")}
                       onChange={(e) => {
                         const value = e.target.value;

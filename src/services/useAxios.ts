@@ -96,7 +96,7 @@ const useAxios = (): AxiosProps => {
           message = res?.data?.error || errorMessages[code] || message;
         }
 
-        message && toast.error(message);
+        message && code !== "ERR_CANCELED" && toast.error(message);
 
         if (code === 401) {
           logout(() => {

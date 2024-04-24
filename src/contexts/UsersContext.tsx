@@ -110,6 +110,35 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const changePerfilUser = useCallback(
+    async (
+      id: number,
+      perfilId: number
+    ): Promise<Common.CommonResponse & { user: Users.UserType }> => {
+      setLoadingUsers(true);
+      const response = await makeRequest({
+        method: "PUT",
+        url: "/usuario/" + id + "/alterar-perfil",
+        data: { perfilId: perfilId || null },
+        errorMessage: "Ocorreu um erro ao alterar o perfil do usuário",
+        successMessage: "Perfil atualizado com sucesso!",
+      });
+
+      setLoadingUsers(false);
+      if (response?.success) {
+        setUsers((users) =>
+          users.map((u) =>
+            u.id !== id ? u : { ...u, ...(response.user as Users.UserType) }
+          )
+        );
+      } else {
+        setUsersError(response.error!);
+      }
+      return response as Common.CommonResponse & { user: Users.UserType };
+    },
+    [makeRequest]
+  );
+
   const deleteUser = useCallback(
     async (id: number) => {
       setLoadingUsers(true);
@@ -185,6 +214,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         deleteUser,
         updateUser,
         changeStatusUser,
+        changePerfilUser,
         setUsers,
         showUser,
         usersPagination: pagination,
