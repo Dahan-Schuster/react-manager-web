@@ -42,7 +42,7 @@ import SaveUserForm from "../../containers/Users/SaveUserForm";
  *
  * @see https://mui.com/x/react-data-grid/
  */
-const Users: React.FunctionComponent<SelectInputProps> = () => {
+const Users: React.FunctionComponent = () => {
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] =
     useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
