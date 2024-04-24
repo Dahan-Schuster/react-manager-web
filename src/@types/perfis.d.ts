@@ -4,4 +4,10 @@ namespace Perfis {
     nome: string;
     permissoes?: Sistema.PermissaoType[];
   }
+
+  interface UpdatePerfilValues {
+    nome?: string;
+    novasPermissoes?: number[];
+    permissoesDeletar?: number[];
+  }
 }

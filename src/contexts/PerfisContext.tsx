@@ -10,7 +10,11 @@ import useAxios from "../services/useAxios";
 
 interface PerfisContextValue {
   perfis: Perfis.PerfilType[];
-  getPerfis: (comPermissoes?: boolean) => void;
+  getPerfis: (comPermissoes?: boolean) => Promise<void>;
+  updatePerfis: (
+    id: number,
+    values: Perfis.UpdatePerfilValues
+  ) => Promise<Common.CommonResponse & { perfil: Perfis.PerfilType }>;
 }
 
 const PerfisContext = createContext<PerfisContextValue | null>(null);
@@ -37,11 +41,35 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const updatePerfis = useCallback(
+    async (id: number, values: Perfis.UpdatePerfilValues) => {
+      const response = await makeRequest({
+        method: "put",
+        url: "/perfis/" + id,
+        data: values,
+      });
+
+      if (response.success) {
+        setPerfis((perfis) =>
+          perfis.map((p) =>
+            p.id === id
+              ? { ...p, ...(response.perfil as Perfis.PerfilType) }
+              : p
+          )
+        );
+      }
+
+      return response as Common.CommonResponse & { perfil: Perfis.PerfilType };
+    },
+    [makeRequest]
+  );
+
   return (
     <PerfisContext.Provider
       value={{
         perfis,
         getPerfis,
+        updatePerfis,
       }}
     >
       {children}
