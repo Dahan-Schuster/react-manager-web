@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
-import CreateUserForm from "./CreateUserForm";
+import SaveUserForm from "./SaveUserForm";
 
 interface CreateUserButtonProps {}
 
@@ -32,7 +32,7 @@ const CreateUserButton: React.FunctionComponent<CreateUserButtonProps> = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Adicionar usuário</DialogTitle>
         <DialogContent>
-          <CreateUserForm closeModal={handleClose} />
+          <SaveUserForm closeModal={handleClose} />
         </DialogContent>
       </Dialog>
     </Box>
@@ -40,4 +40,3 @@ const CreateUserButton: React.FunctionComponent<CreateUserButtonProps> = () => {
 };
 
 export default CreateUserButton;
-

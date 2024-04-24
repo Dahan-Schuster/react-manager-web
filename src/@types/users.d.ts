@@ -25,12 +25,10 @@ namespace Users {
   /**
    * Valores necessários na criação de um usuário
    */
-  type CreateUserValues = {
+  type SaveUserValues = {
     nome: string;
     email: string;
-    perfilId?: number;
-    password?: string;
-    password_confirmation?: string;
+    perfil_id?: number;
   };
 
   interface UsersContextValues {
@@ -42,6 +40,10 @@ namespace Users {
      * Caso a requisição não seja bem sucedida, atualiza o estado `usersError`
      */
     getUsers: (filters?: Users.GetUsersFilters) => Promise<void>;
+    /** Busca um único usuáiro por ID */
+    showUser: (
+      id: number
+    ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
     /** Se está fazendo requisições aos endpoints `/user` ou não */
     loadingUsers: boolean;
     /**
@@ -65,10 +67,11 @@ namespace Users {
      * @throws {Error} Caso a requisição não seja bem sucedida
      */
     updateUser: (
-      data: Users.UserType
+      id: number,
+      data: Users.SaveUserValues
     ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
     createUser: (
-      data: Users.CreateUserValues
+      data: Users.SaveUserValues
     ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
     changeStatusUser: (id: number) => Promise<Common.CommonResponse>;
   }

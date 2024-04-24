@@ -1,10 +1,7 @@
-import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
 import React, { FC, useMemo, useState } from "react";
 import LoadingOverlay from "../../components/LoadingOverlay";
-import usePageTitle from "../../hooks/usePageTitle";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -15,13 +12,7 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridColDef,
-  GridEventListener,
   GridRenderEditCellParams,
-  GridRowEditStopReasons,
-  GridRowId,
-  GridRowModel,
-  GridRowModes,
-  GridRowModesModel,
   GridSlots,
   GridToolbar,
   useGridApiContext,
@@ -33,7 +24,6 @@ import CreateUserButton from "../../containers/Users/CreateUserButton";
 import { SelectInputProps } from "../../components/SelectInput";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import { useUsers } from "../../contexts/UsersContext";
-import { toast } from "react-toastify";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 import MainLayout from "../../containers/Common/MainLayout";
 import SelectStatus from "../../containers/Users/SelectStatus";
@@ -41,8 +31,10 @@ import UsersNoRowsOverlay from "../../containers/Users/NoRowsOverlay";
 import Switch from "@mui/material/Switch";
 import useUserPermissions from "../../hooks/useUserPermissions";
 import { useAuth } from "../../contexts/AuthContext";
-
-interface UsersProps {}
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import SaveUserForm from "../../containers/Users/SaveUserForm";
 
 /**
  * Página de CRUD de usuários
@@ -50,9 +42,20 @@ interface UsersProps {}
  *
  * @see https://mui.com/x/react-data-grid/
  */
-const Users: React.FunctionComponent<UsersProps> = () => {
-  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
-  const [idToDelete, setIdToDelete] = useState<number | null>(null);
+const Users: React.FunctionComponent<SelectInputProps> = () => {
+  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] =
+    useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = React.useState(false);
+
+  const handleCloseDialogs = React.useCallback(() => {
+    setOpenEditDialog(false);
+    setOpenConfirmDeleteDialog(false);
+    setIdToDeleteOrEdit(undefined);
+  }, []);
+
+  const [idToDeleteOrEdit, setIdToDeleteOrEdit] = useState<number | undefined>(
+    undefined
+  );
 
   const { user } = useAuth();
   const { has } = useUserPermissions();
@@ -61,18 +64,12 @@ const Users: React.FunctionComponent<UsersProps> = () => {
   const {
     getUsers,
     deleteUser,
-    updateUser,
     changeStatusUser,
     usersError,
     loadingUsers,
     users,
     usersPagination,
   } = useUsers();
-
-  /** Define o modo das linhas da tabela: edição ou visualização */
-  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-    {}
-  );
 
   /** Objeto de paginação da tabela */
   const [paginationModel, setPaginationModel] = useState({
@@ -98,109 +95,30 @@ const Users: React.FunctionComponent<UsersProps> = () => {
     500
   );
 
-  /**
-   * Evento chamado ao sair do modo de edição de uma linha
-   * Impede de sair do modo caso o motivo seja perda de foco
-   * Isto garante que para salvar será preciso clicar no botão 'Salvar'
-   */
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
-    params,
-    event
-  ) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
-  };
-
   /** Evento chamado ao confirmar a deleção de um usuário */
   const onConfirmDelete = React.useCallback(async () => {
-    await deleteUser(idToDelete!);
-    setOpenConfirmDialog(false);
-    setIdToDelete(null);
-  }, [deleteUser, idToDelete]);
+    const res = await deleteUser(idToDeleteOrEdit!);
+    if (res.success) {
+      handleCloseDialogs();
+    }
+  }, [deleteUser, idToDeleteOrEdit]);
 
   /** Evento chamado ao clicar no botão de deleção (coluna de ações da tabela) */
   const handleDeleteClick = React.useCallback((id: number) => {
-    setIdToDelete(id);
-    setOpenConfirmDialog(true);
+    setIdToDeleteOrEdit(id);
+    setOpenConfirmDeleteDialog(true);
   }, []);
 
+  /** Evento chamado ao clicar no botão de edição (coluna de ações da tabela) */
+  const handleEditClick = React.useCallback((id: number) => {
+    setIdToDeleteOrEdit(id);
+    setOpenEditDialog(true);
+  }, []);
+
+  /** Evento chamado ao alterar o switch de status de um usuário (coluna de ações da tabela) */
   const handleStatusChange = React.useCallback(async (id: number) => {
     changeStatusUser(id);
   }, []);
-
-  /**
-   * Evento chamado pela DataGrid quando uma edição é cancelada
-   * Retorna a linha para o modo de visualização
-   */
-  const handleCancelClick = React.useCallback(
-    (id: GridRowId) => () => {
-      setRowModesModel((model) => ({
-        ...model,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
-      }));
-    },
-    []
-  );
-
-  /**
-   * Evento chamado ao clicar no botão de edição (coluna de ações da tabela)
-   * Atualiza o estado, alterando o modo de exibição da linha
-   */
-  const handleEditClick = React.useCallback(
-    (id: GridRowId) => () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    },
-    [rowModesModel]
-  );
-
-  /**
-   * Evento chamado ao clicar no botão de salvar edição (coluna de ações da tabela)
-   * Atualiza o estado, disparando o evento `processRowUpdate`
-   */
-  const handleSaveClick = React.useCallback(
-    (id: GridRowId) => () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    },
-    [rowModesModel]
-  );
-
-  /**
-   * Evento chamado pela DataGrid quando uma linha é editada
-   * O método valida nome e email, envia os dados para o servidor
-   * e mostra mensagem de sucesso
-   * A lista de usuários é atualizada no contexto usando o `updateUser`
-   */
-  const processRowUpdate = React.useCallback(
-    async (newRow: GridRowModel<Users.UserType>) => {
-      if (!newRow.nome || !newRow.email) {
-        throw new Error("Nome e e-mail são obrigatórios");
-      }
-
-      const response = await updateUser(newRow);
-      return { ...newRow, ...response.user };
-    },
-    [updateUser]
-  );
-
-  /**
-   * Evento de erro ao chamar a função `processRowUpdate`
-   * Mostra mensagem de erro ao usuário
-   */
-  const handleProcessRowUpdateError = React.useCallback((error: Error) => {
-    toast.error(error.message);
-  }, []);
-
-  /**
-   * Evento chamado ao mudar o modo de uma linha
-   * Atualiza o estado
-   */
-  const handleRowModesModelChange = React.useCallback(
-    (newRowModesModel: GridRowModesModel) => {
-      setRowModesModel(newRowModesModel);
-    },
-    []
-  );
 
   const usersTableColumns = useMemo<GridColDef<Users.UserType>[]>(
     () => [
@@ -209,14 +127,14 @@ const Users: React.FunctionComponent<UsersProps> = () => {
         field: "nome",
         headerName: "Nome",
         flex: 1,
-        editable: true,
+        editable: false,
       },
       {
         field: "email",
         headerName: "E-mail",
         flex: 1,
         minWidth: 250,
-        editable: true,
+        editable: false,
       },
       {
         field: "perfil_id",
@@ -233,11 +151,10 @@ const Users: React.FunctionComponent<UsersProps> = () => {
       },
       {
         field: "status",
+        type: "actions",
         headerName: "Status",
         maxWidth: 100,
-        editable: false,
-        type: "actions",
-        getActions: ({ id, row }) => {
+        getActions: ({ row }) => {
           return [
             <Switch
               disabled={!podeAlterarStatus || row.id === user?.id}
@@ -256,35 +173,13 @@ const Users: React.FunctionComponent<UsersProps> = () => {
         headerName: "Ações",
         minWidth: 150,
         cellClassName: "actions",
-        getActions: ({ id, row }) => {
-          const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-          if (isInEditMode) {
-            return [
-              <GridActionsCellItem
-                icon={<SaveIcon />}
-                label="Save"
-                sx={{
-                  color: "primary.main",
-                }}
-                onClick={handleSaveClick(id)}
-              />,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={handleCancelClick(id)}
-                color="inherit"
-              />,
-            ];
-          }
-
+        getActions: ({ row }) => {
           return [
             <GridActionsCellItem
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
-              onClick={handleEditClick(id)}
+              onClick={() => handleEditClick(row.id)}
               color="inherit"
             />,
             <GridActionsCellItem
@@ -297,15 +192,10 @@ const Users: React.FunctionComponent<UsersProps> = () => {
         },
       },
     ],
-    [
-      handleCancelClick,
-      handleDeleteClick,
-      handleEditClick,
-      handleSaveClick,
-      rowModesModel,
-    ]
+    [handleDeleteClick, handleEditClick]
   );
 
+  /** Evento de mudança dos inputs de filtro */
   const handleSearchInput = React.useCallback(
     (e: { target: { value: string | unknown } }, key: string) => {
       setSearchFilters((filters) => ({ ...filters, [key]: e.target.value }));
@@ -374,7 +264,6 @@ const Users: React.FunctionComponent<UsersProps> = () => {
           sx={{ fontSize: 16 }}
           rows={users}
           rowSelection={false}
-          editMode="row"
           columns={usersTableColumns}
           paginationMode="server"
           rowCount={usersPagination?.total || 0}
@@ -382,22 +271,14 @@ const Users: React.FunctionComponent<UsersProps> = () => {
           pageSizeOptions={tablePageSizes}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          onProcessRowUpdateError={handleProcessRowUpdateError}
           slots={{
-            ...(users.length
-              ? {
-                  loadingOverlay: LinearProgress as GridSlots["loadingOverlay"],
-                }
-              : null),
+            loadingOverlay: LinearProgress as GridSlots["loadingOverlay"],
             toolbar: GridToolbar,
             noRowsOverlay: UsersNoRowsOverlay,
             noResultsOverlay: UsersNoRowsOverlay,
           }}
           slotProps={{
+            loadingOverlay: { sx: { height: "5px" } },
             toolbar: { showQuickFilter: false },
           }}
         />
@@ -405,10 +286,20 @@ const Users: React.FunctionComponent<UsersProps> = () => {
       <ConfirmDialog
         title="Confirmar deleção"
         text="Deseja realmente excluir este usuário? Esta ação é permanente."
-        open={openConfirmDialog}
-        onClose={() => setOpenConfirmDialog(false)}
+        open={openConfirmDeleteDialog}
+        onClose={handleCloseDialogs}
         onConfirm={onConfirmDelete}
       />
+
+      <Dialog
+        open={openEditDialog && !!idToDeleteOrEdit}
+        onClose={handleCloseDialogs}
+      >
+        <DialogTitle>Editar usuário</DialogTitle>
+        <DialogContent>
+          <SaveUserForm id={idToDeleteOrEdit} closeModal={handleCloseDialogs} />
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 };

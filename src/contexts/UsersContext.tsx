@@ -28,7 +28,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const createUser = useCallback(
     async (
-      data: Users.CreateUserValues
+      data: Users.SaveUserValues
     ): Promise<Common.CommonResponse & { user: Users.UserType }> => {
       setLoadingUsers(true);
       const response = (await makeRequest({
@@ -36,7 +36,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         url: "/usuario",
         data: {
           ...data,
-          perfilId: data.perfilId ? data.perfilId : undefined,
+          perfil_id: data.perfil_id ? data.perfil_id : undefined,
         },
         errorMessage: "Ocorreu um erro ao cadastrar o usuário",
         successMessage: "Usuário cadastrado com sucesso!",
@@ -56,13 +56,17 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const updateUser = useCallback(
     async (
-      data: Users.UserType
+      id: number,
+      data: Users.SaveUserValues
     ): Promise<Common.CommonResponse & { user: Users.UserType }> => {
       setLoadingUsers(true);
       const response = await makeRequest({
         method: "PUT",
-        url: "/usuario/" + data.id,
-        data,
+        url: "/usuario/" + id,
+        data: {
+          nome: data.nome,
+          email: data.email,
+        },
         errorMessage: "Ocorreu um erro ao atualizar o usuário",
         successMessage: "Usuário atualizado com sucesso!",
       });
@@ -70,7 +74,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setLoadingUsers(false);
       if (response?.success) {
         setUsers((users) =>
-          users.map((u) => (u.id !== data.id ? u : { ...u, ...data }))
+          users.map((u) => (u.id !== id ? u : { ...u, ...data }))
         );
       } else {
         setUsersError(response.error!);
@@ -160,6 +164,18 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const showUser = useCallback(
+    async (id: number) => {
+      const response = (await makeRequest({
+        method: "GET",
+        url: "/usuario/" + id,
+        errorMessage: "Ocorreu um erro ao buscar o usuário",
+      })) as Common.CommonResponse & { user: Users.UserType };
+      return response;
+    },
+    [makeRequest]
+  );
+
   return (
     <UsersContext.Provider
       value={{
@@ -170,6 +186,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         updateUser,
         changeStatusUser,
         setUsers,
+        showUser,
         usersPagination: pagination,
         loadingUsers,
         usersError,

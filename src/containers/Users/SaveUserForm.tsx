@@ -5,10 +5,11 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { useUsers } from "../../contexts/UsersContext";
-import { toast } from "react-toastify";
+import useUserPermissions from "../../hooks/useUserPermissions";
+import useDebounceEffect from "../../hooks/useDebonceEffect";
 
 const inputsMargin = "normal";
 
@@ -19,22 +20,56 @@ const commonTextFieldProps: Partial<TextFieldProps> = {
 };
 
 interface CreateUserFormProps {
+  id?: number;
   closeModal?: VoidFunction;
 }
 
-const CreateUserForm: FC<CreateUserFormProps> = ({ closeModal }) => {
-  const { createUser, loadingUsers } = useUsers();
+const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
+  const { createUser, updateUser, loadingUsers, showUser } = useUsers();
+  const { has } = useUserPermissions();
 
+  const [loadingId, setLoadingId] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+
+  const [initialValues, setInitialValues] = useState<Users.SaveUserValues>({
+    nome: "",
+    email: "",
+    perfil_id: 0,
+  });
+
+  useDebounceEffect(
+    () => {
+      if (!id) return;
+      setLoadingId(true);
+      showUser(id)
+        .then((res) => {
+          if (!res.success && !!closeModal) closeModal();
+          setInitialValues({
+            nome: res.user?.nome || "",
+            email: res.user?.email || "",
+            perfil_id: res.user?.perfil_id || 0,
+          });
+        })
+        .finally(() => setLoadingId(false));
+    },
+    [id],
+    50
+  );
 
   const handleSubmit = useCallback(
     async (
-      values: Users.CreateUserValues,
-      { setSubmitting }: FormikHelpers<Users.CreateUserValues>
+      values: Users.SaveUserValues,
+      { setSubmitting }: FormikHelpers<Users.SaveUserValues>
     ) => {
       setError("");
       setSubmitting(true);
-      const res = await createUser(values);
+
+      let res: Common.CommonResponse = { success: false };
+      if (id) {
+        res = await updateUser(id, values);
+      } else {
+        res = await createUser(values);
+      }
       if (res.success) {
         closeModal && closeModal();
       }
@@ -44,14 +79,15 @@ const CreateUserForm: FC<CreateUserFormProps> = ({ closeModal }) => {
     [closeModal, createUser]
   );
 
+  const handleSubmitPerfil = useCallback(() => {
+    // TODO
+  }, []);
+
   return (
     <Box>
       <Formik
-        initialValues={{
-          nome: "",
-          email: "",
-          perfilId: 0,
-        }}
+        initialValues={initialValues}
+        enableReinitialize
         onSubmit={handleSubmit}
       >
         {({ getFieldProps, setFieldValue }) => {
@@ -74,19 +110,24 @@ const CreateUserForm: FC<CreateUserFormProps> = ({ closeModal }) => {
                     {...getFieldProps("email")}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <SelectPerfil
-                    label="Perfil do usuário"
-                    size="medium"
-                    margin={inputsMargin}
-                    optional
-                    {...getFieldProps("perfil_id")}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFieldValue("perfil_id", value);
-                    }}
-                  />
-                </Grid>
+                {(!id || has("usuarios-alterar-permissao")) && (
+                  <Grid item xs={12} sm={12}>
+                    <SelectPerfil
+                      label="Perfil do usuário"
+                      size="medium"
+                      margin={inputsMargin}
+                      optional
+                      {...getFieldProps("perfil_id")}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFieldValue("perfil_id", value);
+                        if (id) {
+                          handleSubmitPerfil(value as number);
+                        }
+                      }}
+                    />
+                  </Grid>
+                )}
                 <Grid
                   item
                   xs={12}
@@ -108,7 +149,7 @@ const CreateUserForm: FC<CreateUserFormProps> = ({ closeModal }) => {
                   <Button
                     variant="contained"
                     type="submit"
-                    disabled={loadingUsers}
+                    disabled={loadingUsers || loadingId}
                   >
                     Enviar
                   </Button>
@@ -122,4 +163,4 @@ const CreateUserForm: FC<CreateUserFormProps> = ({ closeModal }) => {
   );
 };
 
-export default CreateUserForm;
+export default SaveUserForm;

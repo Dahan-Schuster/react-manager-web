@@ -138,11 +138,12 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
                   },
                 },
                 ".MuiDataGrid-root": {
-                  "& .MuiDataGrid-overlayWrapper": {
-                    height: "70px",
-                  },
-                  "& .MuiDataGrid-overlayWrapperInner, & .MuiDataGrid-filler": {
-                    maxHeight: "70px",
+                  styleOverrides: {
+                    root: {
+                      ".MuiDataGrid-overlay": {
+                        height: "auto !important",
+                      },
+                    },
                   },
                 },
               }),
