@@ -123,9 +123,13 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
                   minHeight: "100vh",
                   display: "flex",
                 },
+                "table, td, th": {
+                  borderCollapse: "collapse",
+                },
                 ".MuiPaper-root *": {
                   "::-webkit-scrollbar": {
-                    width: 8,
+                    width: "6px",
+                    height: "6px",
                     marginLeft: 2,
                   },
                   "::-webkit-scrollbar-thumb": {
