@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { useUsers } from "../../contexts/UsersContext";
 import useUserPermissions from "../../hooks/useUserPermissions";
@@ -100,22 +100,26 @@ const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
             <Form>
               {!!error && <Typography color="error">{error}</Typography>}
               <Grid container spacing={1}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoFocus
-                    label="Nome"
-                    {...commonTextFieldProps}
-                    {...getFieldProps("nome")}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="E-mail"
-                    {...commonTextFieldProps}
-                    {...getFieldProps("email")}
-                  />
-                </Grid>
-                {(!id || has("usuarios-alterar-permissao")) && (
+                {(!id || (!!id && has("usuarios-editar"))) && (
+                  <Fragment>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        autoFocus
+                        label="Nome"
+                        {...commonTextFieldProps}
+                        {...getFieldProps("nome")}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="E-mail"
+                        {...commonTextFieldProps}
+                        {...getFieldProps("email")}
+                      />
+                    </Grid>
+                  </Fragment>
+                )}
+                {has("usuarios-alterar-permissao") && (
                   <Grid item xs={12} sm={12}>
                     <SelectPerfil
                       label="Perfil do usuário"
@@ -152,13 +156,15 @@ const SaveUserForm: FC<CreateUserFormProps> = ({ id, closeModal }) => {
                       Cancelar
                     </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    disabled={loadingUsers || loadingId}
-                  >
-                    Enviar
-                  </Button>
+                  {(!id || (!!id && has("usuarios-editar"))) && (
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      disabled={loadingUsers || loadingId}
+                    >
+                      Enviar
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Form>

@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 import SaveUserForm from "./SaveUserForm";
+import useUserPermissions from "../../hooks/useUserPermissions";
 
 interface CreateUserButtonProps {}
 
@@ -13,12 +14,15 @@ interface CreateUserButtonProps {}
  * Container para a lógica de criar um usuário com um modal aberto por um botão
  */
 const CreateUserButton: React.FunctionComponent<CreateUserButtonProps> = () => {
+  const { has } = useUserPermissions();
+  const podeCriar = has("usuarios-criar");
   const [open, setOpen] = React.useState(false);
 
   const handleClose = React.useCallback(() => {
     setOpen(false);
   }, []);
 
+  if (!podeCriar) return null;
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
       <Button

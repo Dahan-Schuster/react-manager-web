@@ -120,6 +120,10 @@ const Users: React.FunctionComponent = () => {
     changeStatusUser(id);
   }, []);
 
+  const podeEditar = has("usuarios-editar");
+  const podeDeletar = has("usuarios-deletar");
+  const podeAlterarPerms = has("usuarios-alterar-permissao");
+
   const usersTableColumns = useMemo<GridColDef<Users.UserType>[]>(
     () => [
       { field: "id", headerName: "ID", width: 100, editable: false },
@@ -174,21 +178,29 @@ const Users: React.FunctionComponent = () => {
         minWidth: 150,
         cellClassName: "actions",
         getActions: ({ row }) => {
-          return [
+          const editar = (
             <GridActionsCellItem
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
               onClick={() => handleEditClick(row.id)}
               color="inherit"
-            />,
+            />
+          );
+
+          const deletar = (
             <GridActionsCellItem
               icon={<DeleteIcon />}
               label="Delete"
               onClick={() => handleDeleteClick(row.id)}
               color="secondary"
-            />,
-          ];
+            />
+          );
+
+          const actions = [];
+          (podeEditar || podeAlterarPerms) && actions.push(editar);
+          podeDeletar && actions.push(deletar);
+          return actions;
         },
       },
     ],
@@ -217,16 +229,18 @@ const Users: React.FunctionComponent = () => {
       {loadingUsers && !users.length && <LoadingOverlay open />}
       <Box mt={2}>
         <Grid container spacing={1} mb={2}>
-          <Grid item xs={3}>
-            <SelectPerfil
-              margin="none"
-              optional
-              emptyLabel="Todos"
-              label="Perfil"
-              value={searchFilters.perfilId}
-              onChange={(e) => handleSearchInput(e, "perfilId")}
-            />
-          </Grid>
+          {(has("perfis-listar") || podeAlterarPerms) && (
+            <Grid item xs={3}>
+              <SelectPerfil
+                margin="none"
+                optional
+                emptyLabel="Todos"
+                label="Perfil"
+                value={searchFilters.perfilId}
+                onChange={(e) => handleSearchInput(e, "perfilId")}
+              />
+            </Grid>
+          )}
           <Grid item xs={3}>
             <SelectStatus
               margin="none"
