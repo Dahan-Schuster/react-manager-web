@@ -1,24 +1,20 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { useCallback } from "react";
-import { Link } from "react-router-dom";
 import Drawer from "../../components/Drawer";
 
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
+import List from "@mui/material/List";
 import { useAuth } from "../../contexts/AuthContext";
-import ListItem from "@mui/material/ListItem";
+import MenuDrawerItem from "./MenuDrawerItem";
+import { drawerWidthOpen } from "../../constants";
 
-const bottomItems: Common.DrawerItemType[] = [
+const bottomItems: Sistema.MenuItemType[] = [
   {
+    id: 0,
     label: "Logout",
-    path: "/logout",
-    Icon: <LogoutIcon />,
-    iconColor: "#f44336",
+    url: "/logout",
+    icone: "logout",
+    target: "_self",
+    parent_id: null,
   },
 ];
 
@@ -35,33 +31,6 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
   toggleDrawer,
 }) => {
   const { user } = useAuth();
-
-  const renderItem = useCallback(
-    ({ path, label, Icon, iconColor }: Common.DrawerItemType) => {
-      return (
-        <ListItem key={path} disablePadding sx={{ display: "block" }}>
-          <Link to={path} onClick={() => toggleDrawer()} title={label}>
-            <ListItemButton>
-              <ListItemIcon
-                sx={{
-                  minWidth: "48px",
-                  color: (theme) => iconColor || theme.palette.primary.main,
-                }}
-              >
-                {Icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={label}
-                sx={{ color: (theme) => theme.palette.text.primary }}
-              />
-            </ListItemButton>
-          </Link>
-        </ListItem>
-      );
-    },
-    [toggleDrawer]
-  );
-
   return (
     <Drawer anchor="left" open={open} toggleDrawer={toggleDrawer} showLogo>
       <List
@@ -71,22 +40,34 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
           flexDirection: "column",
           top: 0,
           height: "100%",
+          overflowX: "hidden",
+          width: drawerWidthOpen,
         }}
       >
         {!!user && (
           <>
-            {renderItem({
-              label: "Olá, " + user!.nome.split(" ")[0] + "!",
-              path: "#",
-              Icon: <PersonIcon />,
-            })}
+            <MenuDrawerItem
+              item={{
+                id: -1,
+                label: "Olá, " + user!.nome.split(" ")[0] + "!",
+                url: null,
+                icone: "person",
+                target: "_self",
+                parent_id: null,
+              }}
+            />
             <Divider />
           </>
         )}
+        {user?.itensMenu?.map((i) => (
+          <MenuDrawerItem key={i.id} item={i} />
+        ))}
         {bottomItems && (
           <Box mt={"auto"}>
             <Divider />
-            {bottomItems.map(renderItem)}
+            {bottomItems.map((i) => (
+              <MenuDrawerItem key={i.id} item={i} />
+            ))}
           </Box>
         )}
       </List>

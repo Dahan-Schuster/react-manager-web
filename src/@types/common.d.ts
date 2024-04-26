@@ -18,12 +18,5 @@ namespace Common {
     previous_page_url: string | null;
   };
 
-  type DrawerItemType = {
-    path: string;
-    label: string;
-    Icon: JSX.Element;
-    iconColor?: string;
-  };
-
   type AnchorTargetType = "_blank" | "_self" | "_parent" | "_top";
 }

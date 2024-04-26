@@ -10,12 +10,15 @@ import StyledIconButton from "./StyledIconButton";
 import { useMuiTheme } from "../contexts/MuiThemeContext";
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidthOpen,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
+  width: drawerWidthOpen,
+  "& .MuiListItemText-root": {
+    textWrap: "wrap",
+  },
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -25,6 +28,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
   }),
   overflowX: "hidden",
   width: drawerWidthClosed,
+  "& .MuiListItemText-root, & .MenuDrawerItemChildren": {
+    display: "none",
+  },
 });
 
 const StyledDrawer = styled(MuiSwipeableDrawer, {
@@ -40,9 +46,6 @@ const StyledDrawer = styled(MuiSwipeableDrawer, {
         ? "none"
         : `1px solid ${theme.palette.background.paper}`,
 
-    "& a": {
-      textDecoration: "none",
-    },
     whiteSpace: "nowrap",
     boxSizing: "border-box",
     ...(open && {

@@ -18,7 +18,7 @@ namespace Sistema {
     label: string;
     url: string | null;
     icone: string | null;
-    ativo: boolean;
+    ativo?: boolean;
     target: Common.AnchorTargetType;
     parent_id: number | null;
     parent?: MenuItemType;
