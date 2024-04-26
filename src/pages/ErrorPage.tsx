@@ -1,6 +1,6 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useRouteError } from "react-router-dom";
+import { Link, useRouteError } from "react-router-dom";
 
 export default function ErrorPage() {
   const error = useRouteError() as { statusText?: string; message: string };
@@ -32,7 +32,7 @@ export default function ErrorPage() {
         <i>{error.statusText || error.message}</i>
       </p>
 
-      <a href="/">Voltar à página inicial</a>
+      <Link to="/">Voltar à página inicial</Link>
     </Container>
   );
 }
