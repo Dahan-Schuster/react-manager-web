@@ -126,6 +126,12 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
                 "table, td, th": {
                   borderCollapse: "collapse",
                 },
+                "a:link": {
+                  color: temaAtivo?.text_primary || "blue",
+                },
+                "a:visited": {
+                  color: temaAtivo?.text_secondary || "#551abb",
+                },
                 ".MuiPaper-root *": {
                   "::-webkit-scrollbar": {
                     width: "6px",
