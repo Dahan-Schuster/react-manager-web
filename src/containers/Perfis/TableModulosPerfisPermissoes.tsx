@@ -9,6 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import WarningIcon from "@mui/icons-material/Warning";
+import InfoIcon from "@mui/icons-material/Info";
 
 interface TableModulosPerfisPermissoesProps {
   modulos: Sistema.ModuloType[];
@@ -25,6 +26,15 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
 }) => {
   return (
     <Box>
+      <Alert
+        sx={{ mb: 1 }}
+        severity="info"
+        icon={<InfoIcon fontSize="inherit" />}
+      >
+        Selecione os checkboxes para definir as permissões de cada perfil em
+        cada módulo do sistema. Você pode expandir o módulo para ver as
+        permissões mais específicas.
+      </Alert>
       <Alert
         sx={{ mb: 2 }}
         severity="warning"
@@ -45,13 +55,18 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
           <TableHead>
             <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
               <TableCell />
+              <TableCell />
+              <TableCell colSpan={perfis.length}>Perfis</TableCell>
+            </TableRow>
+            <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
+              <TableCell />
               <TableCell
                 align="left"
                 sx={{
                   borderRight: (theme) => `1px solid ${theme.palette.divider}`,
                 }}
               >
-                Módulo
+                Módulos
               </TableCell>
               {perfis.map((p) => (
                 <TableCell key={p.id} align="left">
