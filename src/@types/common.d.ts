@@ -24,4 +24,6 @@ namespace Common {
     Icon: JSX.Element;
     iconColor?: string;
   };
+
+  type AnchorTargetType = "_blank" | "_self" | "_parent" | "_top";
 }

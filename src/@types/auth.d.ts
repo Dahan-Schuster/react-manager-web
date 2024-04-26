@@ -23,6 +23,7 @@ namespace Auth {
     email: string;
     token: TokenType;
     permissoes: Sistema.PermissaoType[];
+    itensMenu: Sistema.MenuItemType[];
   };
 
   interface AuthContextValues {
