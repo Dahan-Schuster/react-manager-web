@@ -34,7 +34,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <InitialPage />,
+        element: (
+          <RequireAuth>
+            <InitialPage />
+          </RequireAuth>
+        ),
       },
       {
         path: "/usuarios",
