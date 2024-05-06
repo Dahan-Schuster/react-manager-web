@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 
 import { DarkMode, LightMode } from "@mui/icons-material";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import StyledIconButton from "../../components/StyledIconButton";
@@ -25,7 +24,7 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
   const urlLogo = getUrlLogo("header");
   return (
     <StyledAppBar
-      position="absolute"
+      position="fixed"
       sx={(theme) => ({
         backgroundColor: temaAtivo?.cor_header || theme.palette.primary.main,
       })}
