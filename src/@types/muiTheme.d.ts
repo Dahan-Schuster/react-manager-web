@@ -1,6 +1,6 @@
 namespace Mui {
   interface Theme {
-    id: number;
+    id?: number;
     nome: string;
     ativo: number;
     mui_mode: ThemeMode;
@@ -8,8 +8,8 @@ namespace Mui {
     url_logo_header: string;
     url_logo_login: string | null;
     url_logo_simples: string | null;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
     background_default: string | undefined;
     background_paper: string | undefined;
     text_primary: string | undefined;
@@ -19,7 +19,7 @@ namespace Mui {
     cor_texto_header: string | undefined;
     cor_menu: string | undefined;
     cor_texto_menu: string | undefined;
-    cores_paleta: Record<PaletteOptions, Palette>;
+    cores_paleta: Partial<Record<PaletteOptions, Palette>>;
   }
 
   type ThemeMode = "light" | "dark";

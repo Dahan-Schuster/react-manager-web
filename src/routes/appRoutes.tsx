@@ -64,6 +64,20 @@ const router = createBrowserRouter([
           return { Component: Index };
         },
       },
+      {
+        path: "/temas/novo",
+        async lazy() {
+          let { default: Index } = await import("../pages/Temas/SalvarTema");
+          return { Component: Index };
+        },
+      },
+      {
+        path: "/temas/editar/:id",
+        async lazy() {
+          let { default: Index } = await import("../pages/Temas/SalvarTema");
+          return { Component: Index };
+        },
+      },
     ],
   },
 ]);

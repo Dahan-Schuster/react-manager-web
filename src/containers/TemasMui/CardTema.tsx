@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Edit from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 
 interface CardTemaProps {
   item: Mui.Theme;
@@ -15,6 +16,7 @@ interface CardTemaProps {
  * Item da listagem de temas MUI
  */
 const CardTema: FC<CardTemaProps> = ({ item }) => {
+  const navigate = useNavigate();
   return (
     <Paper
       sx={{
@@ -76,7 +78,7 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
         }}
       >
         <Typography>{item.nome}</Typography>
-        <IconButton>
+        <IconButton onClick={() => navigate(`/temas/editar/${item.id}`)}>
           <Edit />
         </IconButton>
       </Box>
