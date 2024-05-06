@@ -41,13 +41,16 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
             xs={10}
           >
             {!!urlLogo && (
-              <Box sx={{ width: { xs: "200px", md: "200px" }, height: "100%" }}>
-                <img
-                  src={urlLogo}
-                  alt="logo"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </Box>
+              <img
+                src={urlLogo}
+                alt="logo"
+                style={{
+                  width: "200px",
+                  maxHeight: appBarMinHeight,
+                  objectFit: "cover",
+                  padding: 4,
+                }}
+              />
             )}
           </Grid>
           <Grid item xs={1} sx={{ textAlign: "right" }}>
