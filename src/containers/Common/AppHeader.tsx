@@ -26,6 +26,9 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
   return (
     <StyledAppBar
       position="absolute"
+      sx={(theme) => ({
+        backgroundColor: temaAtivo?.cor_header || theme.palette.primary.main,
+      })}
     >
       <Toolbar>
         <Grid container justifyContent="center" alignItems="center">

@@ -109,6 +109,7 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
           flexDirection,
           minHeight: appBarMinHeight + " !important",
           maxHeight: appBarMinHeight + " !important",
+          backgroundColor: temaAtivo?.cor_header || theme.palette.primary.main,
         })}
       >
         <Box
@@ -122,6 +123,9 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
             <Typography
               sx={(theme) => ({
                 fontSize: 18,
+                color:
+                  temaAtivo?.cor_texto_header ||
+                  theme.palette.primary.contrastText,
                 textWrap: "wrap",
                 overflowX: "hidden",
                 maxWidth: "120px",

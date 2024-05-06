@@ -15,6 +15,10 @@ namespace Mui {
     text_primary: string | undefined;
     text_secondary: string | undefined;
     text_disabled: string | undefined;
+    cor_header: string | undefined;
+    cor_texto_header: string | undefined;
+    cor_menu: string | undefined;
+    cor_texto_menu: string | undefined;
     coresMui: Record<PaletteOptions, Palette>;
   }
 
