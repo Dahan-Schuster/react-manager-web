@@ -16,6 +16,7 @@ interface MainLayoutProps {
   hideTitle?: boolean;
   mainContainerMaxWidth?: Breakpoint;
   mainContainerSx?: SxProps;
+  paperSx?: SxProps;
 }
 
 /**
@@ -27,6 +28,7 @@ const MainLayout: FC<MainLayoutProps> = ({
   hideTitle = true,
   mainContainerMaxWidth = "lg",
   mainContainerSx = {},
+  paperSx = {},
 }) => {
   usePageTitle(title);
 
@@ -70,7 +72,7 @@ const MainLayout: FC<MainLayoutProps> = ({
             {!hideTitle && <h2>{title}</h2>}
           </Box>
 
-          <Paper sx={{ p: 2 }}>{children}</Paper>
+          <Paper sx={{ p: 2, ...paperSx }}>{children}</Paper>
         </Container>
       </Box>
     </Box>
