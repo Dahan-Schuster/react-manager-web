@@ -17,3 +17,33 @@ export const isIOS =
 export const defaultTablePageSize = 25;
 
 export const tablePageSizes = [25, 50, 100];
+
+export const MuiDefaultPalette = {
+  primary: {
+    main: "#3f51b5",
+  },
+  secondary: {
+    main: "#f50057",
+  },
+  error: {
+    main: "#f44336",
+  },
+  warning: {
+    main: "#ff9800",
+  },
+  info: {
+    main: "#2196f3",
+  },
+  success: {
+    main: "#4caf50",
+  },
+} as Record<Mui.PaletteOptions, Mui.Palette>;
+
+export const MuiPaletteNames = {
+  primary: "Primária",
+  secondary: "Secundária",
+  error: "Erro",
+  warning: "Atenção",
+  info: "Info",
+  success: "Sucesso",
+} as Record<Mui.PaletteOptions, string>;
