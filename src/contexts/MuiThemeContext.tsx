@@ -88,7 +88,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
             setTemaAtivo(tema);
           }
         })
-        .catch((e) => {});
+        .catch(() => {});
     },
     [temaAtivo]
   );

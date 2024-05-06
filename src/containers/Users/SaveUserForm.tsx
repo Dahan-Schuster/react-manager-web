@@ -1,15 +1,15 @@
-import { Formik, Form, FormikHelpers } from "formik";
 import Box from "@mui/material/Box";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { Form, Formik, FormikHelpers } from "formik";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 
-import { FC, Fragment, useCallback, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
+import { FC, Fragment, useCallback, useState } from "react";
 import { useUsers } from "../../contexts/UsersContext";
-import useUserPermissions from "../../hooks/useUserPermissions";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
+import useUserPermissions from "../../hooks/useUserPermissions";
 
 const inputsMargin = "normal";
 

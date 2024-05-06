@@ -1,15 +1,14 @@
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Collapse from "@mui/material/Collapse";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { FC, Fragment, useState } from "react";
 import StyledIconButton from "../../components/StyledIconButton";
-import CheckboxTodasPermissoesModulo from "./CheckboxTodasPermissoesModulo";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Collapse from "@mui/material/Collapse";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import CheckboxPermissaoModulo from "./CheckboxPermissaoModulo";
+import CheckboxTodasPermissoesModulo from "./CheckboxTodasPermissoesModulo";
 
 interface RowModuloPerfisPermissoesProps {
   modulo: Sistema.ModuloType;
@@ -81,7 +80,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
                     >
                       {tipoPerm.label}
                     </TableCell>
-                    {perfis.map((perfil, index) => (
+                    {perfis.map((perfil) => (
                       <TableCell
                         key={perfil.id}
                         align="left"

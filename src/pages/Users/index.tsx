@@ -1,40 +1,36 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import React, { FC, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
-import { SelectChangeEvent } from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import {
   DataGrid,
   GridActionsCellItem,
   GridColDef,
-  GridRenderEditCellParams,
   GridSlots,
   GridToolbar,
-  useGridApiContext,
 } from "@mui/x-data-grid";
 
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Switch from "@mui/material/Switch";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { defaultTablePageSize, tablePageSizes } from "../../constants";
-import CreateUserButton from "../../containers/Users/CreateUserButton";
-import { SelectInputProps } from "../../components/SelectInput";
-import useDebounceEffect from "../../hooks/useDebonceEffect";
-import { useUsers } from "../../contexts/UsersContext";
-import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 import MainLayout from "../../containers/Common/MainLayout";
-import SelectStatus from "../../containers/Users/SelectStatus";
+import SelectPerfil from "../../containers/Perfis/SelectPerfil";
+import CreateUserButton from "../../containers/Users/CreateUserButton";
 import UsersNoRowsOverlay from "../../containers/Users/NoRowsOverlay";
-import Switch from "@mui/material/Switch";
-import useUserPermissions from "../../hooks/useUserPermissions";
-import { useAuth } from "../../contexts/AuthContext";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import SaveUserForm from "../../containers/Users/SaveUserForm";
+import SelectStatus from "../../containers/Users/SelectStatus";
+import { useAuth } from "../../contexts/AuthContext";
+import { useUsers } from "../../contexts/UsersContext";
+import useDebounceEffect from "../../hooks/useDebonceEffect";
+import useUserPermissions from "../../hooks/useUserPermissions";
 
 /**
  * Página de CRUD de usuários
@@ -315,28 +311,6 @@ const Users: React.FunctionComponent = () => {
         </DialogContent>
       </Dialog>
     </MainLayout>
-  );
-};
-
-/**
- * Container para o selects usados na tabela de usuários
- */
-const SelectDataGrid: React.FunctionComponent<
-  GridRenderEditCellParams & { SelectComponent: FC<SelectInputProps> }
-> = ({ id, field, value, isProcessingProps, SelectComponent }) => {
-  const apiRef = useGridApiContext();
-
-  const handleValueChange = (event: SelectChangeEvent<unknown>) => {
-    const newValue = event.target.value;
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  return (
-    <SelectComponent
-      value={value}
-      onChange={handleValueChange}
-      disabled={isProcessingProps}
-    />
   );
 };
 

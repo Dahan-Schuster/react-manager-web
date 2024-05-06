@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import { Breakpoint, SxProps } from "@mui/material/styles";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
@@ -10,7 +10,6 @@ import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
-import Paper from "@mui/material/Paper";
 
 interface MainLayoutProps {
   children: ReactNode;
