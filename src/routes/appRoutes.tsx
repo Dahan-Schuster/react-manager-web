@@ -1,15 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import RequireAuth from "../containers/Auth/RequireAuth";
-import EsqueciSenha from "../pages/Auth/EsqueciSenha";
-import Login from "../pages/Auth/Login";
-import Logout from "../pages/Auth/Logout";
-import NovaSenha from "../pages/Auth/NovaSenha";
-import InitialPage from "../pages/InitialPage";
-import RootPage from "../pages/Root";
-import Users from "../pages/Users";
 import ErrorPage from "../pages/ErrorPage";
-import Perfis from "../pages/Perfis";
-import TemasPage from "../pages/Temas";
+import RootPage from "../pages/Root";
 
 const router = createBrowserRouter([
   {
@@ -19,51 +10,59 @@ const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <Login />,
+        async lazy() {
+          let { default: Index } = await import("../pages/Auth/Login");
+          return { Component: Index };
+        },
       },
       {
         path: "logout",
-        element: <Logout />,
+        async lazy() {
+          let { default: Index } = await import("../pages/Auth/Logout");
+          return { Component: Index };
+        },
       },
       {
         path: "esqueci-minha-senha",
-        element: <EsqueciSenha />,
+        async lazy() {
+          let { default: Index } = await import("../pages/Auth/EsqueciSenha");
+          return { Component: Index };
+        },
       },
       {
         path: "alterar-senha/:token",
-        element: <NovaSenha />,
+        async lazy() {
+          let { default: Index } = await import("../pages/Auth/NovaSenha");
+          return { Component: Index };
+        },
       },
       {
         path: "/",
-        element: (
-          <RequireAuth>
-            <InitialPage />
-          </RequireAuth>
-        ),
+        async lazy() {
+          let { default: Index } = await import("../pages/InitialPage");
+          return { Component: Index };
+        },
       },
       {
         path: "/usuarios",
-        element: (
-          <RequireAuth>
-            <Users />
-          </RequireAuth>
-        ),
+        async lazy() {
+          let { default: Index } = await import("../pages/Users");
+          return { Component: Index };
+        },
       },
       {
         path: "/perfis",
-        element: (
-          <RequireAuth>
-            <Perfis />
-          </RequireAuth>
-        ),
+        async lazy() {
+          let { default: Index } = await import("../pages/Perfis");
+          return { Component: Index };
+        },
       },
       {
         path: "/temas",
-        element: (
-          <RequireAuth>
-            <TemasPage />
-          </RequireAuth>
-        ),
+        async lazy() {
+          let { default: Index } = await import("../pages/Temas");
+          return { Component: Index };
+        },
       },
     ],
   },

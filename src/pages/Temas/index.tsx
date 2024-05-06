@@ -1,5 +1,6 @@
 import { FC } from "react";
 import MainLayout from "../../containers/Common/MainLayout";
+import RequireAuth from "../../containers/Auth/RequireAuth";
 
 interface TemasPageProps {}
 
@@ -14,4 +15,8 @@ const TemasPage: FC<TemasPageProps> = () => {
   );
 };
 
-export default TemasPage;
+export default () => (
+  <RequireAuth>
+    <TemasPage />
+  </RequireAuth>
+);

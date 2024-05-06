@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import LoadingOverlay from "../../components/LoadingOverlay";
+import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import TableModulosPerfisPermissoes from "../../containers/Perfis/TableModulosPerfisPermissoes";
 import { usePerfis } from "../../contexts/PerfisContext";
@@ -30,4 +31,8 @@ const Perfis: FC = () => {
   );
 };
 
-export default Perfis;
+export default () => (
+  <RequireAuth>
+    <Perfis />
+  </RequireAuth>
+);
