@@ -101,7 +101,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
           palette: temaAtivo
             ? {
                 mode: temaAtivo.mui_mode,
-                ...temaAtivo.coresMui,
+                ...temaAtivo.cores_paleta,
                 background: {
                   default: temaAtivo.background_default,
                   paper: temaAtivo.background_paper,

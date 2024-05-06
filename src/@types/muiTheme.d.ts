@@ -19,7 +19,7 @@ namespace Mui {
     cor_texto_header: string | undefined;
     cor_menu: string | undefined;
     cor_texto_menu: string | undefined;
-    coresMui: Record<PaletteOptions, Palette>;
+    cores_paleta: Record<PaletteOptions, Palette>;
   }
 
   type ThemeMode = "light" | "dark";
@@ -33,20 +33,9 @@ namespace Mui {
     | "success";
 
   interface Palette {
-    id: number;
-    "100": string | undefined;
-    "200": string | undefined;
-    "300": string | undefined;
-    "400": string | undefined;
-    "500": string | undefined;
-    "600": string | undefined;
-    "700": string | undefined;
-    nome: string;
     main: string;
     dark: string | undefined;
     light: string | undefined;
-    contrast_text: string | undefined;
-    created_at: string;
-    updated_at: string;
+    contrastText: string | undefined;
   }
 }
