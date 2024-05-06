@@ -32,7 +32,12 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
 }) => {
   const { user } = useAuth();
   return (
-    <Drawer anchor="left" open={open} toggleDrawer={toggleDrawer} showLogo>
+    <Drawer
+      anchor="left"
+      open={open}
+      toggleDrawer={toggleDrawer}
+      title={user ? "Olá, " + user!.nome.split(" ")[0] + "!" : undefined}
+    >
       <List
         component="nav"
         sx={{
@@ -44,21 +49,6 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
           width: drawerWidthOpen,
         }}
       >
-        {!!user && (
-          <>
-            <MenuDrawerItem
-              item={{
-                id: -1,
-                label: "Olá, " + user!.nome.split(" ")[0] + "!",
-                url: null,
-                icone: "person",
-                target: "_self",
-                parent_id: null,
-              }}
-            />
-            <Divider />
-          </>
-        )}
         {user?.itensMenu?.map((i) => (
           <MenuDrawerItem key={i.id} item={i} />
         ))}

@@ -3,11 +3,16 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import MuiSwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import { CSSObject, Theme, styled } from "@mui/material/styles";
-import { drawerWidthClosed, drawerWidthOpen, isIOS } from "../constants";
-import StyledIconButton from "./StyledIconButton";
+import {
+  appBarMinHeight,
+  drawerWidthClosed,
+  drawerWidthOpen,
+  isIOS,
+} from "../constants";
 import { useMuiTheme } from "../contexts/MuiThemeContext";
+import StyledIconButton from "./StyledIconButton";
+import Typography from "@mui/material/Typography";
 
 const openedMixin = (theme: Theme): CSSObject => ({
   transition: theme.transitions.create("width", {
@@ -57,13 +62,15 @@ const StyledDrawer = styled(MuiSwipeableDrawer, {
       "& .MuiDrawer-paper": closedMixin(theme),
     }),
   },
+  "& .MuiListItemButton-root": {
+    minHeight: "48px",
+  },
 }));
 
 interface DrawerProps {
   anchor: "left" | "right";
   open: boolean;
   toggleDrawer: () => void;
-  showLogo?: boolean;
   children: React.ReactNode;
   title?: string;
 }
@@ -75,7 +82,6 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
   open,
   title,
   toggleDrawer,
-  showLogo,
   children,
   anchor,
 }) => {
@@ -83,8 +89,7 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
   const ChevronIcon =
     anchor === "left" && open ? ChevronLeftIcon : ChevronRightIcon;
 
-  const { getUrlLogo } = useMuiTheme();
-  const urlLogo = getUrlLogo("header");
+  const { temaAtivo } = useMuiTheme();
 
   return (
     <StyledDrawer
@@ -97,14 +102,14 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
       variant="permanent"
     >
       <Toolbar
-        sx={{
+        sx={(theme) => ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          px: [1],
-          py: 2,
           flexDirection,
-        }}
+          minHeight: appBarMinHeight + " !important",
+          maxHeight: appBarMinHeight + " !important",
+        })}
       >
         <Box
           sx={{
@@ -113,17 +118,15 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
             justifyContent: "center",
           }}
         >
-          {showLogo && !!urlLogo && open && (
-            <Box sx={{ width: { xs: "150px", md: "200px" }, height: "100%" }}>
-              <img
-                src={urlLogo}
-                alt="logo"
-                style={{ width: "100%", height: "auto" }}
-              />
-            </Box>
-          )}
           {title && open && (
-            <Typography fontSize={22} fontWeight="bold">
+            <Typography
+              sx={(theme) => ({
+                fontSize: 18,
+                textWrap: "wrap",
+                overflowX: "hidden",
+                maxWidth: "120px",
+              })}
+            >
               {title}
             </Typography>
           )}

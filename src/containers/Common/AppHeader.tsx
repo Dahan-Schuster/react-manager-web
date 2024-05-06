@@ -1,32 +1,21 @@
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 
+import { DarkMode, LightMode } from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Tooltip from "@mui/material/Tooltip";
+import StyledIconButton from "../../components/StyledIconButton";
 import { appBarMinHeight } from "../../constants";
 import { useMuiTheme } from "../../contexts/MuiThemeContext";
-import Grid from "@mui/material/Grid";
-import StyledIconButton from "../../components/StyledIconButton";
-import { DarkMode, LightMode } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
 
-interface StyledAppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const StyledAppBar = styled(MuiAppBar)<StyledAppBarProps>(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === "light"
-      ? theme.palette.background.paper
-      : theme.palette.background.default,
-  borderBottom:
-    theme.palette.mode === "light"
-      ? "none"
-      : `1px solid ${theme.palette.background.paper}`,
+const StyledAppBar = styled(MuiAppBar)<AppBarProps>(() => ({
   backgroundImage: "none",
   boxShadow: "none",
   padding: "8px 0",
   minHeight: appBarMinHeight,
+  maxHeight: appBarMinHeight,
 }));
 
 interface AppBarProps {}
@@ -35,7 +24,9 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
   const { getUrlLogo, temaAtivo, toggleMode } = useMuiTheme();
   const urlLogo = getUrlLogo("header");
   return (
-    <StyledAppBar position="absolute">
+    <StyledAppBar
+      position="absolute"
+    >
       <Toolbar>
         <Grid container justifyContent="center" alignItems="center">
           <Grid item xs={1}></Grid>
@@ -47,7 +38,7 @@ const AppHeader: React.FunctionComponent<AppBarProps> = () => {
             xs={10}
           >
             {!!urlLogo && (
-              <Box sx={{ width: { xs: "200px", md: "300px" }, height: "100%" }}>
+              <Box sx={{ width: { xs: "200px", md: "200px" }, height: "100%" }}>
                 <img
                   src={urlLogo}
                   alt="logo"
