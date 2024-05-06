@@ -3,9 +3,8 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import { Breakpoint, SxProps } from "@mui/material/styles";
-import { FC, ReactNode, useCallback, useEffect, useState } from "react";
+import { FC, ReactNode, useCallback, useState } from "react";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
-import { useMuiTheme } from "../../contexts/MuiThemeContext";
 import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
@@ -29,8 +28,6 @@ const MainLayout: FC<MainLayoutProps> = ({
   mainContainerMaxWidth = "lg",
   mainContainerSx = {},
 }) => {
-  const { getUrlFavicon } = useMuiTheme();
-
   usePageTitle(title);
 
   /* Estado para o menu lateral */
@@ -39,18 +36,6 @@ const MainLayout: FC<MainLayoutProps> = ({
   /** Método para alterar o estado do menu lateral */
   const toggleDrawer = useCallback(() => {
     setDrawerOpen((prev) => !prev);
-  }, []);
-
-  /** Atualiza o favicon usando o tema ativo */
-  useEffect(() => {
-    let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "shortcut icon";
-      link.type = "image/x-icon";
-      document.getElementsByTagName("head")[0].appendChild(link);
-    }
-    link.href = getUrlFavicon();
   }, []);
 
   return (

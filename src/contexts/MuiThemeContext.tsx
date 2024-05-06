@@ -7,6 +7,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
 } from "react";
 import { useLocalStorage } from "usehooks-ts";
@@ -175,6 +176,18 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
       ),
     [temaAtivo]
   );
+
+  /** Atualiza o favicon usando o tema ativo */
+  useEffect(() => {
+    let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "shortcut icon";
+      link.type = "image/x-icon";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    }
+    link.href = getUrlFavicon();
+  }, []);
 
   return (
     <MuiThemeContext.Provider
