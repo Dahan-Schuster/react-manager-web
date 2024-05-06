@@ -42,15 +42,7 @@ const StyledDrawer = styled(MuiSwipeableDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    backgroundColor:
-      theme.palette.mode === "light"
-        ? theme.palette.background.paper
-        : theme.palette.background.default,
-    borderRight:
-      theme.palette.mode === "light"
-        ? "none"
-        : `1px solid ${theme.palette.background.paper}`,
-
+    border: "none",
     whiteSpace: "nowrap",
     boxSizing: "border-box",
     ...(open && {
@@ -100,6 +92,16 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
       disableBackdropTransition={!isIOS}
       disableDiscovery={isIOS}
       variant="permanent"
+      sx={(theme) => ({
+        "& .MuiDrawer-paper": {
+          backgroundColor:
+            temaAtivo?.cor_menu || theme.palette.background.paper,
+        },
+
+        "& .MuiListItemText-root": {
+          color: temaAtivo?.cor_texto_menu || theme.palette.text.primary,
+        },
+      })}
     >
       <Toolbar
         sx={(theme) => ({
