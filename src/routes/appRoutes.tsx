@@ -9,6 +9,7 @@ import RootPage from "../pages/Root";
 import Users from "../pages/Users";
 import ErrorPage from "../pages/ErrorPage";
 import Perfis from "../pages/Perfis";
+import TemasPage from "../pages/Temas";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <Perfis />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/temas",
+        element: (
+          <RequireAuth>
+            <TemasPage />
           </RequireAuth>
         ),
       },

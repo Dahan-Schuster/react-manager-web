@@ -2,6 +2,7 @@ export const nomesRotas: { [key: string]: { label: string; icon?: string } } = {
   "/": { label: "Home", icon: "home" },
   "/usuarios": { label: "Usuários", icon: "people" },
   "/perfis": { label: "Perfis", icon: "account_box" },
+  "/temas": { label: "Temas", icon: "palette" },
 };
 
 export const drawerWidthOpen = 250 as const;
