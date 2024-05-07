@@ -39,7 +39,7 @@ const AuthContainer: React.FunctionComponent<AuthContainerProps> = ({
           <img
             src={urlLogoLogin}
             alt="Logo"
-            style={{ width: "300px", height: "auto" }}
+            style={{ width: "300px", maxHeight: "100px", objectFit: "cover" }}
           />
         )}
         <Paper
