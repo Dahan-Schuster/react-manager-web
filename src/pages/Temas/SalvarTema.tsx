@@ -10,6 +10,7 @@ import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizar
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useAxios from "../../services/useAxios";
 import { toast } from "react-toastify";
+import { useTemasMui } from "../../contexts/TemasMuiContext";
 
 interface SalvarTemaProps {}
 
@@ -17,10 +18,11 @@ interface SalvarTemaProps {}
  * SalvarTema documentation
  */
 const SalvarTema: FC<SalvarTemaProps> = () => {
-  const { id } = useParams();
-  const { makeRequest } = useAxios();
+  const { id: strId } = useParams();
+  const id = strId ? parseInt(strId) : undefined;
 
   const [tema, setTema] = useState<Mui.Theme>({
+    id,
     ativo: 0,
     nome: "",
     mui_mode: "light",
@@ -55,8 +57,11 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
     }
   }, []);
 
+  const { makeRequest } = useAxios();
+  const { setTemas } = useTemasMui();
+
   const handleSubmit = useCallback(
-    (values: Mui.Theme) => {
+    async (values: Mui.Theme) => {
       if (!values.nome) {
         toast.error("Informe o nome do tema!");
         return;
@@ -71,7 +76,40 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
         toast.error("Selecione uma imagem de logo padrão");
         return;
       }
-      console.log(values);
+
+      const formData = new FormData();
+      fileFavicon && formData.append("file_favicon", fileFavicon);
+      fileLogoHeader && formData.append("file_logo_header", fileLogoHeader);
+      fileLogoLogin && formData.append("file_logo_login", fileLogoLogin);
+
+      Object.entries(values).forEach(([key, value]) => {
+        if (!values[key as keyof Mui.Theme]) return;
+        if (key.startsWith("url")) return;
+        if (key === "cores_paleta") {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value);
+        }
+      });
+
+      const response = await makeRequest({
+        url: "sistema/temas-mui",
+        method: values.id ? "PUT" : "POST",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.success) {
+        toast.success("Tema salvo com sucesso!");
+        const tema = response.tema as Mui.Theme;
+        setTema(tema);
+        setTemas((list) => {
+          if (!id) return [...list, tema];
+          return list.map((t) => (t.id === tema.id ? tema : t));
+        });
+      }
     },
     [fileFavicon, fileLogoLogin, fileLogoHeader]
   );

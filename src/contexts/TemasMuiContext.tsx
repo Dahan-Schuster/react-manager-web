@@ -1,6 +1,8 @@
 import {
+  Dispatch,
   FC,
   ReactNode,
+  SetStateAction,
   createContext,
   useCallback,
   useContext,
@@ -10,7 +12,7 @@ import useAxios from "../services/useAxios";
 
 interface TemasMuiContextValue {
   temas: Mui.Theme[];
-  setTemas: (x: Mui.Theme[]) => void;
+  setTemas: Dispatch<SetStateAction<Mui.Theme[]>>;
   getTemas: () => Promise<void>;
 }
 
