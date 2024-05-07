@@ -188,6 +188,25 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
           </Grid>
         </Grid>
       </SimpleAccordion>
+      <SimpleAccordion label="Texto">
+        <Grid container spacing={1} my={1}>
+          <Grid item xs={12} sm={4} md={4}>
+            <Typography fontSize={30} color="text.primary">
+              Primário
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={4} md={4}>
+            <Typography fontSize={30} color="text.secondary">
+              Secundário
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={4} md={4}>
+            <Typography fontSize={30} color="text.disabled">
+              Inativo
+            </Typography>
+          </Grid>
+        </Grid>
+      </SimpleAccordion>
     </Box>
   );
 };
