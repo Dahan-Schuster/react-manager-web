@@ -4,13 +4,13 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
@@ -23,19 +23,27 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { MuiPaletteNames } from "../../constants";
-import Paper from "@mui/material/Paper";
+import SimpleAccordion from "../SimpleAccordion";
+import Alert, { AlertColor } from "@mui/material/Alert";
 
-interface PanelPrevisualizarTemaProps {}
+interface PanelPrevisualizarTemaProps {
+  tema: Mui.Theme;
+  fileFavicon: File | null;
+  fileLogoHeader: File | null;
+  fileLogoLogin: File | null;
+}
 
 /**
  * Painel de previsualização do tema em edição
  */
-const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = () => {
-  const [textValue, setTextValue] = useState("Olá, mundo!");
-  const [selectValue, setSelectValue] = useState("");
-
+const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
+  tema,
+  fileFavicon,
+  fileLogoHeader,
+  fileLogoLogin,
+}) => {
   return (
     <Box
       sx={{
@@ -44,117 +52,169 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = () => {
         backgroundColor: (theme) => theme.palette.background.default,
       }}
     >
-      <Typography variant="h5" color="text.primary">
-        Botões
-      </Typography>
-      <Grid container spacing={1} my={1} px={1}>
-        {(
-          [
-            "primary",
-            "secondary",
-            "error",
-            "warning",
-            "info",
-            "success",
-          ] as const
-        ).map((color) => (
-          <Grid item xs={12} sm={4} md={2} key={color}>
-            <Button variant="contained" fullWidth color={color}>
-              {MuiPaletteNames[color]}
-            </Button>
           </Grid>
-        ))}
-      </Grid>
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="h5" color="text.primary">
-        Inputs
-      </Typography>
-      <Grid
-        container
-        spacing={1}
-        my={1}
-        px={1}
-        sx={{
-          "& .MuiTypography-root": {
-            color: (theme) => theme.palette.text.secondary,
-          },
-        }}
-      >
-        <Grid item xs={12} sm={6} md={2}>
-          <TextField
-            error={!textValue}
-            id="example-input"
-            label="Texto"
-            value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
-            helperText={!textValue && "Digite um texto"}
-            fullWidth
-          />
         </Grid>
-        <Grid item xs={12} sm={6} md={2}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Selecione</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectValue}
-              label="Age"
-              onChange={(e) => setSelectValue(e.target.value as string)}
-            >
-              <MenuItem value={""}>Selecione</MenuItem>
-              <MenuItem value={"1"}>Opção 1</MenuItem>
-              <MenuItem value={"2"}>Opção 2</MenuItem>
-              <MenuItem value={"3"} disabled>
-                Opção inativa
-              </MenuItem>
-            </Select>
-          </FormControl>
+      </SimpleAccordion>
+      <SimpleAccordion label="Botões">
+        <Grid
+          container
+          spacing={1}
+          my={1}
+          p={1}
+          sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+        >
+          <ButtonsGrid variant="contained" />
+          <ButtonsGrid variant="outlined" />
+          <ButtonsGrid variant="text" />
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="Checkbox"
+      </SimpleAccordion>
+      <SimpleAccordion label="Alertas">
+        <Grid
+          container
+          spacing={1}
+          my={1}
+          p={1}
+          sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+        >
+          <AlertsGrid variant="filled" />
+          <AlertsGrid variant="outlined" />
+          <AlertsGrid variant="standard" />
+        </Grid>
+      </SimpleAccordion>
+      <SimpleAccordion label="Inputs">
+        <Grid
+          container
+          spacing={1}
+          my={1}
+          p={1}
+          sx={{
+            backgroundColor: (theme) => theme.palette.background.default,
+            "& .MuiTypography-root": {
+              color: (theme) => theme.palette.text.secondary,
+            },
+          }}
+        >
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField label="Texto" fullWidth defaultValue="Olá, mundo!" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Selecione</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Select"
+              >
+                <MenuItem value={""}>Selecione</MenuItem>
+                <MenuItem value={"1"}>Opção 1</MenuItem>
+                <MenuItem value={"2"}>Opção 2</MenuItem>
+                <MenuItem value={"3"} disabled>
+                  Opção inativa
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              error
+              label="Erro"
+              helperText="Input com erro"
+              fullWidth
             />
-          </FormGroup>
+          </Grid>
+          <Grid item xs={12} sm={4} md={2}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox defaultChecked />}
+                label="Checkbox"
+              />
+            </FormGroup>
+          </Grid>
+          <Grid item xs={12} sm={4} md={2}>
+            <FormControl>
+              <RadioGroup
+                row
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="s"
+                name="radio-buttons-group"
+              >
+                <FormControlLabel value="s" control={<Radio />} label="Sim" />
+                <FormControlLabel value="n" control={<Radio />} label="Não" />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4} md={2}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch defaultChecked />}
+                label="Switch"
+              />
+            </FormGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
-          <FormControl>
-            <RadioGroup
-              row
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="s"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="s" control={<Radio />} label="Sim" />
-              <FormControlLabel value="n" control={<Radio />} label="Não" />
-            </RadioGroup>
-          </FormControl>
+      </SimpleAccordion>
+      <SimpleAccordion label="Conteúdo">
+        <Grid
+          container
+          spacing={1}
+          my={1}
+          p={1}
+          sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+        >
+          <Grid item xs={12} sm={4} md={3}>
+            <BasicCard />
+          </Grid>
+          <Grid item xs={12} sm={8} md={9}>
+            <BasicTable />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={2}>
-          <FormGroup>
-            <FormControlLabel
-              control={<Switch defaultChecked />}
-              label="Switch"
-            />
-          </FormGroup>
-        </Grid>
-      </Grid>
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="h5" color="text.primary">
-        Conteúdo
-      </Typography>
-      <Grid container spacing={1} my={1} px={1}>
-        <Grid item xs={12} sm={4} md={2}>
-          <BasicCard />
-        </Grid>
-        <Grid item xs={12} sm={8} md={10}>
-          <BasicTable />
-        </Grid>
-      </Grid>
+      </SimpleAccordion>
     </Box>
   );
 };
+
+function ButtonsGrid({
+  variant,
+}: {
+  variant: "text" | "outlined" | "contained";
+}) {
+  return (
+    <>
+      {Object.keys(MuiPaletteNames).map((color) => (
+        <Grid item xs={12} sm={4} md={2} key={color}>
+          <Button
+            variant={variant}
+            fullWidth
+            color={color as Mui.PaletteOptions}
+          >
+            {MuiPaletteNames[color as Mui.PaletteOptions]}
+          </Button>
+        </Grid>
+      ))}
+    </>
+  );
+}
+
+function AlertsGrid({
+  variant,
+}: {
+  variant: "standard" | "filled" | "outlined";
+}) {
+  return (
+    <>
+      {Object.keys(MuiPaletteNames).map((color) => {
+        if (["primary", "secondary"].includes(color)) return null;
+        return (
+          <Grid item xs={12} sm={4} md={3} key={color}>
+            <Alert variant={variant} severity={color as AlertColor}>
+              {MuiPaletteNames[color as Mui.PaletteOptions]}
+            </Alert>
+          </Grid>
+        );
+      })}
+    </>
+  );
+}
 
 function BasicCard() {
   return (

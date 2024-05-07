@@ -5,8 +5,8 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
-import { FC, Fragment, useCallback, useState } from "react";
-import { ChromePicker, SliderPicker, TwitterPicker } from "react-color";
+import { FC, Fragment, useCallback, useEffect, useState } from "react";
+import { ChromePicker, SliderPicker } from "react-color";
 
 interface PickerCorProps {
   label: string;
@@ -35,6 +35,10 @@ const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
   const handleClose = useCallback(() => {
     setOpenPicker(false);
   }, []);
+
+  useEffect(() => {
+    setCorState(cor);
+  }, [cor]);
 
   return (
     <ClickAwayListener onClickAway={handleClose}>

@@ -18,6 +18,8 @@ export const defaultTablePageSize = 25;
 
 export const tablePageSizes = [25, 50, 100];
 
+export const acceptImg = "image/png, image/jpg, image/jpeg";
+
 export const MuiDefaultPalette = {
   primary: {
     main: "#3f51b5",

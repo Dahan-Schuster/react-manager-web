@@ -5,11 +5,12 @@ import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { createTheme, darken, lighten } from "@mui/material/styles";
-import { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
-import { MuiDefaultPalette, MuiPaletteNames } from "../../constants";
+import { Form, Formik } from "formik";
+import { Dispatch, FC, SetStateAction, useCallback } from "react";
+import { MuiDefaultPalette, MuiPaletteNames, acceptImg } from "../../constants";
+import UploadFileButton from "../UploadFileButton";
 import ContainerAlterarCores from "./ContainerAlterarCores";
 import SwitchModoTema from "./SwitchModoTema";
-import { Form, Formik } from "formik";
 
 const inputsMargin = "normal";
 
@@ -23,6 +24,15 @@ interface PanelEditarTemaProps {
   tema: Mui.Theme;
   setTema: Dispatch<SetStateAction<Mui.Theme>>;
   handleSubmit: (values: Mui.Theme) => void;
+
+  fileFavicon: File | null;
+  setFileFavicon: Dispatch<SetStateAction<File | null>>;
+
+  fileLogoHeader: File | null;
+  setFileLogoHeader: Dispatch<SetStateAction<File | null>>;
+
+  fileLogoLogin: File | null;
+  setFileLogoLogin: Dispatch<SetStateAction<File | null>>;
 }
 
 // tema específico do painel de edição, para diferenciar do tema do sistema e do tema sendo editado
@@ -42,6 +52,12 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
   tema,
   setTema,
   handleSubmit,
+  fileFavicon,
+  fileLogoHeader,
+  fileLogoLogin,
+  setFileFavicon,
+  setFileLogoHeader,
+  setFileLogoLogin,
 }) => {
   const handleChangeCorPaleta = useCallback(
     (value: string, nome: Mui.PaletteOptions, variante: keyof Mui.Palette) => {
@@ -66,6 +82,7 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
         sx={{
           p: 1,
           overflowY: "scroll",
+          height: "100%",
         }}
       >
         <Formik initialValues={tema} enableReinitialize onSubmit={handleSubmit}>
@@ -79,6 +96,27 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                 />
                 <Divider />
                 <SwitchModoTema tema={tema} setTema={setTema} />
+                <Divider />
+                <UploadFileButton
+                  label="Favicon"
+                  onUpload={setFileFavicon}
+                  file={fileFavicon}
+                  accept="image/x-icon"
+                />
+                <Divider />
+                <UploadFileButton
+                  label="Logo padrão"
+                  onUpload={setFileLogoHeader}
+                  file={fileLogoHeader}
+                  accept={acceptImg}
+                />
+                <Divider />
+                <UploadFileButton
+                  label="Logo login"
+                  onUpload={setFileLogoLogin}
+                  file={fileLogoLogin}
+                  accept={acceptImg}
+                />
                 <Divider />
                 <ContainerAlterarCores
                   label="Background"

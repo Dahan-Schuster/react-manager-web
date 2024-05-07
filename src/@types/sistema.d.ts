@@ -24,4 +24,11 @@ namespace Sistema {
     parent?: MenuItemType;
     children?: MenuItemType[];
   }
+
+  interface ImagensTemaType {
+    fileFavicon: File;
+    fileLogoHeader: File;
+    fileLogoLogin: File | null;
+    fileLogoSimples: File | null;
+  }
 }

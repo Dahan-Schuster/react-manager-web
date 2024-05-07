@@ -9,6 +9,7 @@ import PanelEditarTema from "../../containers/TemasMui/PanelEditarTema";
 import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizarTema";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useAxios from "../../services/useAxios";
+import { toast } from "react-toastify";
 
 interface SalvarTemaProps {}
 
@@ -39,19 +40,41 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
     cores_paleta: MuiDefaultPalette,
   });
 
+  const [fileFavicon, setFileFavicon] = useState<File | null>(null);
+  const [fileLogoHeader, setFileLogoHeader] = useState<File | null>(null);
+  const [fileLogoLogin, setFileLogoLogin] = useState<File | null>(null);
+
   useDebounceEffect(() => {
     if (id) {
       makeRequest({
         url: `/sistema/temas-mui/${id}`,
-      }).then((response) => {
-        setTema(response.tema as Mui.Theme);
+      }).then(async (response) => {
+        const tema = response.tema as Mui.Theme;
+        setTema(tema);
       });
     }
   }, []);
 
-  const handleSubmit = useCallback((values: Mui.Theme) => {
-    console.log(values);
-  }, []);
+  const handleSubmit = useCallback(
+    (values: Mui.Theme) => {
+      if (!values.nome) {
+        toast.error("Informe o nome do tema!");
+        return;
+      }
+
+      if (!fileFavicon && !values.url_favicon) {
+        toast.error("Selecione uma imagem de favicon com extensão .ico");
+        return;
+      }
+
+      if (!fileLogoHeader && !values.url_logo_header) {
+        toast.error("Selecione uma imagem de logo padrão");
+        return;
+      }
+      console.log(values);
+    },
+    [fileFavicon, fileLogoLogin, fileLogoHeader]
+  );
 
   const themePreview = useMemo(
     () =>
@@ -80,7 +103,12 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
           <Grid container>
             {/* Painel de visualização do tema */}
             <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }} sx={{ p: 2 }}>
-              <PanelPrevisualizarTema />
+              <PanelPrevisualizarTema
+                tema={tema}
+                fileFavicon={fileFavicon}
+                fileLogoHeader={fileLogoHeader}
+                fileLogoLogin={fileLogoLogin}
+              />
             </Grid>
 
             {/* Painel de edição do tema */}
@@ -89,6 +117,12 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
                 tema={tema}
                 setTema={setTema}
                 handleSubmit={handleSubmit}
+                fileFavicon={fileFavicon}
+                setFileFavicon={setFileFavicon}
+                fileLogoHeader={fileLogoHeader}
+                setFileLogoHeader={setFileLogoHeader}
+                fileLogoLogin={fileLogoLogin}
+                setFileLogoLogin={setFileLogoLogin}
               />
             </Grid>
           </Grid>
