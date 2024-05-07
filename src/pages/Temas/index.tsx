@@ -8,6 +8,7 @@ import MainLayout from "../../containers/Common/MainLayout";
 import CardTema from "../../containers/TemasMui/CardTema";
 import { useTemasMui } from "../../contexts/TemasMuiContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
+import useUserPermissions from "../../hooks/useUserPermissions";
 
 interface TemasPageProps {}
 
@@ -16,6 +17,7 @@ interface TemasPageProps {}
  */
 const TemasPage: FC<TemasPageProps> = () => {
   const { getTemas, temas } = useTemasMui();
+  const { has } = useUserPermissions();
 
   useDebounceEffect(() => {
     if (temas.length === 0) getTemas();
@@ -27,15 +29,17 @@ const TemasPage: FC<TemasPageProps> = () => {
     <RequireAuth>
       <MainLayout title="Temas">
         <Grid container spacing={1}>
-          <Grid item xs={12} display="flex" justifyContent="flex-end">
-            <Button
-              startIcon={<AddCircle />}
-              variant="outlined"
-              onClick={() => navigate("/temas/novo")}
-            >
-              Adicionar
-            </Button>
-          </Grid>
+          {has("temas-criar") && (
+            <Grid item xs={12} display="flex" justifyContent="flex-end">
+              <Button
+                startIcon={<AddCircle />}
+                variant="outlined"
+                onClick={() => navigate("/temas/novo")}
+              >
+                Adicionar
+              </Button>
+            </Grid>
+          )}
           {temas.map((t) => (
             <Grid item xs={12} sm={6} md={4} key={t.id}>
               <CardTema item={t} />

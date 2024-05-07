@@ -7,6 +7,7 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Edit from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
+import useUserPermissions from "../../hooks/useUserPermissions";
 
 interface CardTemaProps {
   item: Mui.Theme;
@@ -17,6 +18,7 @@ interface CardTemaProps {
  */
 const CardTema: FC<CardTemaProps> = ({ item }) => {
   const navigate = useNavigate();
+  const { has } = useUserPermissions();
   return (
     <Paper
       sx={{
@@ -78,9 +80,11 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
         }}
       >
         <Typography>{item.nome}</Typography>
-        <IconButton onClick={() => navigate(`/temas/editar/${item.id}`)}>
-          <Edit />
-        </IconButton>
+        {has("temas-editar") && (
+          <IconButton onClick={() => navigate(`/temas/editar/${item.id}`)}>
+            <Edit />
+          </IconButton>
+        )}
       </Box>
     </Paper>
   );
