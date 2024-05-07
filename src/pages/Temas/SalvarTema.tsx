@@ -1,14 +1,12 @@
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { FC, memo, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MuiDefaultPalette, MuiPaletteNames } from "../../constants";
+import { MuiDefaultPalette } from "../../constants";
 import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import PanelEditarTema from "../../containers/TemasMui/PanelEditarTema";
+import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizarTema";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useAxios from "../../services/useAxios";
 
@@ -34,9 +32,9 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
     text_primary: "#000000",
     text_secondary: "#000000",
     text_disabled: "#000000",
-    cor_header: "#ffffff",
+    cor_header: "",
     cor_texto_header: "#000000",
-    cor_menu: "#ffffff",
+    cor_menu: "",
     cor_texto_menu: "#000000",
     cores_paleta: MuiDefaultPalette,
   });
@@ -46,14 +44,14 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
       makeRequest({
         url: `/sistema/temas-mui/${id}`,
       }).then((response) => {
-        setTema((prev) => ({ ...prev, ...(response.tema as Mui.Theme) }));
+        setTema(response.tema as Mui.Theme);
       });
     }
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    console.log(tema);
-  }, [tema]);
+  const handleSubmit = useCallback((values: Mui.Theme) => {
+    console.log(values);
+  }, []);
 
   const themePreview = useMemo(
     () =>
@@ -76,37 +74,17 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
   );
 
   return (
-    <MainLayout mainContainerMaxWidth="xl" paperSx={{ p: 0 }}>
-      <ThemeProvider theme={themePreview}>
-        <Paper>
+    <RequireAuth>
+      <MainLayout mainContainerMaxWidth="xl" paperSx={{ p: 0 }}>
+        <ThemeProvider theme={themePreview}>
           <Grid container>
             {/* Painel de visualização do tema */}
-            <Grid item xs={12} sm={9} order={{ xs: 2, sm: 1 }} sx={{ p: 2 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  <Typography variant="h5">Botões</Typography>
-                </Grid>
-                {(
-                  [
-                    "primary",
-                    "secondary",
-                    "error",
-                    "warning",
-                    "info",
-                    "success",
-                  ] as const
-                ).map((color) => (
-                  <Grid item xs={12} sm={6} md={2} key={color}>
-                    <Button variant="contained" fullWidth color={color}>
-                      {MuiPaletteNames[color]}
-                    </Button>
-                  </Grid>
-                ))}
-              </Grid>
+            <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }} sx={{ p: 2 }}>
+              <PanelPrevisualizarTema />
             </Grid>
 
             {/* Painel de edição do tema */}
-            <Grid item xs={12} sm={3} order={{ xs: 1, sm: 2 }}>
+            <Grid item xs={12} md={3} order={{ xs: 1, md: 2 }}>
               <PanelEditarTema
                 tema={tema}
                 setTema={setTema}
@@ -114,14 +92,10 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
               />
             </Grid>
           </Grid>
-        </Paper>
-      </ThemeProvider>
-    </MainLayout>
+        </ThemeProvider>
+      </MainLayout>
+    </RequireAuth>
   );
 };
 
-export default memo(() => (
-  <RequireAuth>
-    <SalvarTema />
-  </RequireAuth>
-));
+export default SalvarTema;

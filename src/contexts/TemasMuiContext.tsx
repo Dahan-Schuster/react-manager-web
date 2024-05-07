@@ -32,7 +32,7 @@ export const TemasMuiProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (response.success) {
       setTemas(response.temas as Mui.Theme[]);
     }
-  }, []);
+  }, [makeRequest]);
 
   return (
     <TemasMuiContext.Provider
