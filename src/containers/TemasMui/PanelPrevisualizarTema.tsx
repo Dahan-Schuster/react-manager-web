@@ -26,6 +26,9 @@ import Typography from "@mui/material/Typography";
 import { FC } from "react";
 import { MuiPaletteNames } from "../../constants";
 import SimpleAccordion from "../SimpleAccordion";
+import BoxFaviconTema from "./BoxFaviconTema";
+import HeaderTema from "./HeaderTema";
+import LoginTema from "./LoginTema";
 import Alert, { AlertColor } from "@mui/material/Alert";
 
 interface PanelPrevisualizarTemaProps {
@@ -52,6 +55,22 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
         backgroundColor: (theme) => theme.palette.background.default,
       }}
     >
+      <SimpleAccordion label="Layout">
+        <Grid
+          container
+          spacing={1}
+          my={1}
+          p={1}
+          sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+        >
+          <Grid item xs={12}>
+            <BoxFaviconTema tema={tema} file={fileFavicon} />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <HeaderTema tema={tema} file={fileLogoHeader} />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <LoginTema tema={tema} file={fileLogoLogin || fileLogoHeader} />
           </Grid>
         </Grid>
       </SimpleAccordion>
