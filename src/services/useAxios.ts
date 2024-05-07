@@ -6,6 +6,7 @@ import config from "../config";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { storageBaseName } from "../constants";
 
 const api = axios.create({
   baseURL: config.apiBaseUrl,
@@ -66,6 +67,9 @@ const useAxios = (): AxiosProps => {
         requests.current[id] = controller;
 
         // adiciona token se houver
+        const user = JSON.parse(
+          localStorage.getItem(storageBaseName + ":user") || "{}"
+        ) as Auth.UserType;
         if (user?.token?.token) {
           config.headers = {
             ...config.headers,
@@ -115,7 +119,7 @@ const useAxios = (): AxiosProps => {
         delete requests.current[id];
       }
     },
-    [user]
+    []
   );
 
   return {

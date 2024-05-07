@@ -1,3 +1,5 @@
+export const storageBaseName = "projetoPadrao";
+
 export const nomesRotas: { [key: string]: { label: string; icon?: string } } = {
   "/": { label: "Home", icon: "home" },
   "/usuarios": { label: "Usuários", icon: "people" },

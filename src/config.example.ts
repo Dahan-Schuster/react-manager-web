@@ -1,4 +1,4 @@
-const storageBaseName = "projetoPadrao";
+import { storageBaseName } from "./constants";
 
 const config = {
   appTitle: "Projeto Padrão",
