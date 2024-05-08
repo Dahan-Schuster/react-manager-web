@@ -73,6 +73,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
                       component="th"
                       align="right"
                       sx={{
+                        width: "200px",
                         borderBottom: "unset",
                         borderRight: (theme) =>
                           `1px solid ${theme.palette.divider}`,

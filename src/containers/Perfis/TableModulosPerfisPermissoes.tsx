@@ -1,19 +1,18 @@
-import { FC, useEffect, useRef } from "react";
+import InfoIcon from "@mui/icons-material/Info";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import RowModuloPerfisPermissoes from "./RowModuloPerfisPermissoes";
-import TableContainer from "@mui/material/TableContainer";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import WarningIcon from "@mui/icons-material/Warning";
-import InfoIcon from "@mui/icons-material/Info";
+import { FC, useEffect, useRef } from "react";
+import { Id, toast } from "react-toastify";
 import { useLocalStorage } from "usehooks-ts";
 import { storageBaseName } from "../../constants";
-import IconButton from "@mui/material/IconButton";
-import { Id, toast } from "react-toastify";
+import RowModuloPerfisPermissoes from "./RowModuloPerfisPermissoes";
 
 interface TableModulosPerfisPermissoesProps {
   modulos: Sistema.ModuloType[];
@@ -65,9 +64,9 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
         <Table size="small" sx={{ minWidth: 500, tableLayout: "fixed" }}>
           <colgroup>
             <col style={{ width: "48px" }} />
-            <col />
+            <col style={{ width: "200px" }} />
             {perfis.map((p) => (
-              <col key={p.id} />
+              <col key={p.id} style={{ width: "100px" }} />
             ))}
           </colgroup>
           <TableHead>
