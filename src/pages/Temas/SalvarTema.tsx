@@ -8,6 +8,7 @@ import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import PanelEditarTema from "../../containers/TemasMui/PanelEditarTema";
 import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizarTema";
+import { useMuiTheme } from "../../contexts/MuiThemeContext";
 import { useTemasMui } from "../../contexts/TemasMuiContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useAxios from "../../services/useAxios";
@@ -59,6 +60,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
 
   const { makeRequest } = useAxios();
   const { setTemas } = useTemasMui();
+  const { fetchTema } = useMuiTheme();
 
   const handleSubmit = useCallback(
     async (values: Mui.Theme) => {
@@ -109,6 +111,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
           if (!id) return [...list, tema];
           return list.map((t) => (t.id === tema.id ? tema : t));
         });
+        if (tema.ativo) fetchTema();
       }
     },
     [fileFavicon, fileLogoLogin, fileLogoHeader]

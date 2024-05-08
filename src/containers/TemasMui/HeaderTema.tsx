@@ -41,15 +41,31 @@ const HeaderTema: FC<HeaderTemaProps> = ({ tema, file }) => {
         })}
       >
         <Grid container justifyContent="center" alignItems="center">
+          <Grid item xs={2}>
+            <Typography
+              sx={(theme) => ({
+                color:
+                  tema?.cor_texto_header || theme.palette.primary.contrastText,
+              })}
+            >
+              Olá, mundo!
+            </Typography>
+          </Grid>
           <Grid
             display="flex"
             justifyContent="center"
             alignItems="center"
             item
-            xs={12}
+            xs={8}
           >
             {!url && (
-              <Typography color="text.primary">
+              <Typography
+                sx={(theme) => ({
+                  color:
+                    tema?.cor_texto_header ||
+                    theme.palette.primary.contrastText,
+                })}
+              >
                 Selecione uma imagem de logo padrão
               </Typography>
             )}
@@ -66,6 +82,7 @@ const HeaderTema: FC<HeaderTemaProps> = ({ tema, file }) => {
               />
             )}
           </Grid>
+          <Grid item xs={2}></Grid>
         </Grid>
       </Toolbar>
     </Fragment>

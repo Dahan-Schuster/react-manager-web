@@ -30,6 +30,7 @@ import BoxFaviconTema from "./BoxFaviconTema";
 import HeaderTema from "./HeaderTema";
 import LoginTema from "./LoginTema";
 import Alert, { AlertColor } from "@mui/material/Alert";
+import MenuTema from "./MenuTema";
 
 interface PanelPrevisualizarTemaProps {
   tema: Mui.Theme;
@@ -69,8 +70,11 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
           <Grid item xs={12} sm={12}>
             <HeaderTema tema={tema} file={fileLogoHeader} />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={6}>
             <LoginTema tema={tema} file={fileLogoLogin || fileLogoHeader} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MenuTema tema={tema} />
           </Grid>
         </Grid>
       </SimpleAccordion>
