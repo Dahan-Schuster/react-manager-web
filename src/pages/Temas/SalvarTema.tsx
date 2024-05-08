@@ -52,7 +52,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
         url: `/sistema/temas-mui/${id}`,
       }).then(async (response) => {
         const tema = response.tema as Mui.Theme;
-        setTema(tema);
+        tema?.id === id && setTema(tema);
       });
     }
   }, []);
@@ -136,7 +136,11 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
 
   return (
     <RequireAuth>
-      <MainLayout mainContainerMaxWidth="xl" paperSx={{ p: 0 }}>
+      <MainLayout
+        title={id ? "Editar tema" : "Criar tema"}
+        mainContainerMaxWidth="xl"
+        paperSx={{ p: 0 }}
+      >
         <ThemeProvider theme={themePreview}>
           <Grid container>
             {/* Painel de visualização do tema */}
