@@ -22,6 +22,7 @@ interface PickerCorProps {
   label: string;
   cor: string;
   onChange: (v: string) => void;
+  default?: string;
 }
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -37,8 +38,13 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 });
 
-const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
-  const [corState, setCorState] = useState(cor);
+const PickerCor: FC<PickerCorProps> = ({
+  cor,
+  default: defaultCor,
+  label,
+  onChange,
+}) => {
+  const [corState, setCorState] = useState(cor || defaultCor);
 
   const [openPicker, setOpenPicker] = useState(false);
 
@@ -46,10 +52,13 @@ const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
     setOpenPicker(false);
   }, []);
 
-  const handleReset = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onChange("");
-  }, []);
+  const handleReset = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onChange(defaultCor || "");
+    },
+    [defaultCor]
+  );
 
   useEffect(() => {
     setCorState(cor);

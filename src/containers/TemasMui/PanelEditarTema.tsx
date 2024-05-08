@@ -153,14 +153,17 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                     {
                       label: "Primário",
                       ...getFieldProps<string>("text_primary"),
+                      defaultValue: "#000000",
                     },
                     {
                       label: "Secundário",
                       ...getFieldProps<string>("text_secondary"),
+                      defaultValue: "#333333",
                     },
                     {
                       label: "Inativo",
                       ...getFieldProps<string>("text_disabled"),
+                      defaultValue: "#666666",
                     },
                   ]}
                 />
@@ -193,11 +196,12 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                     Mui.Palette
                   ];
 
-                  const coresPaleta = tema.cores_paleta?.[nome] || paletaPadrao;
+                  const main =
+                    tema.cores_paleta?.[nome]?.main || paletaPadrao.main;
                   const light =
-                    coresPaleta.light || lighten(coresPaleta.main, 0.2);
+                    tema.cores_paleta?.[nome]?.light || lighten(main, 0.2);
                   const dark =
-                    coresPaleta.dark || darken(coresPaleta.main, 0.2);
+                    tema.cores_paleta?.[nome]?.dark || darken(main, 0.2);
                   const contrastText =
                     tema.cores_paleta?.[nome]?.contrastText ||
                     paletaPadrao.contrastText;
@@ -210,21 +214,25 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                         {
                           label: "Padrão",
                           ...getFieldProps(`cores_paleta.${nome}.main`),
+                          defaultValue: paletaPadrao.main,
                         },
                         {
                           label: "Claro",
                           ...getFieldProps(`cores_paleta.${nome}.light`),
                           value: light,
+                          defaultValue: light,
                         },
                         {
                           label: "Escuro",
                           ...getFieldProps(`cores_paleta.${nome}.dark`),
                           value: dark,
+                          defaultValue: dark,
                         },
                         {
                           label: "Cor do texto",
                           ...getFieldProps(`cores_paleta.${nome}.contrastText`),
-                          value: contrastText,
+                          value: contrastText!,
+                          defaultValue: paletaPadrao.contrastText,
                         },
                       ]}
                     />

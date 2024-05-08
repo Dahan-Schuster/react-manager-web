@@ -10,7 +10,7 @@ import { FieldInputProps } from "formik";
 
 interface ContainerAlterarCoresProps {
   label: string;
-  cores: ({ label: string } & FieldInputProps<string>)[];
+  cores: ({ label: string; defaultValue?: string } & FieldInputProps<string>)[];
 }
 
 /**
@@ -49,11 +49,12 @@ const ContainerAlterarCores: FC<ContainerAlterarCoresProps> = memo(
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0, pr: 2 }}>
-          {cores.map(({ label, value, onChange, name }) => (
+          {cores.map(({ label, value, defaultValue, onChange, name }) => (
             <PickerCor
               key={label}
               label={label}
               cor={value}
+              default={defaultValue}
               onChange={(v) => {
                 onChange(name)(v);
               }}
