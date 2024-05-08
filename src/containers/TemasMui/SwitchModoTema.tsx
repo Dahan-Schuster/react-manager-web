@@ -1,14 +1,15 @@
 import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 
-interface SwitchModoTemaProps {
-  tema: Mui.Theme;
-  setTema: Dispatch<SetStateAction<Mui.Theme>>;
-}
+import type { FieldInputProps } from "formik";
 
-const SwitchModoTema: FC<SwitchModoTemaProps> = ({ tema, setTema }) => {
+interface SwitchModoTemaProps {}
+
+const SwitchModoTema: FC<SwitchModoTemaProps & FieldInputProps<string>> = ({
+  ...props
+}) => {
   return (
     <Box
       sx={{
@@ -19,20 +20,19 @@ const SwitchModoTema: FC<SwitchModoTemaProps> = ({ tema, setTema }) => {
       }}
     >
       <Typography sx={{ flex: 1 }}>Modo do tema</Typography>
-      <Typography sx={{ color: tema.mui_mode === "light" ? "#fff" : "#ddd" }}>
+      <Typography sx={{ color: props.value === "light" ? "#fff" : "#ddd" }}>
         Claro
       </Typography>
       <Switch
-        checked={tema.mui_mode === "dark"}
-        onChange={() =>
-          setTema((prev) => ({
-            ...prev,
-            mui_mode: prev.mui_mode === "dark" ? "light" : "dark",
-          }))
-        }
-        inputProps={{ "aria-label": "controlled" }}
+        {...props}
+        onChange={() => {
+          props.onChange("mui_mode")(
+            props.value === "light" ? "dark" : "light"
+          );
+        }}
+        checked={props.value === "dark"}
       />
-      <Typography sx={{ color: tema.mui_mode === "dark" ? "#fff" : "#ddd" }}>
+      <Typography sx={{ color: props.value === "dark" ? "#fff" : "#ddd" }}>
         Escuro
       </Typography>
     </Box>

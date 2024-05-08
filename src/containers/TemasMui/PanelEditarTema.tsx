@@ -92,10 +92,10 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                 <TextField
                   label="Nome do tema"
                   {...commonTextFieldProps}
-                  {...getFieldProps("nome")}
+                  {...getFieldProps<string>("nome")}
                 />
                 <Divider />
-                <SwitchModoTema tema={tema} setTema={setTema} />
+                <SwitchModoTema {...getFieldProps<string>("mui_mode")} />
                 <Divider />
                 <UploadFileButton
                   label="Favicon"
