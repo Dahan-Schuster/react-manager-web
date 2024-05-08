@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState } from "react";
 import BoxCorPaleta from "./BoxCorPaleta";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -27,15 +27,19 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
   const { has } = useUserPermissions();
   const { ativarTema, setTemas } = useTemasMui();
   const { fetchTema } = useMuiTheme();
+  const [loading, setLoading] = useState(false);
 
   const handleAtivarTema = useCallback(() => {
-    ativarTema(item).then((response) => {
-      if (response.success) {
-        setTemas(response.temas as Mui.Theme[]);
-        toast.success("Novo tema definido como ativo!");
-        fetchTema();
-      }
-    });
+    setLoading(true);
+    ativarTema(item)
+      .then((response) => {
+        if (response.success) {
+          setTemas(response.temas as Mui.Theme[]);
+          toast.success("Novo tema definido como ativo!");
+          fetchTema();
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -112,7 +116,7 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
             <span>
               <Switch
                 checked={!!item.ativo}
-                disabled={!!item.ativo}
+                disabled={!!item.ativo || loading}
                 onChange={handleAtivarTema}
                 inputProps={{ "aria-label": "controlled" }}
               />
