@@ -1,15 +1,16 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Breakpoint, SxProps } from "@mui/material/styles";
 import { FC, Fragment, ReactNode, useCallback, useState } from "react";
+import LoadingOverlay from "../../components/LoadingOverlay";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
 import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
-import Grid from "@mui/material/Grid";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ interface MainLayoutProps {
   mainContainerSx?: SxProps;
   paperSx?: SxProps;
   options?: ReactNode[];
+  loading?: boolean;
 }
 
 /**
@@ -32,6 +34,7 @@ const MainLayout: FC<MainLayoutProps> = ({
   mainContainerSx = {},
   paperSx = {},
   options = [],
+  loading,
 }) => {
   usePageTitle(title);
 
@@ -47,6 +50,7 @@ const MainLayout: FC<MainLayoutProps> = ({
     <Box sx={{ display: "flex", width: "100%" }}>
       <CssBaseline />
       <AppHeader />
+      {loading && <LoadingOverlay open />}
       <MenuDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
       <Box
