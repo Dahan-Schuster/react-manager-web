@@ -28,6 +28,7 @@ const RootPage: FC = () => {
           draggable
           pauseOnHover
           theme="colored"
+          limit={3}
         />
 
         <PerfisProvider>

@@ -159,6 +159,9 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
                     },
                   },
                 },
+                ".Toastify__toast-container--bottom-center": {
+                  bottom: "8rem",
+                },
               }),
             },
             MuiOutlinedInput: {

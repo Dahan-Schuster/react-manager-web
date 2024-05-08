@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,6 +10,10 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import WarningIcon from "@mui/icons-material/Warning";
 import InfoIcon from "@mui/icons-material/Info";
+import { useLocalStorage } from "usehooks-ts";
+import { storageBaseName } from "../../constants";
+import IconButton from "@mui/material/IconButton";
+import { Id, toast } from "react-toastify";
 
 interface TableModulosPerfisPermissoesProps {
   modulos: Sistema.ModuloType[];
@@ -24,25 +28,39 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
   modulos,
   perfis,
 }) => {
+  const [openInfo, setOpenInfo] = useLocalStorage(
+    storageBaseName + ":openInfoPerfis",
+    true
+  );
+
+  const toastId = useRef<Id | null>(null);
+  useEffect(() => {
+    toastId.current = toast.warning(
+      "Atenção! Alterações feitas nesta tela impactam imediatamente os usuários associados aos perfis.",
+      {
+        autoClose: false,
+        position: "bottom-center",
+      }
+    );
+
+    return () => {
+      if (toastId.current) {
+        toast.dismiss(toastId.current);
+      }
+    };
+  }, []);
+
   return (
     <Box>
-      <Alert
-        sx={{ mb: 1 }}
-        severity="info"
-        icon={<InfoIcon fontSize="inherit" />}
-      >
-        Selecione os checkboxes para definir as permissões de cada perfil em
-        cada módulo do sistema. Você pode expandir o módulo para ver as
-        permissões mais específicas.
-      </Alert>
-      <Alert
-        sx={{ mb: 2 }}
-        severity="warning"
-        icon={<WarningIcon fontSize="inherit" />}
-      >
-        Atenção! Alterações feitas nesta tela impactam imediatamente os usuários
-        associados aos perfis.
-      </Alert>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        {openInfo && (
+          <Alert severity="info" onClose={() => setOpenInfo(false)}>
+            Selecione os checkboxes para definir as permissões de cada perfil em
+            cada módulo do sistema. Você pode expandir o módulo para ver as
+            permissões mais específicas.
+          </Alert>
+        )}
+      </Box>
       <TableContainer>
         <Table size="small" sx={{ minWidth: 500, tableLayout: "fixed" }}>
           <colgroup>
@@ -56,7 +74,14 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
             <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
               <TableCell />
               <TableCell />
-              <TableCell colSpan={perfis.length}>Perfis</TableCell>
+              <TableCell colSpan={perfis.length - 1}>Perfis</TableCell>
+              <TableCell align="right">
+                {!openInfo && (
+                  <IconButton color="info" onClick={() => setOpenInfo(true)}>
+                    <InfoIcon />
+                  </IconButton>
+                )}
+              </TableCell>
             </TableRow>
             <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
               <TableCell />
