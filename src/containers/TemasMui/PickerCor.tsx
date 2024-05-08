@@ -1,11 +1,21 @@
 import styled from "@emotion/styled";
+import { Clear } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
-import { FC, Fragment, useCallback, useEffect, useState } from "react";
+import {
+  FC,
+  Fragment,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { ChromePicker, SliderPicker } from "react-color";
 
 interface PickerCorProps {
@@ -34,6 +44,11 @@ const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
 
   const handleClose = useCallback(() => {
     setOpenPicker(false);
+  }, []);
+
+  const handleReset = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    onChange("");
   }, []);
 
   useEffect(() => {
@@ -81,6 +96,13 @@ const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
             value={cor}
             readOnly
             onClick={() => setOpenPicker(true)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton size="small" onClick={handleReset}>
+                  <Clear fontSize="inherit" />
+                </IconButton>
+              </InputAdornment>
+            }
           />
         </CustomWidthTooltip>
       </FormControl>

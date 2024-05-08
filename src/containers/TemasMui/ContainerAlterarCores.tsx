@@ -6,10 +6,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { FC, memo } from "react";
 import PickerCor from "./PickerCor";
+import { FieldInputProps } from "formik";
 
 interface ContainerAlterarCoresProps {
   label: string;
-  cores: { label: string; cor: string; onChange: (v: string) => void }[];
+  cores: ({ label: string } & FieldInputProps<string>)[];
 }
 
 /**
@@ -32,7 +33,7 @@ const ContainerAlterarCores: FC<ContainerAlterarCoresProps> = memo(
         >
           <Typography sx={{ flex: 1 }}>{label}</Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {cores.map(({ label, cor }) => (
+            {cores.map(({ label, value }) => (
               <Box
                 key={label}
                 title={label}
@@ -41,19 +42,21 @@ const ContainerAlterarCores: FC<ContainerAlterarCoresProps> = memo(
                   ml: 1,
                   width: "16px",
                   height: "16px",
-                  backgroundColor: cor,
+                  backgroundColor: value,
                 }}
               />
             ))}
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 0, pr: 2 }}>
-          {cores.map(({ label, cor, onChange }) => (
+          {cores.map(({ label, value, onChange, name }) => (
             <PickerCor
               key={label}
               label={label}
-              cor={cor}
-              onChange={onChange}
+              cor={value}
+              onChange={(v) => {
+                onChange(name)(v);
+              }}
             />
           ))}
         </AccordionDetails>

@@ -25,21 +25,27 @@ export const acceptImg = "image/png, image/jpg, image/jpeg";
 export const MuiDefaultPalette = {
   primary: {
     main: "#3f51b5",
+    contrastText: "#ffffff",
   },
   secondary: {
     main: "#f50057",
+    contrastText: "#ffffff",
   },
   error: {
     main: "#f44336",
+    contrastText: "#ffffff",
   },
   warning: {
     main: "#ff9800",
+    contrastText: "#000000",
   },
   info: {
     main: "#2196f3",
+    contrastText: "#ffffff",
   },
   success: {
     main: "#4caf50",
+    contrastText: "#000000",
   },
 } as Record<Mui.PaletteOptions, Mui.Palette>;
 

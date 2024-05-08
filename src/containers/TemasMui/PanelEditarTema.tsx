@@ -6,8 +6,9 @@ import Paper from "@mui/material/Paper";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { createTheme, darken, lighten } from "@mui/material/styles";
 import { Form, Formik } from "formik";
-import { Dispatch, FC, SetStateAction, useCallback } from "react";
+import { Dispatch, FC, SetStateAction, useMemo } from "react";
 import { MuiDefaultPalette, MuiPaletteNames, acceptImg } from "../../constants";
+import useDebounceEffect from "../../hooks/useDebonceEffect";
 import UploadFileButton from "../UploadFileButton";
 import ContainerAlterarCores from "./ContainerAlterarCores";
 import SwitchModoTema from "./SwitchModoTema";
@@ -59,21 +60,23 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
   setFileLogoHeader,
   setFileLogoLogin,
 }) => {
-  const handleChangeCorPaleta = useCallback(
-    (value: string, nome: Mui.PaletteOptions, variante: keyof Mui.Palette) => {
-      setTema((prev) => ({
-        ...prev,
-        cores_paleta: {
-          ...prev.cores_paleta,
-          [nome]: {
-            ...prev.cores_paleta[nome],
-            [variante]: value,
-          },
-        },
-      }));
-    },
-    []
-  );
+  const initialValues = useMemo<Mui.Theme>(() => {
+    return {
+      ...tema,
+      background_default: tema.background_default || "#f0f0f0",
+      background_paper: tema.background_paper || "#ffffff",
+      text_primary: tema.text_primary || "#000000",
+      text_secondary: tema.text_secondary || "#333333",
+      text_disabled: tema.text_disabled || "#666666",
+      cor_header:
+        tema.cor_header ||
+        tema.cores_paleta.primary?.main ||
+        MuiDefaultPalette.primary.main,
+      cor_texto_header: tema.cor_texto_header || tema.text_primary || "#000000",
+      cor_menu: tema.cor_menu || tema.background_paper || "#fff",
+      cor_texto_menu: tema.cor_texto_menu || "#000000",
+    };
+  }, [tema]);
 
   return (
     <ThemeProvider theme={panelTheme}>
@@ -85,8 +88,20 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
           height: "100%",
         }}
       >
-        <Formik initialValues={tema} enableReinitialize onSubmit={handleSubmit}>
-          {({ getFieldProps }) => {
+        <Formik
+          initialValues={initialValues}
+          enableReinitialize
+          onSubmit={handleSubmit}
+        >
+          {({ getFieldProps, values }) => {
+            useDebounceEffect(
+              () => {
+                setTema(values);
+              },
+              [values],
+              200
+            );
+
             return (
               <Form>
                 <TextField
@@ -123,15 +138,11 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   cores={[
                     {
                       label: "Fundo",
-                      cor: tema.background_default || "#f0f0f0",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, background_default: v })),
+                      ...getFieldProps<string>("background_default"),
                     },
                     {
                       label: "Conteúdo",
-                      cor: tema.background_paper || "#ffffff",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, background_paper: v })),
+                      ...getFieldProps<string>("background_paper"),
                     },
                   ]}
                 />
@@ -141,21 +152,15 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   cores={[
                     {
                       label: "Primário",
-                      cor: tema.text_primary || "#000000",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, text_primary: v })),
+                      ...getFieldProps<string>("text_primary"),
                     },
                     {
                       label: "Secundário",
-                      cor: tema.text_secondary || "#333333",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, text_secondary: v })),
+                      ...getFieldProps<string>("text_secondary"),
                     },
                     {
                       label: "Inativo",
-                      cor: tema.text_disabled || "#666666",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, text_disabled: v })),
+                      ...getFieldProps<string>("text_disabled"),
                     },
                   ]}
                 />
@@ -165,66 +170,66 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   cores={[
                     {
                       label: "Cabeçalho",
-                      cor:
-                        tema.cor_header ||
-                        tema.cores_paleta.primary?.main ||
-                        MuiDefaultPalette.primary.main,
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, cor_header: v })),
+                      ...getFieldProps<string>("cor_header"),
+                    },
+                    {
+                      label: "Texto Cabeçalho",
+                      ...getFieldProps<string>("cor_texto_header"),
                     },
                     {
                       label: "Menu",
-                      cor: tema.cor_menu || "#fff",
-                      onChange: (v) =>
-                        setTema((prev) => ({ ...prev, cor_menu: v })),
+                      ...getFieldProps<string>("cor_menu"),
+                    },
+                    {
+                      label: "Texto Menu",
+                      ...getFieldProps<string>("cor_texto_menu"),
                     },
                   ]}
                 />
                 <Divider />
-                {Object.entries(MuiDefaultPalette).map(
-                  ([nome, paletaPadrao]) => {
-                    let _nome: Mui.PaletteOptions = nome as Mui.PaletteOptions;
+                {Object.entries(MuiDefaultPalette).map((entry) => {
+                  const [nome, paletaPadrao] = entry as [
+                    Mui.PaletteOptions,
+                    Mui.Palette
+                  ];
 
-                    const coresPaleta =
-                      tema.cores_paleta?.[_nome] || paletaPadrao;
+                  const coresPaleta = tema.cores_paleta?.[nome] || paletaPadrao;
+                  const light =
+                    coresPaleta.light || lighten(coresPaleta.main, 0.2);
+                  const dark =
+                    coresPaleta.dark || darken(coresPaleta.main, 0.2);
+                  const contrastText =
+                    tema.cores_paleta?.[nome]?.contrastText ||
+                    paletaPadrao.contrastText;
 
-                    return (
-                      <ContainerAlterarCores
-                        key={_nome}
-                        label={MuiPaletteNames[_nome]}
-                        cores={[
-                          {
-                            label: "Padrão",
-                            cor: coresPaleta.main,
-                            onChange: (v) =>
-                              handleChangeCorPaleta(v, _nome, "main"),
-                          },
-                          {
-                            label: "Claro",
-                            cor:
-                              coresPaleta.light ||
-                              lighten(coresPaleta.main, 0.2),
-                            onChange: (v) =>
-                              handleChangeCorPaleta(v, _nome, "light"),
-                          },
-                          {
-                            label: "Escuro",
-                            cor:
-                              coresPaleta.dark || darken(coresPaleta.main, 0.2),
-                            onChange: (v) =>
-                              handleChangeCorPaleta(v, _nome, "dark"),
-                          },
-                          {
-                            label: "Cor do texto",
-                            cor: coresPaleta.contrastText || "#000",
-                            onChange: (v) =>
-                              handleChangeCorPaleta(v, _nome, "contrastText"),
-                          },
-                        ]}
-                      />
-                    );
-                  }
-                )}
+                  return (
+                    <ContainerAlterarCores
+                      key={nome}
+                      label={MuiPaletteNames[nome]}
+                      cores={[
+                        {
+                          label: "Padrão",
+                          ...getFieldProps(`cores_paleta.${nome}.main`),
+                        },
+                        {
+                          label: "Claro",
+                          ...getFieldProps(`cores_paleta.${nome}.light`),
+                          value: light,
+                        },
+                        {
+                          label: "Escuro",
+                          ...getFieldProps(`cores_paleta.${nome}.dark`),
+                          value: dark,
+                        },
+                        {
+                          label: "Cor do texto",
+                          ...getFieldProps(`cores_paleta.${nome}.contrastText`),
+                          value: contrastText,
+                        },
+                      ]}
+                    />
+                  );
+                })}
                 <Divider />
 
                 <Box p={1}>

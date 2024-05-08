@@ -2,15 +2,15 @@ import Grid from "@mui/material/Grid";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { FC, useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { MuiDefaultPalette } from "../../constants";
 import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import PanelEditarTema from "../../containers/TemasMui/PanelEditarTema";
 import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizarTema";
+import { useTemasMui } from "../../contexts/TemasMuiContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useAxios from "../../services/useAxios";
-import { toast } from "react-toastify";
-import { useTemasMui } from "../../contexts/TemasMuiContext";
 
 interface SalvarTemaProps {}
 
@@ -30,15 +30,15 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
     url_logo_header: "",
     url_logo_login: "",
     url_logo_simples: "",
-    background_default: "#f0f0f0",
-    background_paper: "#ffffff",
-    text_primary: "#000000",
-    text_secondary: "#000000",
-    text_disabled: "#000000",
+    background_default: "",
+    background_paper: "",
+    text_primary: "",
+    text_secondary: "",
+    text_disabled: "",
     cor_header: "",
-    cor_texto_header: "#000000",
+    cor_texto_header: "",
     cor_menu: "",
-    cor_texto_menu: "#000000",
+    cor_texto_menu: "",
     cores_paleta: MuiDefaultPalette,
   });
 
