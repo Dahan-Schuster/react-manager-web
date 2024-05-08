@@ -21,6 +21,8 @@ interface ThemeContextValue {
 
   getUrlLogo: (tipo: "login" | "header" | "simples") => string | null;
   getUrlFavicon: () => string;
+
+  fetchTema: (modo?: Mui.ThemeMode) => Promise<void>;
 }
 
 const MuiThemeContext = createContext<ThemeContextValue | null>(null);
@@ -65,7 +67,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
     return temaAtivo?.url_favicon
       ? config.apiBaseUrl + temaAtivo.url_favicon
       : "/favicon_default.svg";
-  }, [temaAtivo]);
+  }, [temaAtivo?.url_favicon]);
 
   const toggleMode = useCallback(() => {
     const modo = temaAtivo?.mui_mode === "dark" ? "light" : "dark";
@@ -77,8 +79,8 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
   }, []);
 
   const fetchTema = useCallback(
-    (modo?: Mui.ThemeMode) => {
-      fetch(
+    async (modo?: Mui.ThemeMode) => {
+      return fetch(
         config.apiBaseUrl +
           `/sistema/temas-mui/ativo-${modo || temaAtivo?.mui_mode || "light"}`
       )
@@ -187,7 +189,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
       document.getElementsByTagName("head")[0].appendChild(link);
     }
     link.href = getUrlFavicon();
-  }, []);
+  }, [temaAtivo?.url_favicon]);
 
   return (
     <MuiThemeContext.Provider
@@ -195,6 +197,7 @@ export const MuiThemeProvider: FC<{ children?: ReactNode }> = ({
         muiTheme: theme,
         temaAtivo,
         toggleMode,
+        fetchTema,
 
         getUrlLogo,
         getUrlFavicon,
