@@ -123,6 +123,7 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Select"
+                defaultValue=""
               >
                 <MenuItem value={""}>Selecione</MenuItem>
                 <MenuItem value={"1"}>Opção 1</MenuItem>

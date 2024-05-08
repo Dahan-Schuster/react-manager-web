@@ -76,7 +76,6 @@ const PickerCor: FC<PickerCorProps> = ({ cor, label, onChange }) => {
           }
         >
           <Input
-            id={`input-cor-${label}`}
             margin="dense"
             fullWidth
             value={cor}
