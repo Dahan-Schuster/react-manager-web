@@ -3,12 +3,13 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import { Breakpoint, SxProps } from "@mui/material/styles";
-import { FC, ReactNode, useCallback, useState } from "react";
+import { FC, Fragment, ReactNode, useCallback, useState } from "react";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
 import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import Grid from "@mui/material/Grid";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -17,6 +18,7 @@ interface MainLayoutProps {
   mainContainerMaxWidth?: Breakpoint;
   mainContainerSx?: SxProps;
   paperSx?: SxProps;
+  options?: ReactNode[];
 }
 
 /**
@@ -29,6 +31,7 @@ const MainLayout: FC<MainLayoutProps> = ({
   mainContainerMaxWidth = "lg",
   mainContainerSx = {},
   paperSx = {},
+  options = [],
 }) => {
   usePageTitle(title);
 
@@ -67,10 +70,27 @@ const MainLayout: FC<MainLayoutProps> = ({
             ...mainContainerSx,
           }}
         >
-          <Box mb={2}>
-            <RouterBreadcrumbs />
-            {!hideTitle && <h2>{title}</h2>}
-          </Box>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={6} md={4}>
+              <RouterBreadcrumbs />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={8}
+              display="inline-flex"
+              justifyContent="flex-end"
+              flexWrap="wrap"
+              gap={1}
+            >
+              {options.map((option, index) => (
+                <Fragment key={index}>{option}</Fragment>
+              ))}
+            </Grid>
+          </Grid>
+
+          <Box mb={2}>{!hideTitle && <h2>{title}</h2>}</Box>
 
           <Paper sx={{ p: 2, ...paperSx }}>{children}</Paper>
         </Container>
