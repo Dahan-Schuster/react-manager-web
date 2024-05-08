@@ -68,6 +68,7 @@ const LoginTema: FC<LoginTemaProps> = ({ tema, file }) => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            maxWidth: "400px",
           }}
         >
           <h2>Login</h2>

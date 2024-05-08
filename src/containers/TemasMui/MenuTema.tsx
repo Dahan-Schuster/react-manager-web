@@ -50,6 +50,7 @@ const MenuTema: FC<MenuTemaProps> = ({ tema }) => {
           "& .MuiDrawer-paper": {
             backgroundColor: tema?.cor_menu || theme.palette.background.paper,
             position: "relative",
+            zIndex: 1,
           },
 
           "& .MuiListItemText-root": {

@@ -72,7 +72,10 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
         tema.cor_header ||
         tema.cores_paleta.primary?.main ||
         MuiDefaultPalette.primary.main,
-      cor_texto_header: tema.cor_texto_header || tema.text_primary || "#000000",
+      cor_texto_header:
+        tema.cor_texto_header ||
+        tema.cores_paleta.primary?.contrastText ||
+        MuiDefaultPalette.primary.contrastText,
       cor_menu: tema.cor_menu || tema.background_paper || "#fff",
       cor_texto_menu: tema.cor_texto_menu || "#000000",
     };

@@ -70,11 +70,11 @@ const PanelPrevisualizarTema: FC<PanelPrevisualizarTemaProps> = ({
           <Grid item xs={12} sm={12}>
             <HeaderTema tema={tema} file={fileLogoHeader} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <LoginTema tema={tema} file={fileLogoLogin || fileLogoHeader} />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
             <MenuTema tema={tema} />
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <LoginTema tema={tema} file={fileLogoLogin || fileLogoHeader} />
           </Grid>
         </Grid>
       </SimpleAccordion>
