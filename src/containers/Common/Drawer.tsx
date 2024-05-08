@@ -1,63 +1,12 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
-import MuiSwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Toolbar from "@mui/material/Toolbar";
-import { CSSObject, Theme, styled } from "@mui/material/styles";
-import {
-  appBarMinHeight,
-  drawerWidthClosed,
-  drawerWidthOpen,
-  isIOS,
-} from "../constants";
-import { useMuiTheme } from "../contexts/MuiThemeContext";
-import StyledIconButton from "./StyledIconButton";
 import Typography from "@mui/material/Typography";
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-  width: drawerWidthOpen,
-  "& .MuiListItemText-root": {
-    textWrap: "wrap",
-  },
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: drawerWidthClosed,
-  "& .MuiListItemText-root, & .MenuDrawerItemChildren": {
-    display: "none",
-  },
-});
-
-const StyledDrawer = styled(MuiSwipeableDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  "& .MuiDrawer-paper": {
-    border: "none",
-    whiteSpace: "nowrap",
-    boxSizing: "border-box",
-    ...(open && {
-      ...openedMixin(theme),
-      "& .MuiDrawer-paper": openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      "& .MuiDrawer-paper": closedMixin(theme),
-    }),
-  },
-  "& .MuiListItemButton-root": {
-    minHeight: "48px",
-  },
-}));
+import StyledDrawer from "../../components/StyledDrawer";
+import StyledIconButton from "../../components/StyledIconButton";
+import { appBarMinHeight, isIOS } from "../../constants";
+import { useMuiTheme } from "../../contexts/MuiThemeContext";
 
 interface DrawerProps {
   anchor: "left" | "right";

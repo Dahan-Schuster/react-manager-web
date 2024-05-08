@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Drawer from "../../components/Drawer";
 
 import List from "@mui/material/List";
 import { useAuth } from "../../contexts/AuthContext";
 import MenuDrawerItem from "./MenuDrawerItem";
 import { drawerWidthOpen } from "../../constants";
+import Drawer from "./Drawer";
 
 const bottomItems: Sistema.MenuItemType[] = [
   {
