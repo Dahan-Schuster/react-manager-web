@@ -13,6 +13,7 @@ import { Id, toast } from "react-toastify";
 import { useLocalStorage } from "usehooks-ts";
 import { storageBaseName } from "../../constants";
 import RowModuloPerfisPermissoes from "./RowModuloPerfisPermissoes";
+import ColunaNomePerfil from "./ColunaNomePerfil";
 
 interface TableModulosPerfisPermissoesProps {
   modulos: Sistema.ModuloType[];
@@ -66,7 +67,7 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
             <col style={{ width: "48px" }} />
             <col style={{ width: "200px" }} />
             {perfis.map((p) => (
-              <col key={p.id} style={{ width: "100px" }} />
+              <col key={p.id} style={{ width: "120px" }} />
             ))}
           </colgroup>
           <TableHead>
@@ -93,8 +94,8 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
                 Módulos
               </TableCell>
               {perfis.map((p) => (
-                <TableCell key={p.id} align="left">
-                  {p.nome}
+                <TableCell key={p.id} sx={{ px: 1 }} align="left">
+                  <ColunaNomePerfil perfil={p} />
                 </TableCell>
               ))}
             </TableRow>

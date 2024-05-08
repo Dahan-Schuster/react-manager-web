@@ -51,7 +51,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
         </TableCell>
         {perfis.map((perfil) => {
           return (
-            <TableCell key={perfil.id} align="left">
+            <TableCell key={perfil.id} sx={{ px: 1 }} align="left">
               <CheckboxTodasPermissoesModulo modulo={modulo} perfil={perfil} />
             </TableCell>
           );
@@ -86,6 +86,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
                         key={perfil.id}
                         align="left"
                         sx={{
+                          px: 1,
                           borderBottom: "unset",
                         }}
                       >

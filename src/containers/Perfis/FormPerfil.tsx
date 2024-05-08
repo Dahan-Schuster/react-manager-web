@@ -5,9 +5,10 @@ import CustomDialog from "../../components/CustomDialog";
 import Button from "@mui/material/Button";
 import { usePerfis } from "../../contexts/PerfisContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
+import { toast } from "react-toastify";
 
 interface FormNovoPerfilProps {
-  id?: number;
+  perfil?: Perfis.PerfilType;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -15,31 +16,47 @@ interface FormNovoPerfilProps {
 /**
  * Formulário de criação de perfil
  */
-const FormNovoPerfil: FC<FormNovoPerfilProps> = ({ id, open, setOpen }) => {
+const FormPerfil: FC<FormNovoPerfilProps> = ({
+  perfil: _perfil,
+  open,
+  setOpen,
+}) => {
   const { criarPerfil, updatePerfis, showPerfil } = usePerfis();
   const [loading, setLoading] = useState<boolean>(false);
-  const [perfil, setPerfil] = useState<Perfis.CreatePerfilValues>({ nome: "" });
+  const [perfil, setPerfil] = useState<Perfis.CreatePerfilValues>(
+    _perfil || { nome: "" }
+  );
 
   useDebounceEffect(() => {
-    if (id) showPerfil(id).then((response) => setPerfil(response.perfil));
-  }, []);
+    if (_perfil?.id && open)
+      showPerfil(_perfil.id).then((response) => setPerfil(response.perfil));
+  }, [_perfil?.id, open]);
 
   const handleSubmit = useCallback(
     (values: Perfis.CreatePerfilValues, close = true) => {
       setLoading(true);
 
-      if (id) {
-        updatePerfis(id, values).finally(() => {
-          setLoading(false);
-        });
+      if (_perfil?.id) {
+        updatePerfis(_perfil.id, values)
+          .then((res) => {
+            res.success && toast.success("Perfil salvo!");
+          })
+          .finally(() => {
+            setLoading(false);
+            setOpen(false);
+          });
       } else {
-        criarPerfil(values).finally(() => {
-          setLoading(false);
-          close && setOpen(false);
-        });
+        criarPerfil(values)
+          .then((res) => {
+            res.success && toast.success("Perfil criado!");
+          })
+          .finally(() => {
+            setLoading(false);
+            close && setOpen(false);
+          });
       }
     },
-    []
+    [_perfil?.id]
   );
 
   return (
@@ -53,7 +70,7 @@ const FormNovoPerfil: FC<FormNovoPerfilProps> = ({ id, open, setOpen }) => {
           <Form>
             <CustomDialog
               open={open}
-              title="Criar perfil"
+              title={_perfil?.id ? "Editar perfil" : "Criar perfil"}
               actions={[
                 <Button
                   disabled={loading}
@@ -67,9 +84,9 @@ const FormNovoPerfil: FC<FormNovoPerfilProps> = ({ id, open, setOpen }) => {
                     loading ? undefined : () => handleSubmit(values, false)
                   }
                 >
-                  {id ? "Salvar" : "Criar"}
+                  {_perfil?.id ? "Salvar" : "Criar"}
                 </Button>,
-                !id && (
+                !_perfil?.id && (
                   <Button
                     disabled={loading}
                     onClick={
@@ -95,4 +112,4 @@ const FormNovoPerfil: FC<FormNovoPerfilProps> = ({ id, open, setOpen }) => {
   );
 };
 
-export default FormNovoPerfil;
+export default FormPerfil;

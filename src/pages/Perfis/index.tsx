@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { FC, useState } from "react";
 import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
-import FormNovoPerfil from "../../containers/Perfis/FormNovoPerfil";
+import FormPerfil from "../../containers/Perfis/FormPerfil";
 import TableModulosPerfisPermissoes from "../../containers/Perfis/TableModulosPerfisPermissoes";
 import { usePerfis } from "../../contexts/PerfisContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
@@ -49,7 +49,7 @@ const Perfis: FC = () => {
     >
       <TableModulosPerfisPermissoes modulos={modulos} perfis={perfis} />
 
-      <FormNovoPerfil open={openFormPerfil} setOpen={setOpenFormPerfil} />
+      <FormPerfil open={openFormPerfil} setOpen={setOpenFormPerfil} />
     </MainLayout>
   );
 };

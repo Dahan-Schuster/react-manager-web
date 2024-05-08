@@ -13,6 +13,7 @@ interface PerfisContextValue {
   showPerfil: (
     id: number
   ) => Promise<Common.CommonResponse & { perfil: Perfis.PerfilType }>;
+  deletarPerfil: (id: number) => Promise<Common.CommonResponse>;
   getPerfis: (comPermissoes?: boolean) => Promise<void>;
   updatePerfis: (
     id: number,
@@ -54,6 +55,22 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
       });
 
       return response as Common.CommonResponse & { perfil: Perfis.PerfilType };
+    },
+    [makeRequest]
+  );
+
+  const deletarPerfil = useCallback(
+    async (id: number) => {
+      const response = await makeRequest({
+        url: "/perfis/" + id,
+        method: "delete",
+      });
+
+      if (response.success) {
+        setPerfis((list) => list.filter((i) => i.id !== id));
+      }
+
+      return response as Common.CommonResponse;
     },
     [makeRequest]
   );
@@ -109,6 +126,7 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
         showPerfil,
         updatePerfis,
         criarPerfil,
+        deletarPerfil,
       }}
     >
       {children}
