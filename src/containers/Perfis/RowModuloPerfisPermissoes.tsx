@@ -26,7 +26,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
 
   return (
     <Fragment>
-      <TableRow sx={{ borderBottom: "unset" }}>
+      <TableRow sx={{ borderBottom: "unset" }} hover>
         <TableCell>
           <StyledIconButton
             aria-label="expand row"
@@ -67,7 +67,7 @@ const RowModuloPerfisPermissoes: FC<RowModuloPerfisPermissoesProps> = ({
             >
               <TableBody>
                 {modulo.tiposPermissoes.map((tipoPerm) => (
-                  <TableRow key={tipoPerm.id}>
+                  <TableRow key={tipoPerm.id} hover>
                     <TableCell sx={{ borderBottom: "unset", width: "48px" }} />
                     <TableCell
                       component="th"
