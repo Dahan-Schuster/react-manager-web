@@ -10,10 +10,16 @@ import useAxios from "../services/useAxios";
 
 interface PerfisContextValue {
   perfis: Perfis.PerfilType[];
+  showPerfil: (
+    id: number
+  ) => Promise<Common.CommonResponse & { perfil: Perfis.PerfilType }>;
   getPerfis: (comPermissoes?: boolean) => Promise<void>;
   updatePerfis: (
     id: number,
     values: Perfis.UpdatePerfilValues
+  ) => Promise<Common.CommonResponse & { perfil: Perfis.PerfilType }>;
+  criarPerfil: (
+    values: Perfis.CreatePerfilValues
   ) => Promise<Common.CommonResponse & { perfil: Perfis.PerfilType }>;
 }
 
@@ -41,6 +47,17 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const showPerfil = useCallback(
+    async (id: number) => {
+      const response = await makeRequest({
+        url: "/perfis/" + id,
+      });
+
+      return response as Common.CommonResponse & { perfil: Perfis.PerfilType };
+    },
+    [makeRequest]
+  );
+
   const updatePerfis = useCallback(
     async (id: number, values: Perfis.UpdatePerfilValues) => {
       const response = await makeRequest({
@@ -64,12 +81,34 @@ export const PerfisProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const criarPerfil = useCallback(
+    async (values: Perfis.CreatePerfilValues) => {
+      const response = await makeRequest({
+        method: "post",
+        url: "/perfis/",
+        data: values,
+      });
+
+      if (response.success) {
+        setPerfis((perfis) => [
+          ...perfis,
+          response.perfil as Perfis.PerfilType,
+        ]);
+      }
+
+      return response as Common.CommonResponse & { perfil: Perfis.PerfilType };
+    },
+    [makeRequest]
+  );
+
   return (
     <PerfisContext.Provider
       value={{
         perfis,
         getPerfis,
+        showPerfil,
         updatePerfis,
+        criarPerfil,
       }}
     >
       {children}

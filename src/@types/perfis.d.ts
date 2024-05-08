@@ -10,4 +10,8 @@ namespace Perfis {
     novasPermissoes?: number[];
     permissoesDeletar?: number[];
   }
+
+  interface CreatePerfilValues {
+    nome: string;
+  }
 }
