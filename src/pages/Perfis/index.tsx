@@ -1,10 +1,13 @@
+import { AddCircle } from "@mui/icons-material";
+import Button from "@mui/material/Button";
 import { FC, useState } from "react";
-import LoadingOverlay from "../../components/LoadingOverlay";
 import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
+import FormNovoPerfil from "../../containers/Perfis/FormNovoPerfil";
 import TableModulosPerfisPermissoes from "../../containers/Perfis/TableModulosPerfisPermissoes";
 import { usePerfis } from "../../contexts/PerfisContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
+import useUserPermissions from "../../hooks/useUserPermissions";
 import useModulos from "../../services/useModulos";
 
 /**
@@ -13,6 +16,9 @@ import useModulos from "../../services/useModulos";
 const Perfis: FC = () => {
   const { perfis, getPerfis } = usePerfis();
   const { modulos, getModulos } = useModulos();
+  const { has } = useUserPermissions();
+
+  const [openFormPerfil, setOpenFormPerfil] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -24,9 +30,26 @@ const Perfis: FC = () => {
   }, []);
 
   return (
-    <MainLayout title="Perfis">
-      {loading && <LoadingOverlay open />}
+    <MainLayout
+      title="Perfis"
+      loading={loading}
+      options={
+        has("perfis-criar")
+          ? [
+              <Button
+                startIcon={<AddCircle />}
+                variant="outlined"
+                onClick={() => setOpenFormPerfil(true)}
+              >
+                Adicionar perfil
+              </Button>,
+            ]
+          : []
+      }
+    >
       <TableModulosPerfisPermissoes modulos={modulos} perfis={perfis} />
+
+      <FormNovoPerfil open={openFormPerfil} setOpen={setOpenFormPerfil} />
     </MainLayout>
   );
 };
