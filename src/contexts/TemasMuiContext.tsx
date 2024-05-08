@@ -14,6 +14,7 @@ interface TemasMuiContextValue {
   temas: Mui.Theme[];
   setTemas: Dispatch<SetStateAction<Mui.Theme[]>>;
   getTemas: () => Promise<void>;
+  ativarTema: (tema: Mui.Theme) => Promise<Common.CommonResponse>;
 }
 
 const TemasMuiContext = createContext<TemasMuiContextValue | null>(null);
@@ -36,12 +37,25 @@ export const TemasMuiProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [makeRequest]);
 
+  const ativarTema = useCallback(
+    async (tema: Mui.Theme) => {
+      const response = await makeRequest({
+        url: `/sistema/temas-mui/${tema.id}/ativar`,
+        method: "put",
+      });
+
+      return response;
+    },
+    [makeRequest]
+  );
+
   return (
     <TemasMuiContext.Provider
       value={{
         temas,
         setTemas,
         getTemas,
+        ativarTema,
       }}
     >
       {children}
