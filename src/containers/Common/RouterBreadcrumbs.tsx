@@ -12,20 +12,26 @@ export default function RouterBreadcrumbs() {
   pathnames.unshift("/");
 
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs aria-label="breadcrumb" separator="›">
       {pathnames.map((_value, index) => {
         const last = index === pathnames.length - 1;
-        const to = `/${_value}`.replace("//", "/");
+        const currentRouteName = `/${_value}`.replace("//", "/");
+        const to = `${pathnames.slice(0, index + 1).join("/")}`.replace(
+          "//",
+          "/"
+        );
 
-        const nomeRota = nomesRotas[to] || { label: to.substring(1) };
+        const rotaConfig = nomesRotas[to] || {
+          label: currentRouteName.replace("/", ""),
+        };
         const children = (
           <>
-            {!!nomeRota.icon && (
+            {!!rotaConfig.icon && (
               <Icon sx={{ mr: 0.5 }} fontSize="inherit">
-                {nomeRota.icon}
+                {rotaConfig.icon}
               </Icon>
             )}
-            {nomeRota.label}
+            {rotaConfig.label}
           </>
         );
 
@@ -35,8 +41,8 @@ export default function RouterBreadcrumbs() {
           textTransform: "capitalize",
         };
 
-        return last ? (
-          <Typography color="text.primary" key={to} sx={sx}>
+        return last || rotaConfig.disableLink ? (
+          <Typography color="text.primary" key={currentRouteName} sx={sx}>
             {children}
           </Typography>
         ) : (
@@ -44,7 +50,7 @@ export default function RouterBreadcrumbs() {
             underline="hover"
             color="inherit"
             to={to}
-            key={to}
+            key={currentRouteName}
             component={RouterLink as any}
             sx={sx}
           >

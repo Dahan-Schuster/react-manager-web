@@ -1,10 +1,14 @@
 export const storageBaseName = "projetoPadrao";
 
-export const nomesRotas: { [key: string]: { label: string; icon?: string } } = {
+export const nomesRotas: {
+  [key: string]: { label: string; icon?: string; disableLink?: boolean };
+} = {
   "/": { label: "Home", icon: "home" },
   "/usuarios": { label: "Usuários", icon: "people" },
   "/perfis": { label: "Perfis", icon: "account_box" },
   "/temas": { label: "Temas", icon: "palette" },
+  "/temas/editar": { label: "Editar", icon: "edit", disableLink: true },
+  "/temas/novo": { label: "Novo tema", disableLink: true },
 };
 
 export const drawerWidthOpen = 250 as const;
