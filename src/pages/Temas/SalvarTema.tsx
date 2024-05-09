@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { FC, useCallback, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { MuiDefaultPalette } from "../../constants";
 import RequireAuth from "../../containers/Auth/RequireAuth";
@@ -49,19 +49,26 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
 
   useDebounceEffect(() => {
     if (id) {
+      setLoading(true);
       makeRequest({
         url: `/sistema/temas-mui/${id}`,
-      }).then(async (response) => {
-        const tema = response.tema as Mui.Theme;
-        tema?.id === id && setTema(tema);
-      });
+      })
+        .then(async (response) => {
+          const tema = response.tema as Mui.Theme;
+          tema?.id === id && setTema(tema);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, []);
 
   const { makeRequest } = useAxios();
   const { setTemas } = useTemasMui();
   const { fetchTema } = useMuiTheme();
+  const navigate = useNavigate();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = useCallback(
     async (values: Mui.Theme) => {
       if (!values.nome) {
@@ -94,6 +101,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
         }
       });
 
+      setLoading(true);
       const response = await makeRequest({
         url: "sistema/temas-mui",
         method: values.id ? "PUT" : "POST",
@@ -102,6 +110,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setLoading(false);
 
       if (response.success) {
         toast.success("Tema salvo com sucesso!");
@@ -112,6 +121,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
           return list.map((t) => (t.id === tema.id ? tema : t));
         });
         if (tema.ativo) fetchTema();
+        if (!id) navigate("/temas/editar/" + tema.id);
       }
     },
     [fileFavicon, fileLogoLogin, fileLogoHeader]
@@ -143,6 +153,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
         title={id ? "Editar tema" : "Criar tema"}
         mainContainerMaxWidth="xl"
         paperSx={{ p: 0 }}
+        loading={loading}
       >
         <ThemeProvider theme={themePreview}>
           <Grid container>
