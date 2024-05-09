@@ -6,6 +6,9 @@ import { useUsers } from "../../contexts/UsersContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import TabPanel from "../Common/TabPanel";
 import FormDadosIniciais from "./FormDadosIniciais";
+import FormPermissoes from "./FormPermissoes";
+import useModulos from "../../services/useModulos";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 interface CreateUserFormTabs {
   id?: number;
@@ -14,6 +17,8 @@ interface CreateUserFormTabs {
 
 const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
   const { showUser } = useUsers();
+  const { modulos, getModulos } = useModulos();
+
   const [user, setUser] = useState<Users.UserType>({
     id: 0,
     nome: "",
@@ -22,17 +27,18 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
     perfil_id: 0,
   });
 
-  const [loadingId, setLoadingId] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   useDebounceEffect(
     () => {
       if (!id) return;
-      setLoadingId(true);
-      showUser(id)
-        .then((res) => {
-          if (!res.success && !!closeModal) closeModal();
-          setUser(res.user);
+      setLoading(true);
+      Promise.all([showUser(id), getModulos()])
+        .then(([resUser]) => {
+          if (!resUser.success && !!closeModal) closeModal();
+          setUser(resUser.user);
         })
-        .finally(() => setLoadingId(false));
+        .finally(() => setLoading(false));
     },
     [id],
     50
@@ -45,6 +51,7 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
 
   return (
     <Box>
+      {loading && <LoadingOverlay open />}
       <Box sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={tabValue}
@@ -52,11 +59,15 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
           aria-label="tabs usuário"
         >
           <Tab label="Dados iniciais" />
+          <Tab label="Permissões" />
         </Tabs>
       </Box>
 
       <TabPanel group="usuarios" value={tabValue} index={0}>
-        <FormDadosIniciais user={user} loadingId={loadingId} />
+        <FormDadosIniciais user={user} />
+      </TabPanel>
+      <TabPanel group="usuarios" value={tabValue} index={1}>
+        <FormPermissoes user={user} modulos={modulos} />
       </TabPanel>
     </Box>
   );
