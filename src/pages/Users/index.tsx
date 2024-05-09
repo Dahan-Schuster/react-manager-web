@@ -15,24 +15,20 @@ import {
   GridToolbar,
 } from "@mui/x-data-grid";
 
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import Switch from "@mui/material/Switch";
+import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { defaultTablePageSize, tablePageSizes } from "../../constants";
 import MainLayout from "../../containers/Common/MainLayout";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 import CreateUserButton from "../../containers/Users/CreateUserButton";
 import UsersNoRowsOverlay from "../../containers/Users/NoRowsOverlay";
-import SaveUserForm from "../../containers/Users/SaveUserForm";
 import SelectStatus from "../../containers/Users/SelectStatus";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUsers } from "../../contexts/UsersContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useUserPermissions from "../../hooks/useUserPermissions";
-import Tooltip from "@mui/material/Tooltip";
-import { useNavigate } from "react-router-dom";
 
 /**
  * Página de CRUD de usuários
@@ -43,17 +39,13 @@ import { useNavigate } from "react-router-dom";
 const Users: React.FunctionComponent = () => {
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] =
     useState<boolean>(false);
-  const [openEditDialog, setOpenEditDialog] = React.useState(false);
 
-  const handleCloseDialogs = React.useCallback(() => {
-    setOpenEditDialog(false);
+  const handleCloseConfirm = React.useCallback(() => {
     setOpenConfirmDeleteDialog(false);
-    setIdToDeleteOrEdit(undefined);
+    setIdToDelete(undefined);
   }, []);
 
-  const [idToDeleteOrEdit, setIdToDeleteOrEdit] = useState<number | undefined>(
-    undefined
-  );
+  const [idToDelete, setIdToDelete] = useState<number | undefined>(undefined);
 
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -96,15 +88,15 @@ const Users: React.FunctionComponent = () => {
 
   /** Evento chamado ao confirmar a deleção de um usuário */
   const onConfirmDelete = React.useCallback(async () => {
-    const res = await deleteUser(idToDeleteOrEdit!);
+    const res = await deleteUser(idToDelete!);
     if (res.success) {
-      handleCloseDialogs();
+      handleCloseConfirm();
     }
-  }, [deleteUser, idToDeleteOrEdit]);
+  }, [deleteUser, idToDelete]);
 
   /** Evento chamado ao clicar no botão de deleção (coluna de ações da tabela) */
   const handleDeleteClick = React.useCallback((id: number) => {
-    setIdToDeleteOrEdit(id);
+    setIdToDelete(id);
     setOpenConfirmDeleteDialog(true);
   }, []);
 
@@ -303,19 +295,9 @@ const Users: React.FunctionComponent = () => {
         title="Confirmar deleção"
         text="Deseja realmente excluir este usuário? Esta ação é permanente."
         open={openConfirmDeleteDialog}
-        onClose={handleCloseDialogs}
+        onClose={handleCloseConfirm}
         onConfirm={onConfirmDelete}
       />
-
-      <Dialog
-        open={openEditDialog && !!idToDeleteOrEdit}
-        onClose={handleCloseDialogs}
-      >
-        <DialogTitle>Editar usuário</DialogTitle>
-        <DialogContent>
-          <SaveUserForm id={idToDeleteOrEdit} closeModal={handleCloseDialogs} />
-        </DialogContent>
-      </Dialog>
     </MainLayout>
   );
 };
