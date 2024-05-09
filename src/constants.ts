@@ -61,3 +61,8 @@ export const MuiPaletteNames = {
   info: "Info",
   success: "Sucesso",
 } as Record<Mui.PaletteOptions, string>;
+
+export const MuiModesNames = {
+  light: "Claro",
+  dark: "Escuro",
+} as Record<Mui.ThemeMode, string>;

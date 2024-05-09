@@ -15,6 +15,7 @@ interface TemasMuiContextValue {
   setTemas: Dispatch<SetStateAction<Mui.Theme[]>>;
   getTemas: () => Promise<void>;
   ativarTema: (tema: Mui.Theme) => Promise<Common.CommonResponse>;
+  deletarTema: (tema: Mui.Theme) => Promise<Common.CommonResponse>;
 }
 
 const TemasMuiContext = createContext<TemasMuiContextValue | null>(null);
@@ -44,6 +45,26 @@ export const TemasMuiProvider: FC<{ children: ReactNode }> = ({ children }) => {
         method: "put",
       });
 
+      if (response.success) {
+        setTemas(response.temas as Mui.Theme[]);
+      }
+
+      return response;
+    },
+    [makeRequest]
+  );
+
+  const deletarTema = useCallback(
+    async (tema: Mui.Theme) => {
+      const response = await makeRequest({
+        url: `/sistema/temas-mui/${tema.id}`,
+        method: "delete",
+      });
+
+      if (response.success) {
+        setTemas((list) => list.filter((i) => i.id !== tema.id));
+      }
+
       return response;
     },
     [makeRequest]
@@ -56,6 +77,7 @@ export const TemasMuiProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setTemas,
         getTemas,
         ativarTema,
+        deletarTema,
       }}
     >
       {children}

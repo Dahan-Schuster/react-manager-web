@@ -1,19 +1,29 @@
+import MoreVert from "@mui/icons-material/MoreVert";
+import DarkMode from "@mui/icons-material/DarkMode";
+import LightMode from "@mui/icons-material/LightMode";
+import Edit from "@mui/icons-material/Edit";
+import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { FC, useCallback, useState } from "react";
-import BoxCorPaleta from "./BoxCorPaleta";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import Edit from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
-import useUserPermissions from "../../hooks/useUserPermissions";
-import { useTemasMui } from "../../contexts/TemasMuiContext";
-import { LightMode, DarkMode } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
 import Switch from "@mui/material/Switch";
-import { useMuiTheme } from "../../contexts/MuiThemeContext";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { FC, useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useMuiTheme } from "../../contexts/MuiThemeContext";
+import { useTemasMui } from "../../contexts/TemasMuiContext";
+import useUserPermissions from "../../hooks/useUserPermissions";
+import BoxCorPaleta from "./BoxCorPaleta";
+import CustomDialog from "../../components/CustomDialog";
+import Button from "@mui/material/Button";
+import { MuiModesNames } from "../../constants";
 
 interface CardTemaProps {
   item: Mui.Theme;
@@ -24,23 +34,50 @@ interface CardTemaProps {
  */
 const CardTema: FC<CardTemaProps> = ({ item }) => {
   const navigate = useNavigate();
-  const { has } = useUserPermissions();
-  const { ativarTema, setTemas } = useTemasMui();
-  const { fetchTema } = useMuiTheme();
+  const { has, hasOne } = useUserPermissions();
+  const { ativarTema, deletarTema } = useTemasMui();
+  const { fetchTema, temaAtivo } = useMuiTheme();
   const [loading, setLoading] = useState(false);
+
+  const [actionConfirm, setActionConfirm] = useState<
+    "ativar" | "deletar" | null
+  >(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
 
   const handleAtivarTema = useCallback(() => {
     setLoading(true);
     ativarTema(item)
       .then((response) => {
         if (response.success) {
-          setTemas(response.temas as Mui.Theme[]);
           toast.success("Novo tema definido como ativo!");
-          fetchTema();
+          temaAtivo?.mui_mode === item.mui_mode && fetchTema(item.mui_mode);
+          setActionConfirm(null);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [temaAtivo]);
+
+  const handleDeletarTema = useCallback(() => {
+    setLoading(true);
+    deletarTema(item)
+      .then((response) => {
+        if (response.success) {
+          toast.success("Tema deletado com sucesso!");
+          setActionConfirm(null);
         }
       })
       .finally(() => setLoading(false));
   }, []);
+
+  const handleOkConfirm = useCallback(() => {
+    if (actionConfirm === "ativar") {
+      handleAtivarTema();
+    } else if (actionConfirm === "deletar") {
+      handleDeletarTema();
+    }
+  }, [actionConfirm, item]);
 
   return (
     <Paper
@@ -50,50 +87,7 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
         overflow: "hidden",
       }}
     >
-      <Grid container>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.primary?.main || "#3f51b5"}
-            corLabel={item.cores_paleta?.primary?.contrastText || "#fff"}
-            label="Primária"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.secondary?.main || "#f50057"}
-            corLabel={item.cores_paleta?.secondary?.contrastText || "#fff"}
-            label="Secundária"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.error?.main || "#f44336"}
-            corLabel={item.cores_paleta?.error?.contrastText || "#fff"}
-            label="Erro"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.warning?.main || "#ff9800"}
-            corLabel={item.cores_paleta?.warning?.contrastText || "#000"}
-            label="Atenção"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.info?.main || "#2196f3"}
-            corLabel={item.cores_paleta?.info?.contrastText || "#000"}
-            label="Info"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BoxCorPaleta
-            cor={item.cores_paleta?.success?.main || "#4caf50"}
-            corLabel={item.cores_paleta?.success?.contrastText || "#fff"}
-            label="Sucesso"
-          />
-        </Grid>
-      </Grid>
+      <ContainerCoresTema tema={item} />
       <Box
         sx={{
           p: 1,
@@ -117,20 +111,133 @@ const CardTema: FC<CardTemaProps> = ({ item }) => {
               <Switch
                 checked={!!item.ativo}
                 disabled={!!item.ativo || loading}
-                onChange={handleAtivarTema}
+                onChange={() => {
+                  setActionConfirm("ativar");
+                }}
                 inputProps={{ "aria-label": "controlled" }}
               />
             </span>
           </Tooltip>
         )}
-        {has("temas-editar") && (
-          <IconButton onClick={() => navigate(`/temas/editar/${item.id}`)}>
-            <Edit />
+        {hasOne(["temas-editar", "tema-deletar"]) && (
+          <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
+            <MoreVert />
           </IconButton>
         )}
       </Box>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={() => setAnchorEl(null)}
+      >
+        {has("temas-editar") && (
+          <MenuItem onClick={() => navigate(`/temas/editar/${item.id}`)}>
+            <ListItemIcon>
+              <Edit fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Editar</ListItemText>
+          </MenuItem>
+        )}
+        {has("temas-deletar") && (
+          <MenuItem
+            onClick={() => {
+              setActionConfirm("deletar");
+            }}
+          >
+            <ListItemIcon>
+              <Delete fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Deletar</ListItemText>
+          </MenuItem>
+        )}
+      </Menu>
+
+      <CustomDialog
+        title="Confirma a ação?"
+        open={!!actionConfirm}
+        onCloseClick={() => {
+          setActionConfirm(null);
+        }}
+        closeLabel="Cancelar"
+        actions={[
+          <Button
+            disabled={loading}
+            onClick={handleOkConfirm}
+            color={actionConfirm === "deletar" ? "warning" : "primary"}
+            variant="contained"
+          >
+            Sim, {actionConfirm === "ativar" ? "ativar" : "deletar"}
+          </Button>,
+        ]}
+      >
+        <Typography>
+          {actionConfirm === "deletar" && (
+            <>
+              Tem certeza que deseja deletar o tema <b>{item.nome}</b>? Esta
+              ação é irreversível.
+            </>
+          )}
+          {actionConfirm === "ativar" && (
+            <>
+              Tem certeza que deseja ativar o tema <b>{item.nome}</b>? O tema{" "}
+              <b>{MuiModesNames[item.mui_mode]}</b> ativo atualmente será
+              substutuído por este.
+            </>
+          )}
+        </Typography>
+      </CustomDialog>
     </Paper>
   );
 };
+
+function ContainerCoresTema({ tema }: { tema: Mui.Theme }) {
+  return (
+    <Grid container>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.primary?.main || "#3f51b5"}
+          corLabel={tema.cores_paleta?.primary?.contrastText || "#fff"}
+          label="Primária"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.secondary?.main || "#f50057"}
+          corLabel={tema.cores_paleta?.secondary?.contrastText || "#fff"}
+          label="Secundária"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.error?.main || "#f44336"}
+          corLabel={tema.cores_paleta?.error?.contrastText || "#fff"}
+          label="Erro"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.warning?.main || "#ff9800"}
+          corLabel={tema.cores_paleta?.warning?.contrastText || "#000"}
+          label="Atenção"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.info?.main || "#2196f3"}
+          corLabel={tema.cores_paleta?.info?.contrastText || "#000"}
+          label="Info"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <BoxCorPaleta
+          cor={tema.cores_paleta?.success?.main || "#4caf50"}
+          corLabel={tema.cores_paleta?.success?.contrastText || "#fff"}
+          label="Sucesso"
+        />
+      </Grid>
+    </Grid>
+  );
+}
 
 export default CardTema;
