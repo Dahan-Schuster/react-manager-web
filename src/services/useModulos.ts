@@ -3,7 +3,7 @@ import useAxios from "./useAxios";
 
 interface ModulosProps {
   modulos: Sistema.ModuloType[];
-  getModulos: () => void;
+  getModulos: () => Promise<Common.CommonResponse>;
 }
 
 /**
@@ -22,6 +22,8 @@ const useModulos = (): ModulosProps => {
     if (response.success) {
       setModulos(response.modulos as Sistema.ModuloType[]);
     }
+
+    return response;
   }, []);
 
   return {
