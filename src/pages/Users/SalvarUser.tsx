@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useParams } from "react-router-dom";
 import MainLayout from "../../containers/Common/MainLayout";
-import SaveUserForm from "../../containers/Users/SaveUserForm";
+import SaveUserTabs from "../../containers/Users/SaveUserTabs";
 import { useUsers } from "../../contexts/UsersContext";
 
 interface SalvarUserProps {}
@@ -20,7 +20,7 @@ const SalvarUser: FC<SalvarUserProps> = () => {
       title={id ? "Editar Usuário" : "Cadastrar Usuário"}
       loading={loadingUsers}
     >
-      <SaveUserForm id={id} />
+      <SaveUserTabs id={id} />
     </MainLayout>
   );
 };

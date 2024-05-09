@@ -1,3 +1,5 @@
+import type { TextFieldProps } from "@mui/material/TextField";
+
 export const storageBaseName = "projetoPadrao";
 
 export const nomesRotas: {
@@ -27,6 +29,14 @@ export const defaultTablePageSize = 25;
 export const tablePageSizes = [25, 50, 100];
 
 export const acceptImg = "image/png, image/jpg, image/jpeg";
+
+export const inputsMargin = "normal";
+
+export const commonTextFieldProps: Partial<TextFieldProps> = {
+  margin: inputsMargin,
+  fullWidth: true,
+  autoComplete: "off",
+};
 
 export const MuiDefaultPalette = {
   primary: {
