@@ -7,8 +7,10 @@ import { FC, ReactNode } from "react";
 
 interface SimpleAccordionProps {
   label: string;
+  secondayLabel?: string;
   children: ReactNode;
   defaultExpanded?: boolean;
+  unmountOnExit?: boolean;
 }
 
 /**
@@ -16,13 +18,16 @@ interface SimpleAccordionProps {
  */
 const SimpleAccordion: FC<SimpleAccordionProps> = ({
   label,
+  secondayLabel,
   children,
   defaultExpanded,
+  unmountOnExit = true,
 }) => {
   return (
     <Accordion
       disableGutters
       defaultExpanded={defaultExpanded}
+      slotProps={{ transition: { unmountOnExit } }}
       sx={{
         "&.Mui-expanded::before": {
           content: "''",
@@ -42,10 +47,28 @@ const SimpleAccordion: FC<SimpleAccordionProps> = ({
         },
       }}
     >
-      <AccordionSummary expandIcon={<ArrowDropDown />}>
-        <Typography color="text.secondary" variant="h5">
+      <AccordionSummary
+        expandIcon={<ArrowDropDown />}
+        sx={{
+          "& .MuiAccordionSummary-content": {
+            gap: 2,
+            flexWrap: { xs: "wrap", md: "nowrap" },
+          },
+        }}
+      >
+        <Typography
+          minWidth={"15%"}
+          color="text.primary"
+          variant="h5"
+          fontSize={22}
+        >
           {label}
         </Typography>
+        {!!secondayLabel && (
+          <Typography color="text.secondary" variant="h6" fontSize={18}>
+            {secondayLabel}
+          </Typography>
+        )}
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>
