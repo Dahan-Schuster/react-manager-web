@@ -4,7 +4,6 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { MuiDefaultPalette } from "../../constants";
-import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import PanelEditarTema from "../../containers/TemasMui/PanelEditarTema";
 import PanelPrevisualizarTema from "../../containers/TemasMui/PanelPrevisualizarTema";
@@ -148,43 +147,41 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
   );
 
   return (
-    <RequireAuth>
-      <MainLayout
-        title={id ? "Editar tema" : "Criar tema"}
-        mainContainerMaxWidth="xl"
-        paperSx={{ p: 0 }}
-        loading={loading}
-      >
-        <ThemeProvider theme={themePreview}>
-          <Grid container>
-            {/* Painel de visualização do tema */}
-            <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }} sx={{ p: 2 }}>
-              <PanelPrevisualizarTema
-                tema={tema}
-                fileFavicon={fileFavicon}
-                fileLogoHeader={fileLogoHeader}
-                fileLogoLogin={fileLogoLogin}
-              />
-            </Grid>
-
-            {/* Painel de edição do tema */}
-            <Grid item xs={12} md={3} order={{ xs: 1, md: 2 }}>
-              <PanelEditarTema
-                tema={tema}
-                setTema={setTema}
-                handleSubmit={handleSubmit}
-                fileFavicon={fileFavicon}
-                setFileFavicon={setFileFavicon}
-                fileLogoHeader={fileLogoHeader}
-                setFileLogoHeader={setFileLogoHeader}
-                fileLogoLogin={fileLogoLogin}
-                setFileLogoLogin={setFileLogoLogin}
-              />
-            </Grid>
+    <MainLayout
+      title={id ? "Editar tema" : "Criar tema"}
+      mainContainerMaxWidth="xl"
+      paperSx={{ p: 0 }}
+      loading={loading}
+    >
+      <ThemeProvider theme={themePreview}>
+        <Grid container>
+          {/* Painel de visualização do tema */}
+          <Grid item xs={12} md={9} order={{ xs: 2, md: 1 }} sx={{ p: 2 }}>
+            <PanelPrevisualizarTema
+              tema={tema}
+              fileFavicon={fileFavicon}
+              fileLogoHeader={fileLogoHeader}
+              fileLogoLogin={fileLogoLogin}
+            />
           </Grid>
-        </ThemeProvider>
-      </MainLayout>
-    </RequireAuth>
+
+          {/* Painel de edição do tema */}
+          <Grid item xs={12} md={3} order={{ xs: 1, md: 2 }}>
+            <PanelEditarTema
+              tema={tema}
+              setTema={setTema}
+              handleSubmit={handleSubmit}
+              fileFavicon={fileFavicon}
+              setFileFavicon={setFileFavicon}
+              fileLogoHeader={fileLogoHeader}
+              setFileLogoHeader={setFileLogoHeader}
+              fileLogoLogin={fileLogoLogin}
+              setFileLogoLogin={setFileLogoLogin}
+            />
+          </Grid>
+        </Grid>
+      </ThemeProvider>
+    </MainLayout>
   );
 };
 

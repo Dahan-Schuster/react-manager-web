@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { FC, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import CardTema from "../../containers/TemasMui/CardTema";
 import { useTemasMui } from "../../contexts/TemasMuiContext";
@@ -39,50 +38,48 @@ const TemasPage: FC<TemasPageProps> = () => {
   }, [temas]);
 
   return (
-    <RequireAuth>
-      <MainLayout
-        title="Temas"
-        options={[
-          ...(has("temas-criar")
-            ? [
-                <Button
-                  startIcon={<AddCircle />}
-                  variant="outlined"
-                  onClick={() => navigate("/temas/novo")}
-                >
-                  Adicionar
-                </Button>,
-              ]
-            : []),
-        ]}
-      >
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography color="text.primary" variant="h6">
-              Temas ativos
-            </Typography>
-          </Grid>
-          {temasAtivos.map((t) => (
-            <Grid item xs={12} sm={6} md={4} key={t.id}>
-              <CardTema item={t} />
-            </Grid>
-          ))}
+    <MainLayout
+      title="Temas"
+      options={[
+        ...(has("temas-criar")
+          ? [
+              <Button
+                startIcon={<AddCircle />}
+                variant="outlined"
+                onClick={() => navigate("/temas/novo")}
+              >
+                Adicionar
+              </Button>,
+            ]
+          : []),
+      ]}
+    >
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography color="text.primary" variant="h6">
+            Temas ativos
+          </Typography>
         </Grid>
-        <Divider sx={{ my: 2 }} />
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography color="text.primary" variant="h6">
-              Temas inativos
-            </Typography>
+        {temasAtivos.map((t) => (
+          <Grid item xs={12} sm={6} md={4} key={t.id}>
+            <CardTema item={t} />
           </Grid>
-          {temasInativos.map((t) => (
-            <Grid item xs={12} sm={6} md={4} key={t.id}>
-              <CardTema item={t} />
-            </Grid>
-          ))}
+        ))}
+      </Grid>
+      <Divider sx={{ my: 2 }} />
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography color="text.primary" variant="h6">
+            Temas inativos
+          </Typography>
         </Grid>
-      </MainLayout>
-    </RequireAuth>
+        {temasInativos.map((t) => (
+          <Grid item xs={12} sm={6} md={4} key={t.id}>
+            <CardTema item={t} />
+          </Grid>
+        ))}
+      </Grid>
+    </MainLayout>
   );
 };
 

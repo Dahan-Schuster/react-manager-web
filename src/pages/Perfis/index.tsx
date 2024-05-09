@@ -1,7 +1,6 @@
 import { AddCircle } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import { FC, useState } from "react";
-import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import FormPerfil from "../../containers/Perfis/FormPerfil";
 import TableModulosPerfisPermissoes from "../../containers/Perfis/TableModulosPerfisPermissoes";
@@ -54,8 +53,4 @@ const Perfis: FC = () => {
   );
 };
 
-export default () => (
-  <RequireAuth>
-    <Perfis />
-  </RequireAuth>
-);
+export default Perfis;

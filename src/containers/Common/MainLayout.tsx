@@ -11,6 +11,7 @@ import usePageTitle from "../../hooks/usePageTitle";
 import AppHeader from "./AppHeader";
 import MenuDrawer from "./MenuDrawer";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import RequireAuth from "../Auth/RequireAuth";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -21,6 +22,11 @@ interface MainLayoutProps {
   paperSx?: SxProps;
   options?: ReactNode[];
   loading?: boolean;
+  /**
+   * Indica se a página requer autenticação
+   * @default true
+   */
+  requireAuth?: boolean;
 }
 
 /**
@@ -35,6 +41,7 @@ const MainLayout: FC<MainLayoutProps> = ({
   paperSx = {},
   options = [],
   loading,
+  requireAuth = true,
 }) => {
   usePageTitle(title);
 
@@ -46,60 +53,64 @@ const MainLayout: FC<MainLayoutProps> = ({
     setDrawerOpen((prev) => !prev);
   }, []);
 
-  return (
-    <Box sx={{ display: "flex", width: "100%" }}>
-      <CssBaseline />
-      <AppHeader />
-      {loading && <LoadingOverlay open />}
-      <MenuDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+  const Wrapper = requireAuth ? RequireAuth : Fragment;
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          minHeight: `calc(100vh - ${appBarMinHeight})`,
-          overflow: "auto",
-          marginTop: appBarMinHeight,
-          paddingLeft: drawerWidthClosed,
-        }}
-      >
-        <Container
-          maxWidth={mainContainerMaxWidth}
+  return (
+    <Wrapper>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        <CssBaseline />
+        <AppHeader />
+        {loading && <LoadingOverlay open />}
+        <MenuDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+
+        <Box
+          component="main"
           sx={{
-            pt: 2,
-            pb: 2,
-            minHeight: "90%",
-            display: "flex",
-            flexDirection: "column",
-            ...mainContainerSx,
+            flexGrow: 1,
+            minHeight: `calc(100vh - ${appBarMinHeight})`,
+            overflow: "auto",
+            marginTop: appBarMinHeight,
+            paddingLeft: drawerWidthClosed,
           }}
         >
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={6} md={4}>
-              <RouterBreadcrumbs />
+          <Container
+            maxWidth={mainContainerMaxWidth}
+            sx={{
+              pt: 2,
+              pb: 2,
+              minHeight: "90%",
+              display: "flex",
+              flexDirection: "column",
+              ...mainContainerSx,
+            }}
+          >
+            <Grid container spacing={1}>
+              <Grid item xs={12} sm={6} md={4}>
+                <RouterBreadcrumbs />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={8}
+                display="inline-flex"
+                justifyContent="flex-end"
+                flexWrap="wrap"
+                gap={1}
+              >
+                {options.map((option, index) => (
+                  <Fragment key={index}>{option}</Fragment>
+                ))}
+              </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={8}
-              display="inline-flex"
-              justifyContent="flex-end"
-              flexWrap="wrap"
-              gap={1}
-            >
-              {options.map((option, index) => (
-                <Fragment key={index}>{option}</Fragment>
-              ))}
-            </Grid>
-          </Grid>
 
-          <Box mb={2}>{!hideTitle && <h2>{title}</h2>}</Box>
+            <Box mb={2}>{!hideTitle && <h2>{title}</h2>}</Box>
 
-          <Paper sx={{ p: 2, ...paperSx }}>{children}</Paper>
-        </Container>
+            <Paper sx={{ p: 2, ...paperSx }}>{children}</Paper>
+          </Container>
+        </Box>
       </Box>
-    </Box>
+    </Wrapper>
   );
 };
 

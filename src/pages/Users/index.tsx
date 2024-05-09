@@ -21,7 +21,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Switch from "@mui/material/Switch";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { defaultTablePageSize, tablePageSizes } from "../../constants";
-import RequireAuth from "../../containers/Auth/RequireAuth";
 import MainLayout from "../../containers/Common/MainLayout";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 import CreateUserButton from "../../containers/Users/CreateUserButton";
@@ -320,8 +319,4 @@ const Users: React.FunctionComponent = () => {
   );
 };
 
-export default () => (
-  <RequireAuth>
-    <Users />
-  </RequireAuth>
-);
+export default Users;
