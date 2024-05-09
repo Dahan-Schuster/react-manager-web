@@ -32,6 +32,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useUsers } from "../../contexts/UsersContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useUserPermissions from "../../hooks/useUserPermissions";
+import Tooltip from "@mui/material/Tooltip";
 
 /**
  * Página de CRUD de usuários
@@ -176,22 +177,26 @@ const Users: React.FunctionComponent = () => {
         cellClassName: "actions",
         getActions: ({ row }) => {
           const editar = (
-            <GridActionsCellItem
-              icon={<EditIcon />}
-              label="Edit"
-              className="textPrimary"
-              onClick={() => handleEditClick(row.id)}
-              color="inherit"
-            />
+            <Tooltip title="Editar">
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={() => handleEditClick(row.id)}
+                color="inherit"
+              />
+            </Tooltip>
           );
 
           const deletar = (
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={() => handleDeleteClick(row.id)}
-              color="secondary"
-            />
+            <Tooltip title="Deletar">
+              <GridActionsCellItem
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={() => handleDeleteClick(row.id)}
+                color="secondary"
+              />
+            </Tooltip>
           );
 
           const actions = [];
