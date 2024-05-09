@@ -51,6 +51,20 @@ const router = createBrowserRouter([
         },
       },
       {
+        path: "/usuarios/novo",
+        async lazy() {
+          let { default: Index } = await import("../pages/Users/SalvarUser");
+          return { Component: Index };
+        },
+      },
+      {
+        path: "/usuarios/editar/:id",
+        async lazy() {
+          let { default: Index } = await import("../pages/Users/SalvarUser");
+          return { Component: Index };
+        },
+      },
+      {
         path: "/perfis",
         async lazy() {
           let { default: Index } = await import("../pages/Perfis");

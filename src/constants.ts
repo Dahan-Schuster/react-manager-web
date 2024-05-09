@@ -5,6 +5,8 @@ export const nomesRotas: {
 } = {
   "/": { label: "Home", icon: "home" },
   "/usuarios": { label: "Usuários", icon: "people" },
+  "/usuarios/novo": { label: "Novo Usuário", disableLink: true },
+  "/usuarios/editar": { label: "Editar", disableLink: true },
   "/perfis": { label: "Perfis", icon: "account_box" },
   "/temas": { label: "Temas", icon: "palette" },
   "/temas/editar": { label: "Editar", icon: "edit", disableLink: true },

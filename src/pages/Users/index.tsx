@@ -32,6 +32,7 @@ import { useUsers } from "../../contexts/UsersContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import useUserPermissions from "../../hooks/useUserPermissions";
 import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Página de CRUD de usuários
@@ -54,6 +55,7 @@ const Users: React.FunctionComponent = () => {
     undefined
   );
 
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { has } = useUserPermissions();
   const podeAlterarStatus = has("usuarios-alterar-status");
@@ -108,8 +110,7 @@ const Users: React.FunctionComponent = () => {
 
   /** Evento chamado ao clicar no botão de edição (coluna de ações da tabela) */
   const handleEditClick = React.useCallback((id: number) => {
-    setIdToDeleteOrEdit(id);
-    setOpenEditDialog(true);
+    navigate(`/usuarios/editar/${id}`);
   }, []);
 
   /** Evento chamado ao alterar o switch de status de um usuário (coluna de ações da tabela) */
