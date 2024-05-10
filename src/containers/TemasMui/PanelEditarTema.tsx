@@ -7,7 +7,12 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { createTheme, darken, lighten } from "@mui/material/styles";
 import { Form, Formik } from "formik";
 import { Dispatch, FC, SetStateAction, useMemo } from "react";
-import { MuiDefaultPalette, MuiPaletteNames, acceptImg } from "../../constants";
+import {
+  FileSizesBytes,
+  MuiDefaultPalette,
+  MuiPaletteNames,
+  acceptImg,
+} from "../../constants";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import UploadFileButton from "../Common/UploadFileButton";
 import ContainerAlterarCores from "./ContainerAlterarCores";
@@ -120,6 +125,7 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   onUpload={setFileFavicon}
                   file={fileFavicon}
                   accept="image/x-icon"
+                  maxSizeBytes={FileSizesBytes.mb / 2}
                 />
                 <Divider />
                 <UploadFileButton
@@ -127,6 +133,7 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   onUpload={setFileLogoHeader}
                   file={fileLogoHeader}
                   accept={acceptImg}
+                  maxSizeBytes={FileSizesBytes.mb * 2}
                 />
                 <Divider />
                 <UploadFileButton
@@ -134,6 +141,7 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   onUpload={setFileLogoLogin}
                   file={fileLogoLogin}
                   accept={acceptImg}
+                  maxSizeBytes={FileSizesBytes.mb * 2}
                 />
                 <Divider />
                 <ContainerAlterarCores

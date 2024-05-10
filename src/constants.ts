@@ -32,6 +32,11 @@ export const acceptImg = "image/png, image/jpg, image/jpeg";
 
 export const inputsMargin = "normal";
 
+export const FileSizesBytes = {
+  mb: 1048576,
+  kb: 1024,
+};
+
 export const commonTextFieldProps: Partial<TextFieldProps> = {
   margin: inputsMargin,
   fullWidth: true,
