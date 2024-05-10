@@ -1,9 +1,11 @@
-import { FC, useMemo } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import SimpleAccordion from "../Common/SimpleAccordion";
+import CheckboxTodasPermissoesModulo from "./CheckboxTodasPermissoesModulo";
 
 interface AccordionPermissoesModuloUserProps {
   modulo: Sistema.ModuloType;
   user: Users.UserType;
+  setUser: Dispatch<SetStateAction<Users.UserType>>;
 }
 
 /**
@@ -12,25 +14,19 @@ interface AccordionPermissoesModuloUserProps {
 const AccordionPermissoesModuloUser: FC<AccordionPermissoesModuloUserProps> = ({
   modulo,
   user,
+  setUser,
 }) => {
-  const labelPermissoes = useMemo<string>(() => {
-    let label = "";
-    if (modulo.tiposPermissoes.length) {
-      label = "(";
-      modulo.tiposPermissoes.forEach((permModulo) => {
-        label += permModulo.label + ", ";
-      });
-      label = label.slice(0, label.length - 2) + ")";
-    } else {
-      label = "(Módulo sem permissões)";
-    }
-
-    return label;
-  }, []);
-
   return (
-    // TODO: Adicionar checkbox de todas as permissões na linha de título do accordion
-    <SimpleAccordion label={modulo.nome} secondayLabel={labelPermissoes}>
+    <SimpleAccordion
+      label={modulo.nome}
+      actions={[
+        <CheckboxTodasPermissoesModulo
+          modulo={modulo}
+          user={user}
+          setUser={setUser}
+        />,
+      ]}
+    >
       {modulo.tiposPermissoes.map((tipoPermissao) => (
         // TODO: Checkboxes de cada permissão do módulo
         <>{tipoPermissao.label}</>

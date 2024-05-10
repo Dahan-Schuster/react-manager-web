@@ -72,7 +72,7 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
         <FormDadosIniciais user={user} />
       </TabPanel>
       <TabPanel group="usuarios" value={tabValue} index={1}>
-        <FormPermissoes user={user} modulos={modulos} />
+        <FormPermissoes user={user} setUser={setUser} modulos={modulos} />
       </TabPanel>
     </Box>
   );

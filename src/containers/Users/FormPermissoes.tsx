@@ -2,13 +2,14 @@ import InfoIcon from "@mui/icons-material/Info";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { storageBaseName } from "../../constants";
 import AccordionPermissoesModuloUser from "./AccordionPermissoesModuloUser";
 
 interface FormPermissoesProps {
   user: Users.UserType;
+  setUser: Dispatch<SetStateAction<Users.UserType>>;
   loadingId?: boolean;
   modulos: Sistema.ModuloType[];
 }
@@ -16,7 +17,11 @@ interface FormPermissoesProps {
 /**
  * Form de permissões do usuário
  */
-const FormPermissoes: FC<FormPermissoesProps> = ({ user, modulos }) => {
+const FormPermissoes: FC<FormPermissoesProps> = ({
+  user,
+  setUser,
+  modulos,
+}) => {
   const [openInfo, setOpenInfo] = useLocalStorage(
     storageBaseName + ":openInfoPermissoesUsuario",
     true
@@ -43,6 +48,7 @@ const FormPermissoes: FC<FormPermissoesProps> = ({ user, modulos }) => {
           key={modulo.id}
           modulo={modulo}
           user={user}
+          setUser={setUser}
         />
       ))}
     </Box>
