@@ -12,6 +12,8 @@ import AppHeader from "../App/AppHeader";
 import MenuDrawer from "../App/MenuDrawer";
 import RequireAuth from "../Auth/RequireAuth";
 import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import { useLocalStorage } from "usehooks-ts";
+import config from "../../config";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -46,7 +48,10 @@ const MainLayout: FC<MainLayoutProps> = ({
   usePageTitle(title);
 
   /* Estado para o menu lateral */
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useLocalStorage(
+    config.storageKeys.menu,
+    true
+  );
 
   /** Método para alterar o estado do menu lateral */
   const toggleDrawer = useCallback(() => {

@@ -7,6 +7,7 @@ const config = {
   storageKeys: {
     user: `${storageBaseName}:user`,
     temaAtivo: `${storageBaseName}:temaAtivo`,
+    menu: `${storageBaseName}:menuOpen`,
   },
 };
 
