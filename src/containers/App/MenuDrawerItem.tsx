@@ -6,7 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { FC, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 interface MenuDrawerItemProps {
@@ -21,47 +21,57 @@ const MenuDrawerItem: FC<MenuDrawerItemProps> = ({ item }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <ListItem key={id} disablePadding sx={{ display: "block" }}>
-      <ListItemButton sx={{ cursor: "initial" }}>
-        <MUILink
-          component={url ? RouterLink : "div"}
-          to={url!}
-          target={target}
-          title={label}
-          underline={target === "_blank" ? "hover" : "none"}
-          sx={{ flex: 1, display: "flex", alignItems: "center" }}
-        >
-          {!!icone && (
-            <ListItemIcon
+    <Fragment>
+      <ListItem
+        key={id}
+        disablePadding
+        sx={{ display: "flex", alignItems: "stretch" }}
+      >
+        <ListItemButton sx={{ cursor: "initial" }}>
+          <MUILink
+            component={url ? RouterLink : "div"}
+            to={url!}
+            target={target}
+            title={label}
+            underline={target === "_blank" ? "hover" : "none"}
+            sx={{ flex: 1, display: "flex", alignItems: "center" }}
+          >
+            {!!icone && (
+              <ListItemIcon
+                sx={{
+                  minWidth: "48px",
+                  color: (theme) => theme.palette.primary.main,
+                }}
+              >
+                <Icon>{icone}</Icon>
+              </ListItemIcon>
+            )}
+            <ListItemText
+              primary={label}
               sx={{
-                minWidth: "48px",
-                color: (theme) => theme.palette.primary.main,
+                color: (theme) => theme.palette.text.primary,
               }}
-            >
-              <Icon>{icone}</Icon>
-            </ListItemIcon>
-          )}
-          <ListItemText
-            primary={label}
-            sx={{
-              color: (theme) => theme.palette.text.primary,
-            }}
-          />
-        </MUILink>
+            />
+          </MUILink>
+        </ListItemButton>
         {!!children?.length && (
           <ListItemIcon
             sx={{
-              px: 1,
+              p: 1,
               minWidth: "24px",
               color: (theme) => theme.palette.primary.main,
               cursor: "pointer",
+              alignItems: "center",
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              },
             }}
             onClick={() => setOpen((open) => !open)}
           >
             <Icon>{open ? "keyboard_arrow_up" : "keyboard_arrow_down"}</Icon>
           </ListItemIcon>
         )}
-      </ListItemButton>
+      </ListItem>
       <Collapse in={open} className="MenuDrawerItemChildren" unmountOnExit>
         <Box pl={3}>
           {children?.map((item) => (
@@ -69,7 +79,7 @@ const MenuDrawerItem: FC<MenuDrawerItemProps> = ({ item }) => {
           ))}
         </Box>
       </Collapse>
-    </ListItem>
+    </Fragment>
   );
 };
 
