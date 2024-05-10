@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { Dispatch, FC, SetStateAction, useMemo } from "react";
 import { MuiDefaultPalette, MuiPaletteNames, acceptImg } from "../../constants";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
-import UploadFileButton from "../UploadFileButton";
+import UploadFileButton from "../Common/UploadFileButton";
 import ContainerAlterarCores from "./ContainerAlterarCores";
 import SwitchModoTema from "./SwitchModoTema";
 

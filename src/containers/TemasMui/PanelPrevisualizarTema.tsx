@@ -1,3 +1,4 @@
+import Alert, { AlertColor } from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -25,11 +26,10 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { FC } from "react";
 import { MuiPaletteNames } from "../../constants";
-import SimpleAccordion from "../SimpleAccordion";
+import SimpleAccordion from "../Common/SimpleAccordion";
 import BoxFaviconTema from "./BoxFaviconTema";
 import HeaderTema from "./HeaderTema";
 import LoginTema from "./LoginTema";
-import Alert, { AlertColor } from "@mui/material/Alert";
 import MenuTema from "./MenuTema";
 
 interface PanelPrevisualizarTemaProps {

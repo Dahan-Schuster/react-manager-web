@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -7,8 +8,7 @@ import { FC, useCallback, useState } from "react";
 import StyledDrawer from "../../components/StyledDrawer";
 import StyledIconButton from "../../components/StyledIconButton";
 import { appBarMinHeight, drawerWidthOpen, isIOS } from "../../constants";
-import Divider from "@mui/material/Divider";
-import MenuDrawerItem from "../Common/MenuDrawerItem";
+import MenuDrawerItem from "../App/MenuDrawerItem";
 
 interface MenuTemaProps {
   tema: Mui.Theme;

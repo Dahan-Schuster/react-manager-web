@@ -5,7 +5,7 @@ import List from "@mui/material/List";
 import { useAuth } from "../../contexts/AuthContext";
 import MenuDrawerItem from "./MenuDrawerItem";
 import { drawerWidthOpen } from "../../constants";
-import Drawer from "./Drawer";
+import Drawer from "../Common/Drawer";
 
 const bottomItems: Sistema.MenuItemType[] = [
   {

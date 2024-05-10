@@ -8,10 +8,10 @@ import { FC, Fragment, ReactNode, useCallback, useState } from "react";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import { appBarMinHeight, drawerWidthClosed } from "../../constants";
 import usePageTitle from "../../hooks/usePageTitle";
-import AppHeader from "./AppHeader";
-import MenuDrawer from "./MenuDrawer";
-import RouterBreadcrumbs from "./RouterBreadcrumbs";
+import AppHeader from "../App/AppHeader";
+import MenuDrawer from "../App/MenuDrawer";
 import RequireAuth from "../Auth/RequireAuth";
+import RouterBreadcrumbs from "./RouterBreadcrumbs";
 
 interface MainLayoutProps {
   children: ReactNode;

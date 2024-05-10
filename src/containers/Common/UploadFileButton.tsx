@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FC } from "react";
-import HiddenInput from "../components/HiddenInput";
+import HiddenInput from "../../components/HiddenInput";
 
 interface UploadFileButtonProps {
   label: string;

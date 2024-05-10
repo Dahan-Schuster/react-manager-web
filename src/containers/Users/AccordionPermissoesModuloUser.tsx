@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import SimpleAccordion from "../SimpleAccordion";
+import SimpleAccordion from "../Common/SimpleAccordion";
 
 interface AccordionPermissoesModuloUserProps {
   modulo: Sistema.ModuloType;
