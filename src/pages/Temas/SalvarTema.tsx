@@ -149,7 +149,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
   return (
     <MainLayout
       title={id ? "Editar tema" : "Criar tema"}
-      mainContainerMaxWidth="xl"
+      mainContainerMaxWidth="lg"
       paperSx={{ p: 0 }}
       loading={loading}
     >
