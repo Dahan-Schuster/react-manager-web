@@ -6,6 +6,7 @@ namespace Users {
     status: number;
     perfil_id: number | null;
     perfil?: Perfis.PerfilType;
+    permissoes?: PermissaoType[];
   }
 
   type GetUsersFilters = {
@@ -29,6 +30,14 @@ namespace Users {
     nome: string;
     email: string;
     perfil_id?: number;
+  };
+
+  /**
+   * Valores necessários para alterar permissões do usuário
+   */
+  type UpdatePermissoesValues = {
+    novasPermissoes?: number[];
+    permissoesDeletar?: number[];
   };
 
   interface UsersContextValues {
@@ -77,6 +86,10 @@ namespace Users {
     changePerfilUser: (
       id: number,
       perfilId: number
+    ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
+    updatePermissoes: (
+      id: number,
+      data: Users.UpdatePermissoesValues
     ) => Promise<Common.CommonResponse & { user: Users.UserType }>;
   }
 }

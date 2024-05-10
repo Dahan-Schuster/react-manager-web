@@ -205,6 +205,19 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [makeRequest]
   );
 
+  const updatePermissoes = useCallback(
+    async (id: number, dados: Users.UpdatePermissoesValues) => {
+      const response = (await makeRequest({
+        method: "PUT",
+        url: `/usuario/${id}/permissoes`,
+        data: dados,
+        errorMessage: "Ocorreu um erro ao alterar as permissões",
+      })) as Common.CommonResponse & { user: Users.UserType };
+      return response;
+    },
+    [makeRequest]
+  );
+
   return (
     <UsersContext.Provider
       value={{
@@ -220,6 +233,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
         usersPagination: pagination,
         loadingUsers,
         usersError,
+        updatePermissoes,
       }}
     >
       {children}
