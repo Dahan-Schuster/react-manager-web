@@ -2,15 +2,17 @@ import { ArrowDropDown } from "@mui/icons-material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { FC, ReactNode } from "react";
+import { FC, Fragment, ReactNode } from "react";
 
 interface SimpleAccordionProps {
   label: string;
-  secondayLabel?: string;
+  secondaryLabel?: string;
   children: ReactNode;
   defaultExpanded?: boolean;
   unmountOnExit?: boolean;
+  actions?: ReactNode[];
 }
 
 /**
@@ -18,10 +20,11 @@ interface SimpleAccordionProps {
  */
 const SimpleAccordion: FC<SimpleAccordionProps> = ({
   label,
-  secondayLabel,
+  secondaryLabel,
   children,
   defaultExpanded,
   unmountOnExit = true,
+  actions = [],
 }) => {
   return (
     <Accordion
@@ -64,11 +67,24 @@ const SimpleAccordion: FC<SimpleAccordionProps> = ({
         >
           {label}
         </Typography>
-        {!!secondayLabel && (
+        {!!secondaryLabel && (
           <Typography color="text.secondary" variant="h6" fontSize={18}>
-            {secondayLabel}
+            {secondaryLabel}
           </Typography>
         )}
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          {actions?.map((action, index) => (
+            <Fragment key={index}>{action}</Fragment>
+          ))}
+        </Box>
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>
