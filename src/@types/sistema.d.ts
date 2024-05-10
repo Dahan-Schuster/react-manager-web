@@ -11,6 +11,7 @@ namespace Sistema {
     id: number;
     label: string;
     slug: string;
+    fixada?: number;
   }
 
   interface MenuItemType {

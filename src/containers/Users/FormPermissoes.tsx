@@ -1,10 +1,12 @@
-import InfoIcon from "@mui/icons-material/Info";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import { Dispatch, FC, SetStateAction } from "react";
+import Typography from "@mui/material/Typography";
+import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { storageBaseName } from "../../constants";
+import { inputsMargin, storageBaseName } from "../../constants";
+import { useUsers } from "../../contexts/UsersContext";
+import useUserPermissions from "../../hooks/useUserPermissions";
+import SelectPerfil from "../Perfis/SelectPerfil";
 import AccordionPermissoesModuloUser from "./AccordionPermissoesModuloUser";
 
 interface FormPermissoesProps {
@@ -26,23 +28,70 @@ const FormPermissoes: FC<FormPermissoesProps> = ({
     storageBaseName + ":openInfoPermissoesUsuario",
     true
   );
+  const { has } = useUserPermissions();
+  const { changePerfilUser } = useUsers();
+
+  const handleSubmitPerfil = useCallback(
+    (perfilId: number) => {
+      if (!user.id) return;
+      changePerfilUser(user.id, perfilId).then(
+        (res) => res.success && setUser(res.user)
+      );
+    },
+    [user.id]
+  );
 
   return (
     <Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         {openInfo && (
           <Alert severity="info" onClose={() => setOpenInfo(false)}>
-            Selecione os checkboxes para definir as permissões do usuário em
-            cada módulo do sistema. Você pode expandir o módulo para ver as
-            permissões mais específicas.
+            Selecione os checkboxes para fixar ou remover as permissões do
+            usuário em cada módulo do sistema, sobrepondo as permissões do
+            perfil. Você pode expandir o módulo para ver as permissões mais
+            específicas.
+            <p>
+              Checkboxes com a{" "}
+              <Typography
+                component="span"
+                color="warning.main"
+                fontWeight="bold"
+              >
+                cor de aviso
+              </Typography>{" "}
+              indicam que a permissão sobrepõe as permissões do perfil.
+            </p>
+            <p>
+              Checkboxes com a{" "}
+              <Typography
+                component="span"
+                color="primary.main"
+                fontWeight="bold"
+              >
+                cor primária
+              </Typography>{" "}
+              indicam que a permissão foi herdada pelo perfil.
+            </p>
           </Alert>
         )}
-        {!openInfo && (
-          <IconButton color="info" onClick={() => setOpenInfo(true)}>
-            <InfoIcon />
-          </IconButton>
-        )}
       </Box>
+      {has("usuarios-alterar-permissao") && (
+        <SelectPerfil
+          label="Perfil do usuário"
+          size="medium"
+          margin={inputsMargin}
+          optional
+          emptyValue={0}
+          emptyLabel="Sem perfil"
+          value={user.perfil_id || 0}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (user.id) {
+              handleSubmitPerfil(value as number);
+            }
+          }}
+        />
+      )}
       {modulos.map((modulo) => (
         <AccordionPermissoesModuloUser
           key={modulo.id}

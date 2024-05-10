@@ -23,6 +23,7 @@ const AccordionPermissoesModuloUser: FC<AccordionPermissoesModuloUserProps> = ({
   return (
     <SimpleAccordion
       label={modulo.nome}
+      hover
       actions={[
         <CheckboxTodasPermissoesModulo
           modulo={modulo}

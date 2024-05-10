@@ -8,6 +8,7 @@ import { FC, Fragment, ReactNode } from "react";
 
 interface SimpleAccordionProps {
   label: string;
+  hover?: boolean;
   secondaryLabel?: string;
   children: ReactNode;
   defaultExpanded?: boolean;
@@ -20,6 +21,7 @@ interface SimpleAccordionProps {
  */
 const SimpleAccordion: FC<SimpleAccordionProps> = ({
   label,
+  hover,
   secondaryLabel,
   children,
   defaultExpanded,
@@ -53,6 +55,11 @@ const SimpleAccordion: FC<SimpleAccordionProps> = ({
       <AccordionSummary
         expandIcon={<ArrowDropDown />}
         sx={{
+          "&:hover": hover
+            ? {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              }
+            : {},
           "& .MuiAccordionSummary-content": {
             gap: 2,
             flexWrap: { xs: "wrap", md: "nowrap" },

@@ -29,7 +29,6 @@ namespace Users {
   type SaveUserValues = {
     nome: string;
     email: string;
-    perfil_id?: number;
   };
 
   /**

@@ -34,10 +34,7 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const response = (await makeRequest({
         method: "POST",
         url: "/usuario",
-        data: {
-          ...data,
-          perfil_id: data.perfil_id ? data.perfil_id : undefined,
-        },
+        data,
         errorMessage: "Ocorreu um erro ao cadastrar o usuário",
         successMessage: "Usuário cadastrado com sucesso!",
       })) as Common.CommonResponse & { user: Users.UserType };

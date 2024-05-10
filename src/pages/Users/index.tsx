@@ -133,7 +133,7 @@ const Users: React.FunctionComponent = () => {
       {
         field: "perfil_id",
         headerName: "Perfil",
-        maxWidth: 100,
+        minWidth: 120,
         editable: false,
         valueGetter: (value, row) => {
           if (!value) {

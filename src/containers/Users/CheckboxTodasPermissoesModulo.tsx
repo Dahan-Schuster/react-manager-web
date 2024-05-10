@@ -22,6 +22,10 @@ interface CheckboxPermissoesModuloProps {
  */
 const CheckboxTodasPermissoesModulo: FC<CheckboxPermissoesModuloProps> = memo(
   ({ modulo, user, setUser }) => {
+    const algumaFixada = user.permissoes
+      ?.filter((p) => modulo.tiposPermissoes.some((t) => t.id === p.id))
+      .some((p) => p.fixada);
+
     const possuiTodas = modulo.tiposPermissoes.every((permModulo) =>
       user.permissoes?.find((permPerfil) => permPerfil.id === permModulo.id)
     );
@@ -69,6 +73,7 @@ const CheckboxTodasPermissoesModulo: FC<CheckboxPermissoesModuloProps> = memo(
         indeterminate={possuiAlguma}
         onChange={handleChange}
         onClick={(event) => event.stopPropagation()}
+        color={algumaFixada ? "warning" : "primary"}
       />
     );
   }

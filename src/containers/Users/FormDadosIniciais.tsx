@@ -2,16 +2,25 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { Form, Formik, FormikHelpers } from "formik";
-import SelectPerfil from "../../containers/Perfis/SelectPerfil";
 
 import Typography from "@mui/material/Typography";
-import { FC, Fragment, useCallback, useEffect, useState } from "react";
-import { commonTextFieldProps, inputsMargin } from "../../constants";
+import {
+  Dispatch,
+  FC,
+  Fragment,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { commonTextFieldProps } from "../../constants";
 import { useUsers } from "../../contexts/UsersContext";
 import useUserPermissions from "../../hooks/useUserPermissions";
 
 interface FormDadosIniciaisProps {
   user: Users.UserType;
+  setUser: Dispatch<SetStateAction<Users.UserType>>;
+  onCreate?: (user: Users.UserType) => void;
   closeModal?: VoidFunction;
   loadingId?: boolean;
 }
@@ -21,10 +30,12 @@ interface FormDadosIniciaisProps {
  */
 const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
   user,
+  setUser,
+  onCreate,
   closeModal,
   loadingId,
 }) => {
-  const { createUser, updateUser, changePerfilUser, loadingUsers } = useUsers();
+  const { createUser, updateUser, loadingUsers } = useUsers();
   const { has } = useUserPermissions();
 
   const [error, setError] = useState<string>("");
@@ -32,7 +43,6 @@ const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
   const [initialValues, setInitialValues] = useState<Users.SaveUserValues>({
     nome: "",
     email: "",
-    perfil_id: 0,
   });
 
   useEffect(() => {
@@ -40,7 +50,6 @@ const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
       setInitialValues({
         nome: user?.nome || "",
         email: user?.email || "",
-        perfil_id: user?.perfil_id || 0,
       });
     }
   }, [user?.id]);
@@ -60,28 +69,24 @@ const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
         res = await createUser(values);
       }
       if (res.success) {
+        const resUser = res.user as Users.UserType;
         closeModal && closeModal();
+        onCreate && onCreate(resUser);
+        setUser(resUser);
       }
 
       setSubmitting(false);
     },
-    [closeModal, createUser, user]
+    [closeModal, onCreate, createUser, user]
   );
 
-  const handleSubmitPerfil = useCallback(
-    (perfilId: number) => {
-      if (!user.id) return;
-      changePerfilUser(user.id, perfilId);
-    },
-    [user.id]
-  );
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize
       onSubmit={handleSubmit}
     >
-      {({ getFieldProps, setFieldValue }) => {
+      {({ getFieldProps }) => {
         return (
           <Form>
             {!!error && <Typography color="error">{error}</Typography>}
@@ -104,25 +109,6 @@ const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
                     />
                   </Grid>
                 </Fragment>
-              )}
-              {has("usuarios-alterar-permissao") && (
-                <Grid item xs={12} sm={12}>
-                  <SelectPerfil
-                    label="Perfil do usuário"
-                    size="medium"
-                    margin={inputsMargin}
-                    optional
-                    emptyLabel="Sem perfil"
-                    {...getFieldProps("perfil_id")}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFieldValue("perfil_id", value);
-                      if (user.id) {
-                        handleSubmitPerfil(value as number);
-                      }
-                    }}
-                  />
-                </Grid>
               )}
               <Grid
                 item
@@ -148,7 +134,7 @@ const FormDadosIniciais: FC<FormDadosIniciaisProps> = ({
                     type="submit"
                     disabled={loadingUsers || loadingId}
                   >
-                    Enviar
+                    {user.id ? "Salvar" : "Cadastrar"}
                   </Button>
                 )}
               </Grid>

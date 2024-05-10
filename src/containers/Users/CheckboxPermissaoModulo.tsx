@@ -22,9 +22,8 @@ interface CheckboxPermissaoModuloProps {
  */
 const CheckboxPermissaoModulo: FC<CheckboxPermissaoModuloProps> = memo(
   ({ permissao, user, setUser }) => {
-    const possuiPermissao = Boolean(
-      user.permissoes?.find((permPerfil) => permPerfil.id === permissao.id)
-    );
+    const possuiPermissao: Sistema.PermissaoType | undefined =
+      user.permissoes?.find((permPerfil) => permPerfil.id === permissao.id);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -34,8 +33,8 @@ const CheckboxPermissaoModulo: FC<CheckboxPermissaoModuloProps> = memo(
     const handleChange = useCallback(() => {
       setLoading(true);
       updatePermissoes(user.id, {
-        novasPermissoes: possuiPermissao ? [] : [permissao.id],
-        permissoesDeletar: possuiPermissao ? [permissao.id] : [],
+        novasPermissoes: !!possuiPermissao ? [] : [permissao.id],
+        permissoesDeletar: !!possuiPermissao ? [permissao.id] : [],
       })
         .then((res) => res.success && setUser(res.user))
         .finally(() => setLoading(false));
@@ -55,9 +54,10 @@ const CheckboxPermissaoModulo: FC<CheckboxPermissaoModuloProps> = memo(
       );
     return (
       <Checkbox
-        checked={possuiPermissao}
+        checked={!!possuiPermissao}
         onChange={handleChange}
         onClick={(event) => event.stopPropagation()}
+        color={possuiPermissao?.fixada ? "warning" : "primary"}
       />
     );
   }

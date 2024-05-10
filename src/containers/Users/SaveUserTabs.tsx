@@ -1,21 +1,26 @@
+import InfoIcon from "@mui/icons-material/Info";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { FC, SyntheticEvent, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import { storageBaseName } from "../../constants";
 import { useUsers } from "../../contexts/UsersContext";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
+import useModulos from "../../services/useModulos";
 import TabPanel from "../Common/TabPanel";
 import FormDadosIniciais from "./FormDadosIniciais";
 import FormPermissoes from "./FormPermissoes";
-import useModulos from "../../services/useModulos";
-import LoadingOverlay from "../../components/LoadingOverlay";
 
 interface CreateUserFormTabs {
   id?: number;
   closeModal?: VoidFunction;
+  onCreate?: (user: Users.UserType) => void;
 }
 
-const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
+const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal, onCreate }) => {
   const { showUser } = useUsers();
   const { modulos, getModulos } = useModulos();
 
@@ -26,6 +31,11 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
     status: 1,
     perfil_id: 0,
   });
+
+  const [, setOpenInfo] = useLocalStorage(
+    storageBaseName + ":openInfoPermissoesUsuario",
+    true
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -63,17 +73,34 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
           onChange={handleChange}
           aria-label="tabs usuário"
         >
-          <Tab label="Dados iniciais" />
-          <Tab label="Permissões" />
+          <Tab sx={{ py: 0, minHeight: 48 }} label="Dados iniciais" />
+          {!!user.id && (
+            <Tab
+              label="Permissões"
+              iconPosition="end"
+              sx={{ py: 0, minHeight: 48 }}
+              icon={
+                <IconButton
+                  sx={{ p: 0 }}
+                  color="info"
+                  onClick={() => setOpenInfo((open) => !open)}
+                >
+                  <InfoIcon />
+                </IconButton>
+              }
+            />
+          )}
         </Tabs>
       </Box>
 
       <TabPanel group="usuarios" value={tabValue} index={0}>
-        <FormDadosIniciais user={user} />
+        <FormDadosIniciais user={user} setUser={setUser} onCreate={onCreate} />
       </TabPanel>
-      <TabPanel group="usuarios" value={tabValue} index={1}>
-        <FormPermissoes user={user} setUser={setUser} modulos={modulos} />
-      </TabPanel>
+      {!!user.id && (
+        <TabPanel group="usuarios" value={tabValue} index={1}>
+          <FormPermissoes user={user} setUser={setUser} modulos={modulos} />
+        </TabPanel>
+      )}
     </Box>
   );
 };
