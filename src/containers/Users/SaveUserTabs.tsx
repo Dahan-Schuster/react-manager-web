@@ -31,12 +31,17 @@ const SaveUserTabs: FC<CreateUserFormTabs> = ({ id, closeModal }) => {
 
   useDebounceEffect(
     () => {
-      if (!id) return;
       setLoading(true);
-      Promise.all([showUser(id), getModulos()])
+      Promise.all([
+        (() => {
+          if (!id) return { success: false } as Common.CommonResponse;
+          return showUser(id);
+        })(),
+        getModulos(),
+      ])
         .then(([resUser]) => {
           if (!resUser.success && !!closeModal) closeModal();
-          setUser(resUser.user);
+          resUser.user && setUser(resUser.user as Users.UserType);
         })
         .finally(() => setLoading(false));
     },
