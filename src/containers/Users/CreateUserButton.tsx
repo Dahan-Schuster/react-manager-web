@@ -1,11 +1,8 @@
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
-import SaveUserForm from "./SaveUserForm";
+import { useNavigate } from "react-router-dom";
 import useUserPermissions from "../../hooks/useUserPermissions";
 
 interface CreateUserButtonProps {}
@@ -16,29 +13,18 @@ interface CreateUserButtonProps {}
 const CreateUserButton: React.FunctionComponent<CreateUserButtonProps> = () => {
   const { has } = useUserPermissions();
   const podeCriar = has("usuarios-criar");
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = React.useCallback(() => {
-    setOpen(false);
-  }, []);
+  const navigate = useNavigate();
 
   if (!podeCriar) return null;
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => navigate("/usuarios/novo")}
         variant="outlined"
         startIcon={<AddCircleIcon />}
       >
         Adicionar
       </Button>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Adicionar usuário</DialogTitle>
-        <DialogContent>
-          <SaveUserForm closeModal={handleClose} />
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 };
