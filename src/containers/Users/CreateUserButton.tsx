@@ -19,7 +19,7 @@ const CreateUserButton: React.FunctionComponent<CreateUserButtonProps> = () => {
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
       <Button
-        onClick={() => navigate("/ususarios/novo")}
+        onClick={() => navigate("/usuarios/novo")}
         variant="outlined"
         startIcon={<AddCircleIcon />}
       >
