@@ -20,6 +20,7 @@ namespace Sistema {
     url: string | null;
     icone: string | null;
     ativo?: boolean;
+    ordem: number;
     target: Common.AnchorTargetType;
     parent_id: number | null;
     parent?: MenuItemType;

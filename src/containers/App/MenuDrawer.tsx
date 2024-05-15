@@ -6,10 +6,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import MenuDrawerItem from "./MenuDrawerItem";
 import { drawerWidthOpen } from "../../constants";
 import Drawer from "../Common/Drawer";
+import { useMemo } from "react";
 
-const bottomItems: Sistema.MenuItemType[] = [
+const fixedBottomItems: Sistema.MenuItemType[] = [
   {
     id: 0,
+    ordem: 200,
     label: "Logout",
     url: "/logout",
     icone: "logout",
@@ -31,6 +33,25 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
   toggleDrawer,
 }) => {
   const { user } = useAuth();
+
+  const [middle, bottom] = useMemo<
+    [Sistema.MenuItemType[], Sistema.MenuItemType[]]
+  >(() => {
+    const middle: Sistema.MenuItemType[] = [],
+      bottom: Sistema.MenuItemType[] = [];
+    user?.itensMenu?.forEach((i) => {
+      if (i.ordem >= 100) {
+        bottom.push(i);
+      } else {
+        middle.push(i);
+      }
+    });
+
+    bottom.push(...fixedBottomItems);
+
+    return [middle, bottom];
+  }, [user?.itensMenu]);
+
   return (
     <Drawer
       anchor="left"
@@ -49,13 +70,13 @@ const MenuDrawer: React.FunctionComponent<DrawerProps> = ({
           width: drawerWidthOpen,
         }}
       >
-        {user?.itensMenu?.map((i) => (
+        {middle.map((i) => (
           <MenuDrawerItem key={i.id} item={i} />
         ))}
-        {bottomItems && (
+        {bottom.length && (
           <Box mt={"auto"}>
             <Divider />
-            {bottomItems.map((i) => (
+            {bottom.map((i) => (
               <MenuDrawerItem key={i.id} item={i} />
             ))}
           </Box>
