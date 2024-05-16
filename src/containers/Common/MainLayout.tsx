@@ -16,16 +16,51 @@ import { useLocalStorage } from "usehooks-ts";
 import config from "../../config";
 
 interface MainLayoutProps {
+  /**
+   * Elementos filhos 
+   */
   children: ReactNode;
+  /**
+   * Título da página, definido também como título da guia no navegador
+   */
   title?: string;
+  /**
+   * Se deve esconder o elemento <h1> contendo o título
+   * @default true
+   */
   hideTitle?: boolean;
+  /**
+   * Tamanho máximo do container central, podendo ser xs, sm, md, lg e xl
+   * @default "lg"
+   */
   mainContainerMaxWidth?: Breakpoint;
+  /**
+   * Objeto de estilos do MUI passados para o container principal
+   * (div que envolve tudo que não é Header nem Menu Lateral)
+   */
   mainContainerSx?: SxProps;
+  /**
+   * Objeto de estilos do MUI passados para o container de conteúdo
+   * (div pai dos elementos passados no children)
+   */
   paperSx?: SxProps;
+  /**
+   * Array de elementos que devem realizar ações na página
+   * Renderizado à esquerda, acima do container de conteúdo
+   * 
+   * Ex.: botão de cadastrar, botão de atualizar
+   */
   options?: ReactNode[];
+  /**
+   * Se deve aprensentar um indicador de carregamento na página
+   */
   loading?: boolean;
   /**
    * Indica se a página requer autenticação
+   * 
+   * Caso seja `true` e o usuário não estiver logado, será redirecionado para
+   * a página de login
+   * 
    * @default true
    */
   requireAuth?: boolean;
