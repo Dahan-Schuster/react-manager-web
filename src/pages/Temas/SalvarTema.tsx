@@ -45,6 +45,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
   const [fileFavicon, setFileFavicon] = useState<File | null>(null);
   const [fileLogoHeader, setFileLogoHeader] = useState<File | null>(null);
   const [fileLogoLogin, setFileLogoLogin] = useState<File | null>(null);
+  const [fileLogoSimples, setFileLogoSimples] = useState<File | null>(null);
 
   useDebounceEffect(() => {
     if (id) {
@@ -89,6 +90,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
       fileFavicon && formData.append("file_favicon", fileFavicon);
       fileLogoHeader && formData.append("file_logo_header", fileLogoHeader);
       fileLogoLogin && formData.append("file_logo_login", fileLogoLogin);
+      fileLogoSimples && formData.append("file_logo_simples", fileLogoSimples);
 
       Object.entries(values).forEach(([key, value]) => {
         if (!values[key as keyof Mui.Theme]) return;
@@ -123,7 +125,7 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
         if (!id) navigate("/temas/editar/" + tema.id);
       }
     },
-    [fileFavicon, fileLogoLogin, fileLogoHeader]
+    [fileFavicon, fileLogoLogin, fileLogoHeader, fileLogoSimples]
   );
 
   const themePreview = useMemo(
@@ -177,6 +179,8 @@ const SalvarTema: FC<SalvarTemaProps> = () => {
               setFileLogoHeader={setFileLogoHeader}
               fileLogoLogin={fileLogoLogin}
               setFileLogoLogin={setFileLogoLogin}
+              fileLogoSimples={fileLogoSimples}
+              setFileLogoSimples={setFileLogoSimples}
             />
           </Grid>
         </Grid>

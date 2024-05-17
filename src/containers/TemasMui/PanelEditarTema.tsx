@@ -39,6 +39,9 @@ interface PanelEditarTemaProps {
 
   fileLogoLogin: File | null;
   setFileLogoLogin: Dispatch<SetStateAction<File | null>>;
+
+  fileLogoSimples: File | null;
+  setFileLogoSimples: Dispatch<SetStateAction<File | null>>;
 }
 
 // tema específico do painel de edição, para diferenciar do tema do sistema e do tema sendo editado
@@ -64,6 +67,8 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
   setFileFavicon,
   setFileLogoHeader,
   setFileLogoLogin,
+  fileLogoSimples,
+  setFileLogoSimples,
 }) => {
   const initialValues = useMemo<Mui.Theme>(() => {
     return {
@@ -140,6 +145,14 @@ const PanelEditarTema: FC<PanelEditarTemaProps> = ({
                   label="Logo login"
                   onUpload={setFileLogoLogin}
                   file={fileLogoLogin}
+                  accept={acceptImg}
+                  maxSizeBytes={FileSizesBytes.mb * 2}
+                />
+                <Divider />
+                <UploadFileButton
+                  label="Logo simples"
+                  onUpload={setFileLogoSimples}
+                  file={fileLogoSimples}
                   accept={acceptImg}
                   maxSizeBytes={FileSizesBytes.mb * 2}
                 />
