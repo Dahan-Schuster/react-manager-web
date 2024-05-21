@@ -4,6 +4,7 @@ import useAxios from "../../services/useAxios";
 import useDebounceEffect from "../../hooks/useDebonceEffect";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { defaultTablePageSize, tablePageSizes } from "../../constants";
+import dayjs from "dayjs";
 
 interface LogsPageProps {}
 
@@ -46,7 +47,14 @@ const LogsPage: FC<LogsPageProps> = () => {
 
   const logsTableColumns = useMemo<GridColDef<Sistema.LogType>[]>(
     () => [
-      { field: "id", headerName: "ID", width: 100, editable: false },
+      {
+        field: "created_at",
+        headerName: "Data do evento",
+        width: 150,
+        editable: false,
+        valueFormatter: (value: string) =>
+          dayjs(value).format("DD/MM/YYYY HH:mm"),
+      },
       {
         field: "dados",
         headerName: "Nome do paciente",
