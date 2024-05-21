@@ -1,18 +1,20 @@
 import { FC } from "react";
 import { Outlet } from "react-router-dom";
-import { AuthProvider } from "../contexts/AuthContext";
-import { MuiThemeProvider } from "../contexts/MuiThemeContext";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "../contexts/AuthContext";
+import { MuiThemeProvider } from "../contexts/MuiThemeContext";
 import { PerfisProvider } from "../contexts/PerfisContext";
-import { UsersProvider } from "../contexts/UsersContext";
 import { TemasMuiProvider } from "../contexts/TemasMuiContext";
+import { UsersProvider } from "../contexts/UsersContext";
+import { dayjsSetup } from "../utility/dayjs.helper";
 
 /**
  * Página raiz que engloba o restante das páginas
  */
 const RootPage: FC = () => {
+  dayjsSetup();
+
   return (
     <MuiThemeProvider>
       <AuthProvider>
