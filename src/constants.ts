@@ -13,6 +13,7 @@ export const nomesRotas: {
   "/temas": { label: "Temas", icon: "palette" },
   "/temas/editar": { label: "Editar", icon: "edit", disableLink: true },
   "/temas/novo": { label: "Novo tema", disableLink: true },
+  "/logs": { label: "Logs", icon: "list" },
 };
 
 export const drawerWidthOpen = 250 as const;

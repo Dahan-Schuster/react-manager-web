@@ -92,6 +92,13 @@ const router = createBrowserRouter([
           return { Component: Index };
         },
       },
+      {
+        path: "/logs",
+        async lazy() {
+          let { default: Index } = await import("../pages/Logs");
+          return { Component: Index };
+        },
+      },
     ],
   },
 ]);

@@ -33,4 +33,16 @@ namespace Sistema {
     fileLogoLogin: File | null;
     fileLogoSimples: File | null;
   }
+
+  interface LogType {
+    id: 1;
+    evento: string;
+    origem: string;
+    dados: Record<string, unknown>;
+    observacoes: string | null;
+    user_id: number | null;
+    user: Users.UserType | null;
+    created_at: string;
+    updated_at: string;
+  }
 }
