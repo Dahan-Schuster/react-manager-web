@@ -1,12 +1,11 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import React, { useMemo, useState } from "react";
-import LoadingOverlay from "../../components/LoadingOverlay";
-
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -14,11 +13,10 @@ import {
   GridSlots,
   GridToolbar,
 } from "@mui/x-data-grid";
-
-import Switch from "@mui/material/Switch";
-import Tooltip from "@mui/material/Tooltip";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import LoadingOverlay from "../../components/LoadingOverlay";
 import { defaultTablePageSize, tablePageSizes } from "../../constants";
 import MainLayout from "../../containers/Common/MainLayout";
 import SelectPerfil from "../../containers/Perfis/SelectPerfil";
@@ -80,7 +78,7 @@ const Users: React.FunctionComponent = () => {
 
   useDebounceEffect(
     () => {
-      getUsers({ ...paginationModel, ...searchFilters });
+      getUsers(searchFilters, paginationModel);
     },
     [paginationModel, searchFilters],
     500

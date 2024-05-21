@@ -6,7 +6,6 @@ import {
   useContext,
   useState,
 } from "react";
-import { defaultTablePageSize } from "../constants";
 import useAxios from "../services/useAxios";
 
 const UsersContext = createContext<Users.UsersContextValues | null>(null);
@@ -19,9 +18,8 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { makeRequest } = useAxios();
 
   const [users, setUsers] = useState<Users.UserType[]>([]);
-  const [pagination, setPagination] = useState<Common.PaginationType | null>(
-    null
-  );
+  const [pagination, setPagination] =
+    useState<Common.AdonisPaginationType | null>(null);
 
   const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
   const [usersError, setUsersError] = useState<string>("");
@@ -159,22 +157,17 @@ export const UsersProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const getUsers = useCallback(
-    async (filters?: Users.GetUsersFilters) => {
+    async (
+      filters?: Users.GetUsersFilters,
+      pagination?: Common.PaginationModel
+    ) => {
       setLoadingUsers(true);
-      const {
-        page = 0,
-        pageSize = defaultTablePageSize,
-        ...values
-      } = filters || {};
 
       const response = (await makeRequest({
         method: "GET",
         url: "/usuario",
-        params: {
-          ...(page >= 0 ? { page: page + 1 } : {}),
-          ...(pageSize >= 0 ? { per_page: pageSize } : {}),
-          ...values,
-        },
+        params: filters,
+        pagination,
         errorMessage: "Ocorreu um erro ao buscar os usuários",
       })) as Common.CommonResponse & { users: Users.UsersResponse };
 

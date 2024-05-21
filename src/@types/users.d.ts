@@ -10,8 +10,6 @@ namespace Users {
   }
 
   type GetUsersFilters = {
-    page?: number;
-    pageSize?: number;
     perfilId?: number;
     nome?: string;
     email?: string;
@@ -20,7 +18,7 @@ namespace Users {
 
   interface UsersResponse {
     data: Users.UserType[];
-    meta: Common.PaginationType;
+    meta: Common.AdonisPaginationType;
   }
 
   /**
@@ -47,7 +45,10 @@ namespace Users {
      * Busca usuários na API, atualizando a lista de usuários em caso de sucesso
      * Caso a requisição não seja bem sucedida, atualiza o estado `usersError`
      */
-    getUsers: (filters?: Users.GetUsersFilters) => Promise<void>;
+    getUsers: (
+      filters?: Users.GetUsersFilters,
+      pagination?: Common.PaginationModel
+    ) => Promise<void>;
     /** Busca um único usuáiro por ID */
     showUser: (
       id: number
@@ -62,7 +63,7 @@ namespace Users {
     /**
      * Objeto de paginação de usuários
      */
-    usersPagination: Common.PaginationType | null;
+    usersPagination: Common.AdonisPaginationType | null;
     /** Mensagem de erro ocorrido ao buscar usuários */
     usersError: string;
     /**
