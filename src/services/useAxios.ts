@@ -6,7 +6,7 @@ import config from "../config";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { storageBaseName } from "../constants";
+import { defaultTablePageSize, storageBaseName } from "../constants";
 
 const api = axios.create({
   baseURL: config.apiBaseUrl,
@@ -16,6 +16,8 @@ const api = axios.create({
 interface RequestConfig {
   errorMessage?: string;
   successMessage?: string;
+
+  pagination?: Common.PaginationModel;
 }
 
 interface Dict<T> {
@@ -41,7 +43,7 @@ const errorMessages: Dict<string> = {
  * Hook para realizar requisições usando o Axios
  */
 const useAxios = (): AxiosProps => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,6 +76,18 @@ const useAxios = (): AxiosProps => {
           config.headers = {
             ...config.headers,
             ["Authorization"]: "Bearer " + user?.token?.token,
+          };
+        }
+
+        if (!config.method) config.method = "get";
+        if (config.method?.toLowerCase() === "get") {
+          const { page = 0, pageSize = defaultTablePageSize } =
+            config.pagination || {};
+
+          config.params = {
+            ...config.params,
+            ...(page >= 0 ? { page: page + 1 } : {}),
+            ...(pageSize >= 0 ? { per_page: pageSize } : {}),
           };
         }
 

@@ -6,7 +6,7 @@ namespace Common {
     [key: string]: unknown;
   };
 
-  type PaginationType = {
+  type AdonisPaginationType = {
     total: number;
     per_page: number;
     current_page: number;
@@ -16,6 +16,11 @@ namespace Common {
     last_page_url: string;
     next_page_url: string | null;
     previous_page_url: string | null;
+  };
+
+  type PaginationModel = {
+    page: number;
+    pageSize: number;
   };
 
   type AnchorTargetType = "_blank" | "_self" | "_parent" | "_top";
