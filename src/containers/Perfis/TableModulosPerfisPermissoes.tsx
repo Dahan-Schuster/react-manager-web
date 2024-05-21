@@ -63,25 +63,11 @@ const TableModulosPerfisPermissoes: FC<TableModulosPerfisPermissoesProps> = ({
       </Box>
       <TableContainer>
         <Table size="small" sx={{ minWidth: 500, tableLayout: "fixed" }}>
-          <colgroup>
-            <col style={{ width: "48px" }} />
-            <col style={{ width: "200px" }} />
-            {perfis.map((p) => (
-              <col key={p.id} style={{ width: "120px" }} />
-            ))}
-          </colgroup>
           <TableHead>
             <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
-              <TableCell />
-              <TableCell />
-              <TableCell colSpan={perfis.length - 1}>Perfis</TableCell>
-              <TableCell align="right">
-                {!openInfo && (
-                  <IconButton color="info" onClick={() => setOpenInfo(true)}>
-                    <InfoIcon />
-                  </IconButton>
-                )}
-              </TableCell>
+              <TableCell sx={{ width: "48px" }} />
+              <TableCell sx={{ width: "200px" }} />
+              <TableCell colSpan={perfis.length}>Perfis</TableCell>
             </TableRow>
             <TableRow sx={{ "& > *": { fontWeight: "600" } }}>
               <TableCell />
