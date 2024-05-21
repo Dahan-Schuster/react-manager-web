@@ -10,6 +10,7 @@ import CustomDialog from "../../components/CustomDialog";
 import Button from "@mui/material/Button";
 import { usePerfis } from "../../contexts/PerfisContext";
 import { toast } from "react-toastify";
+import Icon from "@mui/material/Icon";
 
 interface ColunaNomePerfilProps {
   perfil: Perfis.PerfilType;
@@ -43,10 +44,16 @@ const ColunaNomePerfil: FC<ColunaNomePerfilProps> = memo(({ perfil }) => {
   return (
     <Fragment>
       <Typography
-        sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+        sx={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          "&:hover": { textDecoration: "underline" },
+        }}
         onClick={(event) => setAnchorEl(event.currentTarget)}
       >
         {perfil.nome}
+        <Icon fontSize="inherit">more_vert</Icon>
       </Typography>
 
       <Menu
