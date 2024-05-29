@@ -14,21 +14,22 @@ Um ponto inicial para sistemas WEB feito com ReactJS, e MUI. Inclui rotas CRUD p
 
 ## Instalação
 
-Para usar o template, clone o projeto e apague o histórico GIT:
+Para usar o template, clone o projeto e remova a remote primária:
 
 ```bash
   # aqui você pode passar o nome da pasta que desejar, para atender sua necessidade
-  git clone --depth=1 git@bitbucket.org:padrao-paineis-web-quaestum/front-projeto.git
-  rm -rf front-projeto/.git
+  git clone git@bitbucket.org:manservquaestum/front-padrao.git
+  cd api-projeto
+  git remote remove origin
 ```
 
-Isso irá clonar o projeto na branch principal, e depois remover a pasta .git para permitir inicializar um novo repositório para o seu projeto:
+Isso irá clonar o projeto na branch principal, e depois remover a remote origin para poder adicionar a URL do seu repositório.
+
+**ATENÇÃO:** Dê preferência a criar o repositório sem commits automáticos (como arquivos .gitignore ou READMEs) que são criados junto do repositório. Isso irá descomplicar o passo de fazer push dos commits do projeto padrão no
+
+Depois adicione a URL do seu repositório como origin:
 
 ```bash
-  cd front-projeto
-  git init
-  git add .
-  git commit -m "Primeiro commit"
   git remote add origin <URL_REPOSITORIO_API_SEU_PROJETO>
   git push origin main
 ```
@@ -37,7 +38,7 @@ Opcionalmente, você pode adicionar o repositório do Projeto Padrão como uma r
 
 ```bash
   # isso irá adicionar a remote de nome "padrao":
-  git remote add padrao git@bitbucket.org:padrao-paineis-web-quaestum/front-projeto.git
+  git remote add padrao git@bitbucket.org:manservquaestum/front-padrao.git
 
   # para usá-la, basta usar "padrao" ao invés de "origin" ao fazer pull:
   git pull padrao main
@@ -48,7 +49,7 @@ Remotes são URLs para repositórios de onde se pode fazer `pull` ou `push` do c
 
     Cuidado! A depender do quão diferente estiver o seu projeto do Projeto Padrão, fazer
     um pull da remote "padrao" pode gerar conflitos. É recomendável mover para uma nova
-    branch antes de fazer o pull, e usar a opção --rebase
+    branch antes de fazer o pull, e NÃO usar a opção --rebase
 
 ### Preparação do ambiente
 
@@ -133,7 +134,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-])
+]);
 ```
 
 Para saber mais sobre como definir rotas, leia a documentação do método [createBrowserRouter](https://reactrouter.com/en/main/routers/create-browser-router) e da opção [lazy](https://reactrouter.com/en/main/route/lazy).
@@ -141,7 +142,7 @@ Para saber mais sobre como definir rotas, leia a documentação do método [crea
 A rota `/` definida como pai de todas as outras define um container global chamado `RootPage` e uma página de erro padrão chamada `ErrorPage`.
 
 - RootPage
-  
+
   Define os contextos da aplicação e outras configurações globais. Note que esse elemento é carregado sem usar a opção `lazy`, ou seja, será carregado sempre que a aplicação for iniciada. Contextos e outras configurações carregadas aqui estarão disponíveis para todas as rotas filhas.
 
 - ErrorPage
@@ -151,4 +152,3 @@ A rota `/` definida como pai de todas as outras define um container global chama
 #### MainLayout
 
 O componente `MainLayout` serve para encapsular as páginas da aplicação e manter o mesmo layout em todas. Ele recebe algumas props que podem ser usadas para personalizar e configurar a página. Verifique o componente para conhecer as props.
-
